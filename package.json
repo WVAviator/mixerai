@@ -1,0 +1,15 @@
+{
+  "name": "mixerai",
+  "version": "0.0.1",
+  "description": "An app that allows the use of AI to generate a completely unique cocktail recipe based on a simple prompt.",
+  "main": "index.js",
+  "author": "WVAviator",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "devDependencies": {
+    "lerna": "^6.4.1"
+  }
+}
