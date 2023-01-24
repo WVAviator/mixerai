@@ -9,8 +9,14 @@ import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
-    MongooseModule.forRoot(process.env.MONGO_URI),
-    ConfigModule.forRoot(),
+    MongooseModule.forRootAsync({
+      useFactory: () => ({
+        uri: process.env.MONGODB_URI,
+      }),
+    }),
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     RecipeModule,
     UserModule,
     AuthModule,

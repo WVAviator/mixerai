@@ -6,11 +6,7 @@ import { AuthGuard } from '@nestjs/passport';
 export class GoogleOAuthGuard extends AuthGuard('google') {
   constructor(private configService: ConfigService) {
     super({
-      // scope: ['email', 'profile'],
       accessType: 'offline',
-      // prompt: 'consent',
-      // session: false,
-      // callbackURL: `${configService.get('APP_URL')}/auth/google/callback`,
     });
   }
 }
