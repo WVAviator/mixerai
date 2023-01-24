@@ -1,7 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import mongoose from 'mongoose';
+import { User } from '../../user/schemas/user.schema';
 
-export type RecipeDocument = HydratedDocument<Recipe>;
+export type RecipeDocument = mongoose.HydratedDocument<Recipe>;
 
 export interface Ingredient {
   name: string;
@@ -13,8 +14,14 @@ export interface Ingredient {
   toObject: { virtuals: true },
 })
 export class Recipe {
+  @Prop({ virtual: true })
+  id: string;
+
   @Prop()
   title: string;
+
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
+  user: User;
 
   @Prop()
   description: string;
