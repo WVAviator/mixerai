@@ -1,26 +1,40 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Request } from 'express';
 import { Strategy, ExtractJwt } from 'passport-jwt';
 import { UserService } from '../../user/user.service';
 
+/**
+ * The payload object that was signed and sent in the JWT.
+ */
 export type JwtPayload = {
+  /**
+   * The user's email address.
+   */
   email: string;
+  /**
+   * The user's id (assigned by MongoDB).
+   */
   sub: string;
-};
-
-const cookieExtractor = (req: Request) => {
-  let token = null;
-
-  if (req && req.signedCookies) {
-    token = req.signedCookies['mixerai_access_token'];
-  }
-  return token;
 };
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
+  private readonly logger = new Logger(JwtStrategy.name);
+
   constructor(private userService: UserService) {
+    const cookieExtractor = (req: Request) => {
+      this.logger.log('Extracting JWT from cookie...');
+      const token = req?.signedCookies?.['mixerai_access_token'];
+      if (!token) {
+        this.logger.error(
+          'Attempt to access protected route failed - no JWT in signed cookies.',
+        );
+        throw new UnauthorizedException('Please log in to continue.');
+      }
+      return token;
+    };
+
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]),
       ignoreExpiration: false,
@@ -28,16 +42,20 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     });
   }
 
+  /**
+   * The validate function is invoked on any subsequent requests to protected routes.
+   * @param payload The payload object that was signed and sent in the JWT.
+   * @returns The user object that will be assigned to req.user.
+   */
   async validate(payload: JwtPayload) {
-    console.log("Attempting to verify user's JWT token...", payload);
+    this.logger.log(`Validating JWT payload: ${JSON.stringify(payload)}`);
     const user = await this.userService.findOneById(payload.sub);
     if (!user) {
+      this.logger.error(`User with id: ${payload.sub} not found.`);
       throw new UnauthorizedException('Please log in to continue.');
     }
+    this.logger.log(`User authenticated: ${JSON.stringify(user)}`);
 
-    return {
-      email: user.email,
-      sub: user.id,
-    };
+    return user;
   }
 }
