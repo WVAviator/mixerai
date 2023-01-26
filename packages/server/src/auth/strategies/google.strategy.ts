@@ -1,7 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Strategy, VerifyCallback } from 'passport-google-oauth20';
 import { PassportStrategy } from '@nestjs/passport';
-import { UserService } from '../../user/user.service';
+import { Profile, Strategy, VerifyCallback } from 'passport-google-oauth20';
 import { User } from '../../user/schemas/user.schema';
 
 @Injectable()
@@ -24,9 +23,9 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
    * @param done The callback function that should be called with the user object to be assigned to req.user.
    */
   async validate(
-    accessToken: string,
-    refreshToken: string,
-    profile,
+    _accessToken: string,
+    _refreshToken: string,
+    profile: Profile,
     done: VerifyCallback,
   ) {
     this.logger.log(
@@ -38,7 +37,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     const user: User = {
       email: emails[0].value,
       displayName,
-      avatarUrl: photos[0].value,
+      avatarUrl: photos[0]?.value ?? '',
       authService: 'google',
       authServiceId: id,
     };
