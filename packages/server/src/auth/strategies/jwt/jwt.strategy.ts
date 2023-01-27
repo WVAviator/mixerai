@@ -2,21 +2,8 @@ import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Request } from 'express';
 import { Strategy, ExtractJwt } from 'passport-jwt';
-import { UserService } from '../../user/user.service';
-
-/**
- * The payload object that was signed and sent in the JWT.
- */
-export type JwtPayload = {
-  /**
-   * The user's email address.
-   */
-  email: string;
-  /**
-   * The user's id (assigned by MongoDB).
-   */
-  sub: string;
-};
+import { UserService } from '../../../user/user.service';
+import { JwtPayload } from './types';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
