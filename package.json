@@ -12,5 +12,9 @@
   "devDependencies": {
     "lerna": "^6.4.1"
   },
+  "scripts": {
+    "start": "yarn workspaces foreach -vpti run start",
+    "start:dev": "yarn workspaces foreach -vpti run start:dev"
+  },
   "packageManager": "yarn@3.3.1"
 }
