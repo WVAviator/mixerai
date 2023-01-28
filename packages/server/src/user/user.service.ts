@@ -13,6 +13,11 @@ export class UserService {
   private logger = new Logger(UserService.name);
   constructor(@InjectModel('User') private userModel: Model<UserDocument>) {}
 
+  /**
+   * Creates a new user in the database.
+   * @param user The user to create.
+   * @returns The hydrated user document after it has been saved to the database.
+   */
   async create(user: User) {
     this.logger.log(`Creating user ${user.email} in database.`);
     try {
@@ -26,6 +31,11 @@ export class UserService {
     }
   }
 
+  /**
+   * Finds a single user based on their id.
+   * @param id The string id of the user.
+   * @returns The hydrated user docuent from the database.
+   */
   async findOneById(id: string) {
     this.logger.log(`Finding user with id ${id}.`);
     try {
@@ -43,6 +53,11 @@ export class UserService {
     }
   }
 
+  /**
+   * Finds a single user based on their email.
+   * @param email The email of the user.
+   * @returns The hydrated user document from the database.
+   */
   async findOneByEmail(email: string) {
     this.logger.log(`Finding user with email ${email}.`);
     try {
@@ -64,6 +79,11 @@ export class UserService {
     }
   }
 
+  /**
+   * Removes a user from the database.
+   * @param id The string id of the user.
+   * @returns The hydrated user document that was removed from the database.
+   */
   async remove(id: string) {
     this.logger.log(`Removing user with id ${id}.`);
     try {
