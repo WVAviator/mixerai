@@ -5241,7 +5241,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/express@npm:*":
+"@types/express@npm:*, @types/express@npm:^4.17.16":
   version: 4.17.16
   resolution: "@types/express@npm:4.17.16"
   dependencies:
@@ -5250,18 +5250,6 @@ __metadata:
     "@types/qs": "*"
     "@types/serve-static": "*"
   checksum: 43f3ed2cea6e5e83c7c1098c5152f644e975fd764443717ff9c812a1518416a9e7e9f824ffe852c118888cbfb994ed023cad08331f49b19ced469bb185cdd5cd
-  languageName: node
-  linkType: hard
-
-"@types/express@npm:^4.17.13":
-  version: 4.17.15
-  resolution: "@types/express@npm:4.17.15"
-  dependencies:
-    "@types/body-parser": "*"
-    "@types/express-serve-static-core": ^4.17.31
-    "@types/qs": "*"
-    "@types/serve-static": "*"
-  checksum: b4acd8a836d4f6409cdf79b12d6e660485249b62500cccd61e7997d2f520093edf77d7f8498ca79d64a112c6434b6de5ca48039b8fde2c881679eced7e96979b
   languageName: node
   linkType: hard
 
@@ -5369,10 +5357,30 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/oauth@npm:*":
+  version: 0.9.1
+  resolution: "@types/oauth@npm:0.9.1"
+  dependencies:
+    "@types/node": "*"
+  checksum: 5c079611b455eff58fba6358e028b191a1e65475600f8ed8d98c1696fedcfb0290aa6c6a19cf50f21a9e2d816ecb43a19f910900d91f8ba3727e33c48f97d7f3
+  languageName: node
+  linkType: hard
+
 "@types/parse-json@npm:^4.0.0":
   version: 4.0.0
   resolution: "@types/parse-json@npm:4.0.0"
   checksum: fd6bce2b674b6efc3db4c7c3d336bd70c90838e8439de639b909ce22f3720d21344f52427f1d9e57b265fcb7f6c018699b99e5e0c208a1a4823014269a6bf35b
+  languageName: node
+  linkType: hard
+
+"@types/passport-google-oauth20@npm:^2.0.11":
+  version: 2.0.11
+  resolution: "@types/passport-google-oauth20@npm:2.0.11"
+  dependencies:
+    "@types/express": "*"
+    "@types/passport": "*"
+    "@types/passport-oauth2": "*"
+  checksum: 5e87a0bf40d77ce863dbcea4ae1cd6bccc663282593c9b6ce83b0e2d5d6c56ed9dc0275a04f5d81832f03b3a477fd47d17fd9b3ee22ceb69ca445ab0b0d326d7
   languageName: node
   linkType: hard
 
@@ -5384,6 +5392,17 @@ __metadata:
     "@types/jsonwebtoken": "*"
     "@types/passport-strategy": "*"
   checksum: 321eca319eff51c87a5ddebf590937b24ed7fa6c8cc2465cecb4edf49f839b7770e57a4ed009f323c66ade6c0f1d9b6a51033d82dd392270b17976380893af2f
+  languageName: node
+  linkType: hard
+
+"@types/passport-oauth2@npm:*":
+  version: 1.4.11
+  resolution: "@types/passport-oauth2@npm:1.4.11"
+  dependencies:
+    "@types/express": "*"
+    "@types/oauth": "*"
+    "@types/passport": "*"
+  checksum: 09d047a6c09a05c036f7db0cf8f8c09bf5878fdd15949bb1baa09a35f439929d471048fa6595f09ea4a4ea25396ce3918b362136579cf4a2b2ee29a92c0dd1ce
   languageName: node
   linkType: hard
 
@@ -15541,9 +15560,10 @@ __metadata:
     "@nestjs/schematics": ^9.0.0
     "@nestjs/testing": ^9.0.0
     "@types/cookie-parser": ^1.4.3
-    "@types/express": ^4.17.13
+    "@types/express": ^4.17.16
     "@types/jest": 29.2.4
     "@types/node": 18.11.18
+    "@types/passport-google-oauth20": ^2.0.11
     "@types/passport-jwt": ^3.0.8
     "@types/supertest": ^2.0.11
     "@typescript-eslint/eslint-plugin": ^5.0.0
