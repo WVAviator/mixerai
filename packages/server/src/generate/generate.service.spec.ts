@@ -1,13 +1,14 @@
 import { OpenAIProvider } from './openai.provider';
 import { Test, TestingModule } from '@nestjs/testing';
 import { GenerateService } from './generate.service';
-import { CreateCompletionResponse } from 'openai';
+import { CreateCompletionResponse, CreateModerationResponse } from 'openai';
 import { AxiosResponse } from 'axios';
 import { InternalServerErrorException } from '@nestjs/common';
 import { GeneratedRecipe } from './dtos/generated-recipe.dto';
 import { PromptProvider } from './prompt.provider';
 import { GenerationOptions } from './dtos/generation-options.dto';
 import { AIResponseException } from './ai-response.exception';
+import { ContentModerationException } from './content-moderation.exception';
 
 describe('GenerateService', () => {
   let generateService: GenerateService;
@@ -22,6 +23,15 @@ describe('GenerateService', () => {
           provide: OpenAIProvider,
           useValue: {
             createCompletion: jest.fn(),
+            createModeration: jest.fn(() => ({
+              data: {
+                results: [
+                  {
+                    flagged: false,
+                  },
+                ],
+              },
+            })),
           },
         },
         {
@@ -150,6 +160,42 @@ describe('GenerateService', () => {
       await expect(
         generateService.generateRecipe({ prompt: '' }),
       ).rejects.toThrow(InternalServerErrorException);
+    });
+
+    it('throws an error if the prompt fails moderation', async () => {
+      const mockResponse: AxiosResponse<CreateModerationResponse, any> = {
+        data: {
+          results: [
+            {
+              categories: {
+                hate: false,
+                'hate/threatening': true,
+                'self-harm': false,
+                sexual: false,
+                'sexual/minors': false,
+                violence: true,
+                'violence/graphic': false,
+              },
+              flagged: true,
+            },
+          ],
+        },
+      } as AxiosResponse<CreateModerationResponse, any>;
+
+      jest
+        .spyOn(openAIProvider, 'createModeration')
+        .mockResolvedValue(mockResponse);
+
+      await expect(
+        generateService.generateRecipe({ prompt: 'Test prompt' }),
+      ).rejects.toThrow(
+        new ContentModerationException(
+          `Prompt failed moderation. Reasons: ${JSON.stringify([
+            'hate/threatening',
+            'violence',
+          ])}`,
+        ),
+      );
     });
   });
 });

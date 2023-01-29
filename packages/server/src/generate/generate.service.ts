@@ -13,6 +13,7 @@ import { PromptProvider } from './prompt.provider';
 import { GenerationOptions } from './dtos/generation-options.dto';
 import { AIResponseException } from './ai-response.exception';
 import { AxiosResponse } from 'axios';
+import { ContentModerationException } from './content-moderation.exception';
 
 @Injectable()
 export class GenerateService {
@@ -40,6 +41,28 @@ export class GenerateService {
     this.logger.log(
       `Generating recipe with options: ${JSON.stringify(options)}`,
     );
+
+    let moderationResponse;
+    try {
+      moderationResponse = await this.openai.createModeration({
+        model: 'text-moderation-001',
+        input: options.prompt,
+      });
+    } catch (error) {
+      this.logger.error(`OpenAI API request error: ${error}`);
+      throw new BadGatewayException('Error communicating with OpenAI');
+    }
+
+    const moderationResult = moderationResponse.data.results[0];
+
+    if (moderationResult.flagged) {
+      const flaggedReasons = Object.keys(moderationResult.categories).filter(
+        (category) => moderationResult.categories[category] === true,
+      );
+      throw new ContentModerationException(
+        `Prompt failed moderation. Reasons: ${JSON.stringify(flaggedReasons)}`,
+      );
+    }
 
     let recipeResponse: AxiosResponse<CreateCompletionResponse, any>;
 

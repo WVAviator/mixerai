@@ -4,6 +4,8 @@ import {
   Configuration,
   CreateCompletionRequest,
   CreateCompletionResponse,
+  CreateModerationRequest,
+  CreateModerationResponse,
   OpenAIApi,
 } from 'openai';
 
@@ -14,10 +16,16 @@ import {
 export class OpenAIProvider {
   private configuration: Configuration;
   private openai: OpenAIApi;
+
   public createCompletion: (
     createCompletionRequest: CreateCompletionRequest,
     options?: AxiosRequestConfig,
   ) => Promise<AxiosResponse<CreateCompletionResponse>>;
+
+  public createModeration: (
+    createModerationRequest: CreateModerationRequest,
+    options?: AxiosRequestConfig<any>,
+  ) => Promise<AxiosResponse<CreateModerationResponse, any>>;
 
   constructor() {
     this.configuration = new Configuration({
@@ -25,5 +33,6 @@ export class OpenAIProvider {
     });
     this.openai = new OpenAIApi(this.configuration);
     this.createCompletion = this.openai.createCompletion.bind(this);
+    this.createModeration = this.openai.createModeration.bind(this);
   }
 }
