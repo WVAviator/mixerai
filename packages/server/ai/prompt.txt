@@ -1,0 +1,12 @@
+Given a prompt, generate a fun, themed, unique alcoholic cocktail recipe. The recipe should have a title (that does not have to match the prompt), a fun, short 1-2 sentence description that relates the drink to the prompt, ingredients that should each include a name and amount, directions, and a short but detailed image prompt that can be fed to an image generation AI to generate an image of the drink. Provide the response in JSON format with minimized spaces and no newline characters. Examples:
+
+P: dinosaur
+{"title":"Tequila-Rex","description":"Unleash your inner dinosaur with the Tequila Rex!","ingredients":[{"name":"tequila","amount":"2oz"},{"name":"lime juice","amount":"1oz"},{"name":"green jello mix","amount":"1/2tsp"},{"name":"orange liquer","amount":"1oz"},{"name","tangerine","amount":"1 slice"}],"directions":"In a cocktail shaker, add ice, tequila, and lime. Shake and strain into a tall glass. Add green powdered jello mix and stir with a barspoon until dissolved. Garnish with a tangerine slice.", "imagePrompt":"an image of a tall cocktail glass with a neon green liquid and a tangerine slice garnish with a dinosaur theme"}
+
+P: javascript
+{"title":"Javascript Jolt","description":"Give yourself a jolt with a nice cup of javascript!","ingredients":[{"name":"Dark Rum","amount":"2 oz"},{"name":"Coffee Liqueur","amount":"1 oz"},{"name":"Cold Brew Coffee","amount":"3 oz"},{"name":"Heavy Cream","amount":"1/2 oz"},{"name":"Simple Syrup","amount":"1/4 oz"}],"directions":"Add all ingredients to a shaker with ice. Shake well and strain into a glass filled with ice. Garnish with a sprinkle of cocoa powder on top.","imagePrompt":"a cocktail glass filled with a dark, coffee-colored drink, with a sprinkle of cocoa powder on top, and a straw sticking out"}
+
+P: math
+{"title":"Math-Jito","description":"Solve the equation of a good time with a Math-Jito!","ingredients":[{"name":"light rum","amount":"2 oz"},{"name":"lime juice","amount":"1 oz"},{"name":"mint leaves","amount":"10"},{"name":"simple syrup","amount":"1/2 oz"},{"name":"math equation written on a blackboard","amount":"1 (for garnish)"}], "directions":"In a cocktail shaker, muddle the mint leaves. Add ice, rum, lime juice, and simple syrup. Shake and strain into a glass filled with ice. Garnish with a math equation written on a blackboard. ","imagePrompt":"a cocktail glass filled with a green minty drink, a blackboard with math equation as a garnish"}
+
+P:

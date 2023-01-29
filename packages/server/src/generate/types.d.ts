@@ -4,7 +4,7 @@ export interface GenerationOptions {
   prompt: string;
 }
 
-export interface AIResponseSchema {
+export interface GeneratedRecipe {
   title: string;
   description: string;
   ingredients: {
