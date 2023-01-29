@@ -5,6 +5,7 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { GenerateModule } from './generate/generate.module';
+import { ImageModule } from './image/image.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { GenerateModule } from './generate/generate.module';
     UserModule,
     AuthModule,
     GenerateModule,
+    ImageModule,
   ],
 })
 export class AppModule {}
