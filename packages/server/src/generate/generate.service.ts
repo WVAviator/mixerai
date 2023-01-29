@@ -50,7 +50,6 @@ export class GenerateService {
         input: options.prompt,
       });
     } catch (error) {
-      this.logger.error(`OpenAI API request error: ${error}`);
       throw new BadGatewayException('Error communicating with OpenAI', {
         cause: error,
       });
@@ -77,17 +76,19 @@ export class GenerateService {
         max_tokens: 250,
       });
     } catch (error) {
-      this.logger.error(`OpenAI API request error: ${error}`);
-      throw new BadGatewayException('Error communicating with OpenAI');
+      throw new BadGatewayException('Error communicating with OpenAI', {
+        cause: error,
+      });
     }
     const recipe = await this.parseRecipe(recipeResponse.data);
+    this.logger.log(`Generated recipe ${recipe.title} successfully.`);
+
     return recipe;
   }
 
   private async parseRecipe(data: CreateCompletionResponse) {
     const responseJson = data.choices[0].text;
 
-    this.logger.log(`Attempting to parse and validate JSON from AI response.`);
     let generatedRecipe: GeneratedRecipe;
     try {
       generatedRecipe = await JSON.parse(responseJson);
@@ -100,8 +101,9 @@ export class GenerateService {
     const validatedRecipe = new GeneratedRecipe(generatedRecipe);
     const errors = await validate(validatedRecipe);
     if (errors.length > 0) {
-      this.logger.error(`Validation error: ${errors}`);
-      throw new AIResponseException('AI response failed validation');
+      throw new AIResponseException('AI response failed validation', {
+        cause: new Error(errors[0].toString()),
+      });
     }
 
     return generatedRecipe;
