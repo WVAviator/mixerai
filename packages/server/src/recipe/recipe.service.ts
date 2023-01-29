@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { CreateRecipeDto } from './dto/create-recipe.dto';
+import { GenerateService } from '../generate/generate.service';
+import { GenerateRecipeDto } from './dto/generate-recipe.dto';
 import { UpdateRecipeDto } from './dto/update-recipe.dto';
 import { RecipeDocument } from './schemas/recipe.schema';
 
@@ -9,10 +10,12 @@ import { RecipeDocument } from './schemas/recipe.schema';
 export class RecipeService {
   constructor(
     @InjectModel('Recipe') private recipeModel: Model<RecipeDocument>,
+    private generateService: GenerateService,
   ) {}
 
-  create(createRecipeDto: CreateRecipeDto) {
-    return 'This action adds a new recipe';
+  generate({ prompt }: GenerateRecipeDto) {
+    const recipe = this.generateService.generateRecipe({ prompt });
+    return recipe;
   }
 
   findAll() {

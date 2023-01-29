@@ -1,13 +1,9 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 import { User } from '../../user/schemas/user.schema';
+import { Ingredient } from '../types';
 
 export type RecipeDocument = mongoose.HydratedDocument<Recipe>;
-
-export interface Ingredient {
-  name: string;
-  quantity: string;
-}
 
 @Schema({
   toJSON: { virtuals: true },
@@ -34,6 +30,9 @@ export class Recipe {
 
   @Prop()
   imageUrl: string;
+
+  @Prop()
+  prompt: string;
 }
 
 export const RecipeSchema = SchemaFactory.createForClass(Recipe);
