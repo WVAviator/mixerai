@@ -1,8 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { readFileSync } from 'fs';
 import { join } from 'path';
-import { GenerationOptions } from './types';
+import { GenerationOptions } from './dtos/generation-options.dto';
 
+/**
+ * Provides the methods for prefixing prompts to OpenAI with the appropriate context for few-shot learning.
+ */
 @Injectable()
 export class PromptProvider {
   private promptPrefix: string;

@@ -6,7 +6,8 @@ import { AxiosResponse } from 'axios';
 import { InternalServerErrorException } from '@nestjs/common';
 import { GeneratedRecipe } from './dtos/generated-recipe.dto';
 import { PromptProvider } from './prompt.provider';
-import { GenerationOptions } from './types';
+import { GenerationOptions } from './dtos/generation-options.dto';
+import { AIResponseException } from './ai-response.exception';
 
 describe('GenerateService', () => {
   let generateService: GenerateService;
@@ -87,7 +88,7 @@ describe('GenerateService', () => {
 
       await expect(
         generateService.generateRecipe({ prompt: 'Test prompt' }),
-      ).rejects.toThrow(InternalServerErrorException);
+      ).rejects.toThrow(AIResponseException);
     });
 
     it('should throw an error if the returned recipe is missing properties', async () => {
@@ -98,7 +99,7 @@ describe('GenerateService', () => {
 
       await expect(
         generateService.generateRecipe({ prompt: 'Test prompt' }),
-      ).rejects.toThrow(InternalServerErrorException);
+      ).rejects.toThrow(AIResponseException);
     });
 
     it('should throw an error if a nested ingredient is invalid', async () => {
@@ -114,7 +115,7 @@ describe('GenerateService', () => {
 
       await expect(
         generateService.generateRecipe({ prompt: 'Test prompt' }),
-      ).rejects.toThrow(InternalServerErrorException);
+      ).rejects.toThrow(AIResponseException);
     });
 
     it('calls the ai with provided prompt prefixed with training prompt', async () => {
@@ -143,6 +144,12 @@ describe('GenerateService', () => {
         temperature: 0.8,
         max_tokens: 250,
       });
+    });
+
+    it('throws an error if an empty prompt is provided', async () => {
+      await expect(
+        generateService.generateRecipe({ prompt: '' }),
+      ).rejects.toThrow(InternalServerErrorException);
     });
   });
 });

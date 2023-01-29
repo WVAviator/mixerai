@@ -7,6 +7,9 @@ import {
   OpenAIApi,
 } from 'openai';
 
+/**
+ * Represents the server's instance of the configured OpenAI API.
+ */
 @Injectable()
 export class OpenAIProvider {
   private configuration: Configuration;
@@ -21,7 +24,6 @@ export class OpenAIProvider {
       apiKey: process.env.OPENAI_SECRET_KEY,
     });
     this.openai = new OpenAIApi(this.configuration);
-    // this.createCompletion = this.openai.createCompletion.bind(this);
     this.createCompletion = this.openai.createCompletion.bind(this);
   }
 }
