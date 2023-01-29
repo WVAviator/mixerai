@@ -1,10 +1,10 @@
-import { OpenAIProvider } from './openai.provider';
 import { Module } from '@nestjs/common';
 import { GenerateService } from './generate.service';
-import { PromptProvider } from './prompt.provider';
+import { OpenAIModule } from '../openai/openai.module';
 
 @Module({
-  providers: [GenerateService, OpenAIProvider, PromptProvider],
+  providers: [GenerateService],
+  imports: [OpenAIModule],
   exports: [GenerateService],
 })
 export class GenerateModule {}

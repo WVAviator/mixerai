@@ -1,4 +1,4 @@
-import { OpenAIProvider } from './openai.provider';
+import { OpenAIProvider } from '../openai/openai.provider';
 import {
   BadGatewayException,
   Inject,
@@ -9,8 +9,8 @@ import {
 import { CreateCompletionResponse } from 'openai';
 import { GeneratedRecipe } from './dtos/generated-recipe.dto';
 import { validate } from 'class-validator';
-import { PromptProvider } from './prompt.provider';
-import { GenerationOptions } from './dtos/generation-options.dto';
+import { PromptProvider } from '../openai/prompt.provider';
+import { RecipeGenerationOptions } from './dtos/recipe-generation-options.dto';
 import { AIResponseException } from './ai-response.exception';
 import { AxiosResponse } from 'axios';
 import { ContentModerationException } from './content-moderation.exception';
@@ -28,8 +28,10 @@ export class GenerateService {
    * @param options AI Generation options, including the required prompt.
    * @returns A generated recipe
    */
-  async generateRecipe(options: GenerationOptions): Promise<GeneratedRecipe> {
-    const validatedOptions = new GenerationOptions(options);
+  async generateRecipe(
+    options: RecipeGenerationOptions,
+  ): Promise<GeneratedRecipe> {
+    const validatedOptions = new RecipeGenerationOptions(options);
     const errors = await validate(validatedOptions);
     if (errors.length > 0) {
       this.logger.error(`Validation error: ${errors}`);
@@ -45,12 +47,13 @@ export class GenerateService {
     let moderationResponse;
     try {
       moderationResponse = await this.openai.createModeration({
-        model: 'text-moderation-001',
         input: options.prompt,
       });
     } catch (error) {
       this.logger.error(`OpenAI API request error: ${error}`);
-      throw new BadGatewayException('Error communicating with OpenAI');
+      throw new BadGatewayException('Error communicating with OpenAI', {
+        cause: error,
+      });
     }
 
     const moderationResult = moderationResponse.data.results[0];

@@ -1,12 +1,12 @@
-import { OpenAIProvider } from './openai.provider';
+import { OpenAIProvider } from '../openai/openai.provider';
 import { Test, TestingModule } from '@nestjs/testing';
 import { GenerateService } from './generate.service';
 import { CreateCompletionResponse, CreateModerationResponse } from 'openai';
 import { AxiosResponse } from 'axios';
 import { InternalServerErrorException } from '@nestjs/common';
 import { GeneratedRecipe } from './dtos/generated-recipe.dto';
-import { PromptProvider } from './prompt.provider';
-import { GenerationOptions } from './dtos/generation-options.dto';
+import { PromptProvider } from '../openai/prompt.provider';
+import { RecipeGenerationOptions } from './dtos/recipe-generation-options.dto';
 import { AIResponseException } from './ai-response.exception';
 import { ContentModerationException } from './content-moderation.exception';
 
@@ -136,7 +136,7 @@ describe('GenerateService', () => {
       const createPromptFunction = jest
         .spyOn(promptProvider, 'createPrompt')
         .mockImplementation(
-          (options: GenerationOptions) =>
+          (options: RecipeGenerationOptions) =>
             `Test training prompt prefix: ${options.prompt}`,
         );
 

@@ -6,6 +6,7 @@ import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { GenerateModule } from './generate/generate.module';
 import { ImageModule } from './image/image.module';
+import { OpenAIModule } from './openai/openai.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { ImageModule } from './image/image.module';
     AuthModule,
     GenerateModule,
     ImageModule,
+    OpenAIModule,
   ],
 })
 export class AppModule {}

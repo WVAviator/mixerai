@@ -4,8 +4,10 @@ import {
   Configuration,
   CreateCompletionRequest,
   CreateCompletionResponse,
+  CreateImageRequest,
   CreateModerationRequest,
   CreateModerationResponse,
+  ImagesResponse,
   OpenAIApi,
 } from 'openai';
 
@@ -27,6 +29,11 @@ export class OpenAIProvider {
     options?: AxiosRequestConfig<any>,
   ) => Promise<AxiosResponse<CreateModerationResponse, any>>;
 
+  public createImage: (
+    createImageRequest: CreateImageRequest,
+    options?: AxiosRequestConfig<any>,
+  ) => Promise<AxiosResponse<ImagesResponse, any>>;
+
   constructor() {
     this.configuration = new Configuration({
       apiKey: process.env.OPENAI_SECRET_KEY,
@@ -34,5 +41,6 @@ export class OpenAIProvider {
     this.openai = new OpenAIApi(this.configuration);
     this.createCompletion = this.openai.createCompletion.bind(this);
     this.createModeration = this.openai.createModeration.bind(this);
+    this.createImage = this.openai.createImage.bind(this);
   }
 }

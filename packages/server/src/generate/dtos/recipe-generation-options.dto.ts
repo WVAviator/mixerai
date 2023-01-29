@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsString } from 'class-validator';
 
-export class GenerationOptions {
+export class RecipeGenerationOptions {
   @IsString({
     message: 'Prompt must be a string',
   })
@@ -9,7 +9,7 @@ export class GenerationOptions {
   })
   prompt: string;
 
-  constructor(partial: Partial<GenerationOptions>) {
+  constructor(partial: Partial<RecipeGenerationOptions>) {
     Object.assign(this, partial);
   }
 }
