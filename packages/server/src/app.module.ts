@@ -7,6 +7,7 @@ import { ConfigModule } from '@nestjs/config';
 import { GenerateModule } from './generate/generate.module';
 import { ImageModule } from './image/image.module';
 import { OpenAIModule } from './openai/openai.module';
+import { VoteModule } from './vote/vote.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { OpenAIModule } from './openai/openai.module';
     GenerateModule,
     ImageModule,
     OpenAIModule,
+    VoteModule,
   ],
 })
 export class AppModule {}
