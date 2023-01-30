@@ -8,7 +8,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { User as UserModel } from '../user/schemas/user.schema';
+import { UserDocument } from '../user/schemas/user.schema';
 import { User } from '../user/user.decorator';
 import { GenerateRecipeDto } from './dto/generate-recipe.dto';
 import { RecipeService } from './recipe.service';
@@ -21,14 +21,14 @@ export class RecipeController {
   @UseGuards(JwtAuthGuard)
   generate(
     @Body() generateRecipeDto: GenerateRecipeDto,
-    @User() user: UserModel,
+    @User() user: UserDocument,
   ) {
     return this.recipeService.generate(generateRecipeDto, user);
   }
 
   @Get()
   @UseGuards(JwtAuthGuard)
-  findAll(@User() user: UserModel) {
+  findAll(@User() user: UserDocument) {
     return this.recipeService.findAll(user);
   }
 
@@ -39,7 +39,7 @@ export class RecipeController {
 
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
-  remove(@Param('id') id: string, @User() user: UserModel) {
+  remove(@Param('id') id: string, @User() user: UserDocument) {
     return this.recipeService.remove(id, user);
   }
 }

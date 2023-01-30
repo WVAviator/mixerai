@@ -8,7 +8,7 @@ export type UserDocument = HydratedDocument<User>;
   toObject: { virtuals: true },
 })
 export class User {
-  @Prop({ virtual: true })
+  // @Prop({ virtual: true })
   id?: string;
 
   @Prop()
@@ -27,4 +27,10 @@ export class User {
   authServiceId: string;
 }
 
-export const UserSchema = SchemaFactory.createForClass(User);
+const UserSchema = SchemaFactory.createForClass(User);
+
+UserSchema.virtual('id').get(function (this: UserDocument) {
+  return this._id.toString();
+});
+
+export { UserSchema };

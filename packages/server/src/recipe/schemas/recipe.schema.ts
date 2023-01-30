@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
-import { User } from '../../user/schemas/user.schema';
+import { User, UserDocument } from '../../user/schemas/user.schema';
 
 export type RecipeDocument = mongoose.HydratedDocument<Recipe>;
 
@@ -10,7 +10,7 @@ export interface Ingredient {
 }
 
 export interface Vote {
-  user: User;
+  userId: string;
   vote: 'like' | 'dislike';
 }
 
@@ -48,7 +48,7 @@ export class Recipe {
   @Prop({
     type: [
       {
-        user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+        userId: { type: String },
         vote: { type: String, enum: ['like', 'dislike'] },
       },
     ],
@@ -60,8 +60,6 @@ export class Recipe {
 
   dislikes: number;
 
-  userVote: (user: User) => 'like' | 'dislike' | null;
-
   @Prop({ default: 0 })
   shares: number;
 
@@ -71,17 +69,12 @@ export class Recipe {
 
 const RecipeSchema = SchemaFactory.createForClass(Recipe);
 
-RecipeSchema.virtual('likes').get(function (this: Recipe) {
+RecipeSchema.virtual('likes').get(function (this: RecipeDocument) {
   return this.votes.filter((vote) => vote.vote === 'like').length;
 });
 
-RecipeSchema.virtual('dislikes').get(function (this: Recipe) {
+RecipeSchema.virtual('dislikes').get(function (this: RecipeDocument) {
   return this.votes.filter((vote) => vote.vote === 'dislike').length;
-});
-
-RecipeSchema.virtual('userVote').get(function (this: Recipe, user: User) {
-  const vote = this.votes.find((vote) => vote.user.id === user.id);
-  return vote ? vote.vote : null;
 });
 
 export { RecipeSchema };

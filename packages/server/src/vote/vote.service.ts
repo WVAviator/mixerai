@@ -1,33 +1,28 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { DatabaseException } from '../exceptions/database.exceptions';
 import { RecipeService } from '../recipe/recipe.service';
-import { User } from '../user/schemas/user.schema';
+import { RecipeDocument, Vote } from '../recipe/schemas/recipe.schema';
+import { UserDocument } from '../user/schemas/user.schema';
 import { VoteException } from './vote.exception';
 
 interface VoteOptions {
   recipeId: string;
-  user: User;
+  user: UserDocument;
   vote?: 'like' | 'dislike';
 }
 @Injectable()
 export class VoteService {
+  private readonly logger = new Logger(VoteService.name);
   constructor(private readonly recipeService: RecipeService) {}
 
   /**
    * Gets the vote for a user on a recipe
    * @param param0 An object containing the recipeId and user
-   * @returns A promise that resolves to the vote value - either 'like', 'dislike', or null if the user has not voted on this recipe
+   * @returns A promise that resolves to the vote or null if the user has not voted on this recipe
    */
   async getVote({ recipeId, user }: VoteOptions) {
-    const recipe = await this.recipeService.findOne(recipeId);
-    try {
-      const vote = recipe.userVote(user);
-      return vote;
-    } catch (error) {
-      throw new DatabaseException('Database error getting vote', {
-        cause: error,
-      });
-    }
+    const { userVote } = await this.getRecipeVote(recipeId, user);
+    return userVote;
   }
 
   /**
@@ -36,14 +31,18 @@ export class VoteService {
    * @returns A promise that resolves to the updated recipe document
    */
   async createVote({ recipeId, user, vote }: VoteOptions) {
-    const recipe = await this.recipeService.findOne(recipeId);
-    const userVote = this.getVote({ recipeId, user });
+    this.logger.log(`User ${user.id} has voted ${vote} on recipe ${recipeId}.`);
+    const { recipe, userVote } = await this.getRecipeVote(recipeId, user);
+    this.logger.log(
+      `Checked for previous vote on this recipe by user: ${userVote}`,
+    );
     if (userVote) {
       throw new VoteException('User has already voted on this recipe.');
     }
     try {
-      recipe.votes.push({ user, vote });
-      return recipe.save();
+      recipe.votes.push({ userId: user.id, vote });
+      await recipe.save();
+      return recipe;
     } catch (error) {
       throw new DatabaseException('Database error creating vote', {
         cause: error,
@@ -57,15 +56,14 @@ export class VoteService {
    * @returns A promise that resolves to the updated recipe document
    */
   async updateVote({ recipeId, user, vote: newVote }: VoteOptions) {
-    const recipe = await this.recipeService.findOne(recipeId);
-    const userVote = this.getVote({ recipeId, user });
+    const { recipe, userVote } = await this.getRecipeVote(recipeId, user);
     if (!userVote) {
       throw new VoteException('User has not voted on this recipe.');
     }
     try {
       recipe.votes = recipe.votes.map((vote) => {
-        if (vote.user.id === user.id) {
-          return { user, vote: newVote };
+        if (vote.userId === user.id) {
+          return { userId: vote.userId, vote: newVote };
         }
         return vote;
       });
@@ -83,14 +81,13 @@ export class VoteService {
    * @returns A promise that resolves to the updated recipe document
    */
   async deleteVote({ recipeId, user }: VoteOptions) {
-    const recipe = await this.recipeService.findOne(recipeId);
-    const userVote = this.getVote({ recipeId, user });
+    const { recipe, userVote } = await this.getRecipeVote(recipeId, user);
     if (!userVote) {
       throw new VoteException('User has not voted on this recipe.');
     }
     try {
       recipe.votes = recipe.votes.filter((vote) => {
-        return vote.user.id !== user.id;
+        return vote.userId !== user.id;
       });
       return recipe.save();
     } catch (error) {
@@ -98,5 +95,16 @@ export class VoteService {
         cause: error,
       });
     }
+  }
+
+  private async getRecipeVote(
+    recipeId: string,
+    user: UserDocument,
+  ): Promise<{ recipe: RecipeDocument; userVote: Vote }> {
+    const recipe = await this.recipeService.findOne(recipeId);
+    const userVote = recipe.votes.find((vote) => {
+      return vote.userId === user.id;
+    });
+    return { recipe, userVote };
   }
 }

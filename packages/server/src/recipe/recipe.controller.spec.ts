@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { User } from '../user/schemas/user.schema';
+import { UserDocument } from '../user/schemas/user.schema';
 import { RecipeController } from './recipe.controller';
 import { RecipeService } from './recipe.service';
 import { RecipeDocument } from './schemas/recipe.schema';
@@ -40,7 +40,7 @@ describe('RecipeController', () => {
 
       await recipeController.generate({ prompt: 'test-prompt' }, {
         id: '123',
-      } as User);
+      } as UserDocument);
 
       expect(generateFunction).toBeCalledWith(
         {
@@ -57,9 +57,9 @@ describe('RecipeController', () => {
         .spyOn(recipeService, 'findAll')
         .mockResolvedValue([{} as RecipeDocument]);
 
-      expect(await recipeController.findAll({ id: '123' } as User)).toEqual([
-        {},
-      ]);
+      expect(
+        await recipeController.findAll({ id: '123' } as UserDocument),
+      ).toEqual([{}]);
       expect(findAllFunction).toBeCalled();
     });
   });
@@ -82,7 +82,7 @@ describe('RecipeController', () => {
         .mockResolvedValue({} as RecipeDocument);
 
       expect(
-        await recipeController.remove('123', { id: '123' } as User),
+        await recipeController.remove('123', { id: '123' } as UserDocument),
       ).toEqual({});
       expect(removeFunction).toBeCalledWith('123', { id: '123' });
     });
