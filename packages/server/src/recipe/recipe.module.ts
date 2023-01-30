@@ -14,5 +14,6 @@ import { ImageModule } from '../image/image.module';
   ],
   controllers: [RecipeController],
   providers: [RecipeService],
+  exports: [RecipeService],
 })
 export class RecipeModule {}

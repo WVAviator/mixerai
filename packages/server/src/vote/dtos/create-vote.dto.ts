@@ -1,14 +1,6 @@
 import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
 
-export class VoteRecipeDto {
-  @IsString({
-    message: 'ID must be a string',
-  })
-  @IsNotEmpty({
-    message: 'ID must not be empty',
-  })
-  id: string;
-
+export class CreateVoteDto {
   @IsString({
     message: 'Vote must be a string',
   })

@@ -1,4 +1,52 @@
-import { Controller } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { User } from '../user/user.decorator';
+import { CreateVoteDto } from './dtos/create-vote.dto';
+import { UpdateVoteDto } from './dtos/update-vote.dto';
+import { VoteService } from './vote.service';
 
 @Controller('vote')
-export class VoteController {}
+export class VoteController {
+  constructor(private voteService: VoteService) {}
+
+  @Get(':id')
+  @UseGuards(JwtAuthGuard)
+  getVote(@Param('id') recipeId, @User() user) {
+    return this.voteService.getVote({ recipeId, user });
+  }
+
+  @Post(':id')
+  @UseGuards(JwtAuthGuard)
+  createVote(
+    @Body() { vote }: CreateVoteDto,
+    @Param('id') recipeId,
+    @User() user,
+  ) {
+    return this.voteService.createVote({ recipeId, vote, user });
+  }
+
+  @Patch(':id')
+  @UseGuards(JwtAuthGuard)
+  updateVote(
+    @Body() { vote }: UpdateVoteDto,
+    @Param('id') recipeId,
+    @User() user,
+  ) {
+    return this.voteService.updateVote({ recipeId, vote, user });
+  }
+
+  @Delete(':id')
+  @UseGuards(JwtAuthGuard)
+  deleteVote(@Param('id') recipeId, @User() user) {
+    return this.voteService.deleteVote({ recipeId, user });
+  }
+}

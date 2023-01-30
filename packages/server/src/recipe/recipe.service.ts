@@ -75,7 +75,7 @@ export class RecipeService {
   async findOne(id: string) {
     this.logger.log(`Searching for recipe with id ${id}.`);
 
-    let recipe;
+    let recipe: RecipeDocument;
     try {
       recipe = await this.recipeModel.findOne({ _id: id });
     } catch (error) {

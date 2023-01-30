@@ -60,7 +60,7 @@ export class Recipe {
 
   dislikes: number;
 
-  userVote: 'like' | 'dislike' | null;
+  userVote: (user: User) => 'like' | 'dislike' | null;
 
   @Prop({ default: 0 })
   shares: number;
