@@ -26,6 +26,7 @@ export class RecipeService {
         ...recipe,
         imageUrl,
         prompt,
+        user,
       });
       recipeData.save();
       return recipeData;
