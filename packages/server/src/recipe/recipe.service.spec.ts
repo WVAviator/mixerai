@@ -35,6 +35,7 @@ describe('RecipeService', () => {
           provide: ImageService,
           useValue: {
             generateImage: jest.fn(),
+            deleteImage: jest.fn(),
           },
         },
       ],
@@ -181,6 +182,21 @@ describe('RecipeService', () => {
       await expect(recipeService.remove('123', mockUser)).rejects.toThrow(
         DatabaseException,
       );
+    });
+
+    it('should request to delete the image in s3', async () => {
+      const mockUser = { id: 'abc' } as unknown as User;
+      const mockRecipe = {
+        remove: jest.fn(),
+        user: mockUser,
+        imageUrl: 'test-image-url',
+      } as unknown as RecipeDocument;
+      jest.spyOn(mockRecipeModel, 'findOne').mockResolvedValue(mockRecipe);
+      const deleteImageFunction = jest.spyOn(imageService, 'deleteImage');
+
+      await recipeService.remove('123', mockUser);
+
+      expect(deleteImageFunction).toBeCalledWith('test-image-url');
     });
   });
 });

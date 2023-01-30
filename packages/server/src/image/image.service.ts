@@ -67,4 +67,19 @@ export class ImageService {
 
     return imageUrl;
   }
+
+  /**
+   * Deletes an image from S3 given its URL
+   * @param imageUrl The URL of the image to delete
+   */
+  async deleteImage(imageUrl: string) {
+    const key = imageUrl.split('/').pop();
+    try {
+      await this.s3Provider.deleteImage(key);
+    } catch (error) {
+      throw new ImageUploadException(`Error deleting image from S3`, {
+        cause: error,
+      });
+    }
+  }
 }

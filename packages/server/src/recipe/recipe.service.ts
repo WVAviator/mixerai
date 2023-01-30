@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { DatabaseException } from '../exceptions/database.exceptions';
@@ -11,6 +11,7 @@ import { RecipeDocument } from './schemas/recipe.schema';
 
 @Injectable()
 export class RecipeService {
+  private logger = new Logger(RecipeService.name);
   constructor(
     @InjectModel('Recipe') private recipeModel: Model<RecipeDocument>,
     private generateService: GenerateService,
@@ -22,6 +23,7 @@ export class RecipeService {
     const imageUrl = await this.imageService.generateImage({
       prompt: recipe.imagePrompt,
     });
+    this.logger.log(`Saving recipe to database.`);
     try {
       const recipeData = await this.recipeModel.create({
         ...recipe,
@@ -50,6 +52,7 @@ export class RecipeService {
   }
 
   async findOne(id: string) {
+    this.logger.log(`Searching for recipe with id ${id}.`);
     try {
       const recipe = await this.recipeModel.findOne({ _id: id });
       return recipe;
@@ -68,6 +71,7 @@ export class RecipeService {
         'You do not have permission to delete this recipe',
       );
     }
+    this.logger.log(`Deleting recipe with id ${id}.`);
     try {
       await recipe.remove();
     } catch (error) {
@@ -75,6 +79,9 @@ export class RecipeService {
         cause: error,
       });
     }
+
+    this.logger.log(`Recipe deleted from database. Deleting image from S3.`);
+    this.imageService.deleteImage(recipe.imageUrl);
     return recipe;
   }
 }
