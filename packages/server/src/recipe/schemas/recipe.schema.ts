@@ -4,11 +4,6 @@ import { User } from '../../user/schemas/user.schema';
 
 export type RecipeDocument = mongoose.HydratedDocument<Recipe>;
 
-export interface Ingredient {
-  name: string;
-  amount: string;
-}
-
 @Schema({
   toJSON: { virtuals: true },
   toObject: { virtuals: true },
@@ -26,17 +21,26 @@ export class Recipe {
   @Prop()
   description: string;
 
-  @Prop()
-  ingredients: Ingredient[];
+  @Prop({ type: [{ name: String, amount: String }], default: [] })
+  ingredients: {
+    name: string;
+    amount: string;
+  };
 
   @Prop()
-  instructions: string;
+  directions: string;
 
   @Prop()
   imageUrl: string;
 
   @Prop()
+  imagePrompt: string;
+
+  @Prop()
   prompt: string;
+
+  @Prop({ default: Date.now })
+  createdAt: Date;
 }
 
 export const RecipeSchema = SchemaFactory.createForClass(Recipe);

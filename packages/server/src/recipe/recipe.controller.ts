@@ -1,4 +1,15 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { User as UserModel } from '../user/schemas/user.schema';
+import { User } from '../user/user.decorator';
 import { GenerateRecipeDto } from './dto/generate-recipe.dto';
 import { RecipeService } from './recipe.service';
 
@@ -7,8 +18,12 @@ export class RecipeController {
   constructor(private readonly recipeService: RecipeService) {}
 
   @Post()
-  generate(@Body() createRecipeDto: GenerateRecipeDto) {
-    return this.recipeService.generate(createRecipeDto);
+  @UseGuards(JwtAuthGuard)
+  generate(
+    @Body() generateRecipeDto: GenerateRecipeDto,
+    @User() user: UserModel,
+  ) {
+    return this.recipeService.generate(generateRecipeDto, user);
   }
 
   @Get()

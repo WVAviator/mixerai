@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { GenerateService } from '../generate/generate.service';
 import { ImageService } from '../image/image.service';
+import { User } from '../user/schemas/user.schema';
 import { GenerateRecipeDto } from './dto/generate-recipe.dto';
 import { UpdateRecipeDto } from './dto/update-recipe.dto';
 import { RecipeDocument } from './schemas/recipe.schema';
@@ -15,12 +16,24 @@ export class RecipeService {
     private imageService: ImageService,
   ) {}
 
-  async generate({ prompt }: GenerateRecipeDto) {
+  async generate({ prompt }: GenerateRecipeDto, user: User) {
     const recipe = await this.generateService.generateRecipe({ prompt });
     const imageUrl = await this.imageService.generateImage({
       prompt: recipe.imagePrompt,
     });
-    return { ...recipe, imageUrl };
+    try {
+      const recipeData = await this.recipeModel.create({
+        ...recipe,
+        imageUrl,
+        prompt,
+      });
+      recipeData.save();
+      return recipeData;
+    } catch (error) {
+      throw new InternalServerErrorException('Error saving recipe', {
+        cause: error,
+      });
+    }
   }
 
   findAll() {

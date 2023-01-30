@@ -1,4 +1,4 @@
-import { Model, Document } from 'mongoose';
+import { Document } from 'mongoose';
 
 export class MockModel<T> {
   constructor(private mockData: T) {}
