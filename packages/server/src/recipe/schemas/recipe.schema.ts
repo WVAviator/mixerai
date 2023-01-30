@@ -10,7 +10,7 @@ export type RecipeDocument = mongoose.HydratedDocument<Recipe>;
 })
 export class Recipe {
   @Prop({ virtual: true })
-  id: string;
+  id?: string;
 
   @Prop()
   title: string;
@@ -38,6 +38,15 @@ export class Recipe {
 
   @Prop()
   prompt: string;
+
+  @Prop({ default: 0 })
+  likes: number;
+
+  @Prop({ default: 0 })
+  dislikes: number;
+
+  @Prop({ default: 0 })
+  shares: number;
 
   @Prop({ default: Date.now })
   createdAt: Date;

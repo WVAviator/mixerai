@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { DatabaseException } from '../exceptions/database.exceptions';
 import { User, UserDocument } from './schemas/user.schema';
 
 @Injectable()
@@ -38,19 +39,18 @@ export class UserService {
    */
   async findOneById(id: string) {
     this.logger.log(`Finding user with id ${id}.`);
+    let user: UserDocument;
     try {
-      const user = await this.userModel.findOne({ id });
-      if (!user) {
-        throw new NotFoundException(`User with id ${id} not found.`);
-      }
-      return user;
+      user = await this.userModel.findOne({ _id: id });
     } catch (error) {
-      this.logger.error(`Database error finding user by id: ${id}.`);
-      if (error instanceof NotFoundException) {
-        throw error;
-      }
-      throw new InternalServerErrorException(`Error finding user in database.`);
+      throw new DatabaseException('Databse error finding user', {
+        cause: error,
+      });
     }
+    if (!user) {
+      throw new NotFoundException(`User with id ${id} not found.`);
+    }
+    return user;
   }
 
   /**
@@ -86,21 +86,17 @@ export class UserService {
    */
   async remove(id: string) {
     this.logger.log(`Removing user with id ${id}.`);
+    const user = await this.findOneById(id);
+    if (!user) {
+      throw new NotFoundException(`User with id ${id} not found.`);
+    }
     try {
-      const user = await this.findOneById(id);
-      if (!user) {
-        throw new NotFoundException(`User with id ${id} not found.`);
-      }
       await user.remove();
       return user;
     } catch (error) {
-      this.logger.error(`Database error removing user with id: ${id}.`);
-      if (error instanceof NotFoundException) {
-        throw error;
-      }
-      throw new InternalServerErrorException(
-        `Error removing user in database.`,
-      );
+      throw new DatabaseException(`Error removing user from database.`, {
+        cause: error,
+      });
     }
   }
 }

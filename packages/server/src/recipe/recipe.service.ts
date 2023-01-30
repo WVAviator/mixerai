@@ -1,6 +1,7 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { DatabaseException } from '../exceptions/database.exceptions';
 import { GenerateService } from '../generate/generate.service';
 import { ImageService } from '../image/image.service';
 import { User } from '../user/schemas/user.schema';
@@ -31,25 +32,49 @@ export class RecipeService {
       recipeData.save();
       return recipeData;
     } catch (error) {
-      throw new InternalServerErrorException('Error saving recipe', {
+      throw new DatabaseException('Error saving recipe', {
         cause: error,
       });
     }
   }
 
-  findAll() {
-    return `This action returns all recipe`;
+  async findAll(user: User) {
+    try {
+      const recipes = await this.recipeModel.find({ user: user.id });
+      return recipes;
+    } catch (error) {
+      throw new DatabaseException('Error finding recipes', {
+        cause: error,
+      });
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} recipe`;
+  async findOne(id: string) {
+    try {
+      const recipe = await this.recipeModel.findOne({ id });
+      return recipe;
+    } catch (error) {
+      throw new DatabaseException('Error finding recipe', {
+        cause: error,
+      });
+    }
   }
 
-  update(id: number, updateRecipeDto: UpdateRecipeDto) {
-    return `This action updates a #${id} recipe`;
-  }
+  async remove(id: string, user: User) {
+    const recipe = await this.findOne(id);
 
-  remove(id: number) {
-    return `This action removes a #${id} recipe`;
+    if (recipe.user.id !== user.id) {
+      throw new ForbiddenException(
+        'You do not have permission to delete this recipe',
+      );
+    }
+    try {
+      await recipe.delete();
+    } catch (error) {
+      throw new DatabaseException('Error deleting recipe', {
+        cause: error,
+      });
+    }
+    return recipe;
   }
 }

@@ -8,6 +8,9 @@ export type UserDocument = HydratedDocument<User>;
   toObject: { virtuals: true },
 })
 export class User {
+  @Prop({ virtual: true })
+  id?: string;
+
   @Prop()
   displayName: string;
 

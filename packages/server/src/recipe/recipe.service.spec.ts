@@ -1,7 +1,7 @@
-import { InternalServerErrorException } from '@nestjs/common';
 import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Model } from 'mongoose';
+import { DatabaseException } from '../exceptions/database.exceptions';
 import { GeneratedRecipe } from '../generate/dtos/generated-recipe.dto';
 import { GenerateService } from '../generate/generate.service';
 import { ImageService } from '../image/image.service';
@@ -83,7 +83,7 @@ describe('RecipeService', () => {
 
       await expect(
         recipeService.generate({ prompt: 'test-prompt' }, {} as User),
-      ).rejects.toThrow(InternalServerErrorException);
+      ).rejects.toThrow(DatabaseException);
     });
   });
 });

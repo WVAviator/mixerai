@@ -27,22 +27,19 @@ export class RecipeController {
   }
 
   @Get()
-  findAll() {
-    return this.recipeService.findAll();
+  @UseGuards(JwtAuthGuard)
+  findAll(@User() user: UserModel) {
+    return this.recipeService.findAll(user);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.recipeService.findOne(+id);
+    return this.recipeService.findOne(id);
   }
 
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateRecipeDto: UpdateRecipeDto) {
-  //   return this.recipeService.update(+id, updateRecipeDto);
-  // }
-
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.recipeService.remove(+id);
+  @UseGuards(JwtAuthGuard)
+  remove(@Param('id') id: string, @User() user: UserModel) {
+    return this.recipeService.remove(id, user);
   }
 }
