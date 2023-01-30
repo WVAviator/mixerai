@@ -1,9 +1,13 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 import { User } from '../../user/schemas/user.schema';
-import { Ingredient } from '../types';
 
 export type RecipeDocument = mongoose.HydratedDocument<Recipe>;
+
+export interface Ingredient {
+  name: string;
+  amount: string;
+}
 
 @Schema({
   toJSON: { virtuals: true },

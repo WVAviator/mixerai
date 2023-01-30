@@ -17,7 +17,7 @@ export class ImageService {
   ) {}
 
   /**
-   * Generates an image fro the provided prompt
+   * Generates an image from the provided prompt
    * @param options The options for image generation, including the prompt
    * @returns A promise that resolves to a static S3 URL for the generated image
    */
