@@ -1,6 +1,12 @@
 import { IsNotEmpty, IsString } from 'class-validator';
 
+/**
+ * Options for generating an image.
+ */
 export class ImageGenerationOptions {
+  /**
+   * The prompt to use when generating the image.
+   */
   @IsString({
     message: 'Prompt must be a string',
   })

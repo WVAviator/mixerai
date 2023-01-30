@@ -16,6 +16,11 @@ export class ImageService {
     @Inject(S3Provider) private s3Provider: S3Provider,
   ) {}
 
+  /**
+   * Generates an image fro the provided prompt
+   * @param options The options for image generation, including the prompt
+   * @returns A promise that resolves to a static S3 URL for the generated image
+   */
   public async generateImage(options: ImageGenerationOptions) {
     this.logger.log('Validating image generation options');
     const validatedOptions = new ImageGenerationOptions(options);

@@ -162,6 +162,14 @@ describe('GenerateService', () => {
       ).rejects.toThrow(InternalServerErrorException);
     });
 
+    it('throws an error if a prompt over 100 characters is provided', async () => {
+      await expect(
+        generateService.generateRecipe({
+          prompt: 'a'.repeat(101),
+        }),
+      ).rejects.toThrow(InternalServerErrorException);
+    });
+
     it('throws an error if the prompt fails moderation', async () => {
       const mockResponse: AxiosResponse<CreateModerationResponse, any> = {
         data: {

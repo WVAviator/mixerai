@@ -12,7 +12,7 @@ import {
 } from 'openai';
 
 /**
- * Represents the server's instance of the configured OpenAI API.
+ * Provides the configured OpenAI instance and exposes methods for interfacing with the API.
  */
 @Injectable()
 export class OpenAIProvider {
