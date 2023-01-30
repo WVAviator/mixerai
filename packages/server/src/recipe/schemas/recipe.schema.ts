@@ -6,7 +6,7 @@ export type RecipeDocument = mongoose.HydratedDocument<Recipe>;
 
 export interface Ingredient {
   name: string;
-  quantity: string;
+  amount: string;
 }
 
 @Schema({
@@ -34,6 +34,9 @@ export class Recipe {
 
   @Prop()
   imageUrl: string;
+
+  @Prop()
+  prompt: string;
 }
 
 export const RecipeSchema = SchemaFactory.createForClass(Recipe);

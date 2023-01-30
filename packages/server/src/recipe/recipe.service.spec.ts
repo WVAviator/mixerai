@@ -1,4 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { GenerateService } from '../generate/generate.service';
+import { ImageService } from '../image/image.service';
 import { MockModel } from '../utils/testing/mock.model';
 import { RecipeService } from './recipe.service';
 
@@ -12,6 +14,18 @@ describe('RecipeService', () => {
         {
           provide: 'RecipeModel',
           useValue: MockModel,
+        },
+        {
+          provide: GenerateService,
+          useValue: {
+            generateRecipe: jest.fn(),
+          },
+        },
+        {
+          provide: ImageService,
+          useValue: {
+            generateImage: jest.fn(),
+          },
         },
       ],
     }).compile();
