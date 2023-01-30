@@ -60,23 +60,20 @@ export class UserService {
    */
   async findOneByEmail(email: string) {
     this.logger.log(`Finding user with email ${email}.`);
+    let user: UserDocument;
     try {
-      const user = await this.userModel.findOne({
+      user = await this.userModel.findOne({
         email,
       });
-      if (!user) {
-        throw new NotFoundException(`User with email ${email} not found.`);
-      }
-      return user;
     } catch (error) {
-      this.logger.error(`Database error finding user by email: ${email}.`);
-      if (error instanceof NotFoundException) {
-        throw error;
-      }
       throw new InternalServerErrorException(
         `Error finding user in database. ${error}`,
       );
     }
+    if (!user) {
+      throw new NotFoundException(`User with email ${email} not found.`);
+    }
+    return user;
   }
 
   /**

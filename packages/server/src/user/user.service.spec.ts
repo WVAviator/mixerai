@@ -90,7 +90,7 @@ describe('UserService', () => {
         .spyOn(mockUserModel, 'findOne')
         .mockResolvedValue(testUser);
       const user = await userService.findOneById('test');
-      expect(findOneFunction).toBeCalledWith({ id: 'test' });
+      expect(findOneFunction).toBeCalledWith({ _id: 'test' });
       expect(user).toBeDefined();
     });
 
@@ -118,7 +118,7 @@ describe('UserService', () => {
         .spyOn(mockUserModel, 'findOne')
         .mockResolvedValue({ remove: removeFunction });
       await userService.remove('test');
-      expect(findFunction).toBeCalledWith({ id: 'test' });
+      expect(findFunction).toBeCalledWith({ _id: 'test' });
       expect(removeFunction).toBeCalled();
     });
 

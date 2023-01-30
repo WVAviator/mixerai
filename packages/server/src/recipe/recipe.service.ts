@@ -51,7 +51,7 @@ export class RecipeService {
 
   async findOne(id: string) {
     try {
-      const recipe = await this.recipeModel.findOne({ id });
+      const recipe = await this.recipeModel.findOne({ _id: id });
       return recipe;
     } catch (error) {
       throw new DatabaseException('Error finding recipe', {
@@ -69,7 +69,7 @@ export class RecipeService {
       );
     }
     try {
-      await recipe.delete();
+      await recipe.remove();
     } catch (error) {
       throw new DatabaseException('Error deleting recipe', {
         cause: error,
