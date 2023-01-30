@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 
 /**
- * Exception thrown when AI response is not valid - either not correctly formaatted JSON or violates the expected response schema.
+ * Exception thrown when AI response is not valid - either not correctly formatted JSON or violates the expected response schema.
  */
 export class AIResponseException extends HttpException {
   constructor(
