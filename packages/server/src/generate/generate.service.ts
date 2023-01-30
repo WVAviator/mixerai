@@ -31,6 +31,7 @@ export class GenerateService {
   async generateRecipe(
     options: RecipeGenerationOptions,
   ): Promise<GeneratedRecipe> {
+    this.logger.log(`Validating prompt: ${options.prompt}`);
     const validatedOptions = new RecipeGenerationOptions(options);
     const errors = await validate(validatedOptions);
     if (errors.length > 0) {
