@@ -75,8 +75,8 @@ describe('AuthService', () => {
     };
 
     it('should return a JWT if the user exists', async () => {
-      const jwt = await authService.signIn(user);
-      expect(jwt).toEqual('jwtToken');
+      const { token } = await authService.signIn(user);
+      expect(token).toEqual('jwtToken');
       expect(jwtService.sign).toHaveBeenCalledWith(jwtPayload, {
         secret: 'jwtSecret',
       });

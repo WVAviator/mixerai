@@ -32,17 +32,21 @@ export class AuthService {
         'An error occurred during authentication process.',
       );
     }
+    let token: string;
     this.logger.log(`Signing in user: ${user.email}`);
     const userData = await this.userService.findOneByEmail(user.email);
     if (!userData) {
       this.logger.log(`User not found. Creating user: ${user.email}`);
-      return this.registerUser(user);
+      token = await this.registerUser(user);
+    } else {
+      this.logger.log(`User found: ${userData.email}. Generating JWT.`);
+      token = this.generateJwt({
+        email: userData.email,
+        sub: userData.id,
+      });
     }
-    this.logger.log(`User found: ${userData.email}. Generating JWT.`);
-    return this.generateJwt({
-      email: userData.email,
-      sub: userData.id,
-    });
+
+    return { userData, token };
   }
 
   /**

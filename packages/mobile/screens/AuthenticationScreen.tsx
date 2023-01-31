@@ -9,6 +9,12 @@ import GoogleAuthButton from '../components/GoogleAuthButton/GoogleAuthButton';
 const AuthenticationScreen: React.FC<
   NativeStackScreenProps<RootStackParamList, 'Authentication'>
 > = ({ navigation, route }) => {
+  const { user } = route.params;
+
+  if (user) {
+    navigation.navigate('Home', { user });
+  }
+
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>Choose a Login Provider</Text>

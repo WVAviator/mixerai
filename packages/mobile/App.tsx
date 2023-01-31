@@ -9,11 +9,15 @@ import AuthenticationScreen from './screens/AuthenticationScreen';
 import HomeScreen from './screens/HomeScreen';
 import SecondScreen from './screens/SecondScreen';
 import { useFonts } from 'expo-font';
+import { User } from './types';
+import linking from './config/linking';
 
 export type RootStackParamList = {
-  Home: undefined;
+  Home: { user: User };
   Second: { name: string };
-  Authentication: undefined;
+  Authentication: {
+    user?: User;
+  };
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -28,7 +32,7 @@ export default function App() {
   }
   return (
     <Background>
-      <NavigationContainer theme={mainTheme}>
+      <NavigationContainer theme={mainTheme} linking={linking}>
         <Stack.Navigator
           screenOptions={{
             headerShown: false,

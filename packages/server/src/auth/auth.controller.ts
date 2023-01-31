@@ -2,6 +2,7 @@ import {
   Controller,
   Get,
   Logger,
+  Redirect,
   Request,
   Response,
   UseGuards,
@@ -26,12 +27,13 @@ export class AuthController {
 
   @Get('google/callback')
   @UseGuards(GoogleOAuthGuard)
+  @Redirect()
   async googleAuthRedirect(
     @User() user: UserModel,
     @Response({ passthrough: true }) res: ExpressResponse,
   ) {
     this.logger.log(`Processing Google OAuth callback for: ${user.email}`);
-    const token = await this.authService.signIn(user);
+    const { token, userData } = await this.authService.signIn(user);
 
     const cookieOptions: CookieOptions = {
       httpOnly: process.env.NODE_ENV === 'production',
@@ -53,6 +55,15 @@ export class AuthController {
       maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
     });
 
-    return user;
+    const redirectUrl = `${process.env.AUTH_REDIRECT_DEEP_LINK || '/'}?id=${
+      userData.id
+    }/displayName=${userData.displayName}/avatarUrl=${
+      userData.avatarUrl
+    }/email=${userData.email}`;
+
+    return {
+      statusCode: 302,
+      url: redirectUrl,
+    };
   }
 }

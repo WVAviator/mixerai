@@ -12,7 +12,20 @@ describe('AuthController', () => {
 
   beforeEach(async () => {
     mockAuthService = {
-      signIn: jest.fn(() => new Promise((res) => res('token'))),
+      signIn: jest.fn(
+        () =>
+          new Promise((res) =>
+            res({
+              token: 'token',
+              userData: {
+                email: 'email',
+                id: 'id',
+                displayName: 'fakeUser',
+                avatarUrl: 'fakeuser.png',
+              },
+            }),
+          ),
+      ),
     } as unknown as AuthService;
 
     const module: TestingModule = await Test.createTestingModule({
@@ -45,7 +58,7 @@ describe('AuthController', () => {
     it('should process Google OAuth callback', async () => {
       process.env.NODE_ENV = 'production';
 
-      const user = { email: 'test@test.com' } as User;
+      const user = { email: 'test@test.com', id: '123' } as User;
 
       jest.mock('../user/user.decorator.ts', () => {
         return jest.fn(() => user);
@@ -56,8 +69,7 @@ describe('AuthController', () => {
         jest.requireActual<ExpressResponse>('express'),
       );
 
-      const result = await authController.googleAuthRedirect(user, res);
-      expect(result).toEqual(user);
+      await authController.googleAuthRedirect(user, res);
       expect(mockAuthService.signIn).toHaveBeenCalledWith(user);
       expect(res.cookie).toHaveBeenCalledWith(
         'mixerai_access_token',
