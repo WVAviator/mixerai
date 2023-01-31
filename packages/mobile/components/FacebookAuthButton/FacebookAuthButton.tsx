@@ -1,33 +1,23 @@
 import React from 'react';
-import {
-  Pressable,
-  PressableProps,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
-import GoogleIcon from './GoogleIcon';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+import FacebookIcon from './FacebookIcon';
 
-interface GoogleAuthButtonProps extends PressableProps {}
-
-const GoogleAuthButton: React.FC<GoogleAuthButtonProps> = (props) => {
+const FacebookAuthIcon = () => {
   return (
     <View style={styles.outer}>
       <Pressable
         android_ripple={{
-          color: '#ffffff35',
-          borderless: true,
+          color: '#1877F220',
           foreground: true,
-          radius: 148,
+          borderless: true,
         }}
-        {...props}
       >
         <View style={styles.inner}>
-          <View style={styles.icon}>
-            <GoogleIcon />
-          </View>
           <View style={styles.fill}>
-            <Text style={styles.text}>Sign in with Google</Text>
+            <View style={styles.icon}>
+              <FacebookIcon />
+            </View>
+            <Text style={styles.text}>Login with Facebook</Text>
           </View>
         </View>
       </Pressable>
@@ -39,16 +29,17 @@ const styles = StyleSheet.create({
   outer: {
     width: 255,
     height: 55,
-    borderRadius: 2.76,
+    borderRadius: 4,
     overflow: 'hidden',
   },
   inner: {
     display: 'flex',
     flexDirection: 'row',
+    justifyContent: 'center',
     borderWidth: 1,
-    borderColor: '#4285F4',
+    borderColor: '#1877F2',
     borderStyle: 'solid',
-    borderRadius: 2.76,
+    borderRadius: 4,
     width: 255,
     height: 55,
     overflow: 'hidden',
@@ -58,12 +49,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    width: 55,
+    // width: 55,
+    marginRight: 15,
     height: '100%',
-    backgroundColor: '#fff',
+    backgroundColor: '#FFFFFF',
   },
   fill: {
-    backgroundColor: '#4285F4',
+    backgroundColor: '#FFFFFF',
     display: 'flex',
     flexGrow: 1,
     flexDirection: 'row',
@@ -71,10 +63,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   text: {
-    color: '#fff',
-    fontFamily: 'Roboto',
+    color: '#1877F2',
+    fontFamily: 'Helvetica',
+    fontWeight: 'bold',
     fontSize: 19,
   },
 });
 
-export default GoogleAuthButton;
+export default FacebookAuthIcon;

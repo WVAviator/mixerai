@@ -8,6 +8,7 @@ import Background from './components/Background/Background';
 import AuthenticationScreen from './screens/AuthenticationScreen';
 import HomeScreen from './screens/HomeScreen';
 import SecondScreen from './screens/SecondScreen';
+import { useFonts } from 'expo-font';
 
 export type RootStackParamList = {
   Home: undefined;
@@ -18,6 +19,13 @@ export type RootStackParamList = {
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
+  const [fontsLoaded] = useFonts({
+    Helvetica: require('./assets/fonts/Helvetica.ttf'),
+  });
+
+  if (!fontsLoaded) {
+    return null;
+  }
   return (
     <Background>
       <NavigationContainer theme={mainTheme}>

@@ -1,33 +1,23 @@
 import React from 'react';
-import {
-  Pressable,
-  PressableProps,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
-import GoogleIcon from './GoogleIcon';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+import AppleIcon from './AppleIcon';
 
-interface GoogleAuthButtonProps extends PressableProps {}
-
-const GoogleAuthButton: React.FC<GoogleAuthButtonProps> = (props) => {
+const AppleAuthButton = () => {
   return (
     <View style={styles.outer}>
       <Pressable
         android_ripple={{
-          color: '#ffffff35',
-          borderless: true,
+          color: '#ffffff20',
           foreground: true,
-          radius: 148,
+          borderless: true,
         }}
-        {...props}
       >
         <View style={styles.inner}>
-          <View style={styles.icon}>
-            <GoogleIcon />
-          </View>
           <View style={styles.fill}>
-            <Text style={styles.text}>Sign in with Google</Text>
+            <View style={styles.icon}>
+              <AppleIcon fill={'white'} />
+            </View>
+            <Text style={styles.text}>Sign in with Apple</Text>
           </View>
         </View>
       </Pressable>
@@ -39,16 +29,17 @@ const styles = StyleSheet.create({
   outer: {
     width: 255,
     height: 55,
-    borderRadius: 2.76,
+    borderRadius: 8,
     overflow: 'hidden',
   },
   inner: {
     display: 'flex',
     flexDirection: 'row',
+    justifyContent: 'center',
     borderWidth: 1,
-    borderColor: '#4285F4',
+    borderColor: '#ffffff',
     borderStyle: 'solid',
-    borderRadius: 2.76,
+    borderRadius: 8,
     width: 255,
     height: 55,
     overflow: 'hidden',
@@ -58,12 +49,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    width: 55,
+    // width: 55,
+    marginRight: 10,
     height: '100%',
-    backgroundColor: '#fff',
+    backgroundColor: '#000000',
   },
   fill: {
-    backgroundColor: '#4285F4',
+    backgroundColor: '#000000',
     display: 'flex',
     flexGrow: 1,
     flexDirection: 'row',
@@ -77,4 +69,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default GoogleAuthButton;
+export default AppleAuthButton;
