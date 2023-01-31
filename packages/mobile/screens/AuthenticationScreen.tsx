@@ -18,7 +18,7 @@ import GoogleAuthButton from '../components/GoogleAuthButton/GoogleAuthButton';
 const AuthenticationScreen: React.FC<
   NativeStackScreenProps<RootStackParamList, 'Authentication'>
 > = ({ navigation, route }) => {
-  const { user } = route.params;
+  const user = route.params?.user;
 
   const [uri, setUri] = React.useState<string>('');
 
@@ -76,7 +76,9 @@ const AuthenticationScreen: React.FC<
       <View style={styles.providers}>
         <View style={styles.provider}>
           <GoogleAuthButton
-            onPress={() => openUrl(`http://localhost:4000/auth/google`)}
+            onPress={() =>
+              openUrl(`https://many-fans-send-50-86-32-237.loca.lt/auth/google`)
+            }
           />
         </View>
         <View style={styles.provider}>
