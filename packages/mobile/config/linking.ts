@@ -1,6 +1,15 @@
+import { LinkingOptions, PathConfigMap } from '@react-navigation/native';
+import { RootStackParamList } from '../App';
 import { User } from '../types';
 
-const config = {
+type LinkingConfig =
+  | {
+      initialRouteName?: keyof RootStackParamList | undefined;
+      screens: PathConfigMap<RootStackParamList>;
+    }
+  | undefined;
+
+const config: LinkingConfig = {
   screens: {
     Authentication: {
       path: 'Authentication/:params',
@@ -15,7 +24,7 @@ const config = {
   },
 };
 
-const linking = {
+const linking: LinkingOptions<RootStackParamList> = {
   prefixes: ['mixerai://app'],
   config,
 };
