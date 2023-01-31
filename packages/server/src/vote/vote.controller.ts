@@ -11,7 +11,7 @@ import {
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { UserDocument } from '../user/schemas/user.schema';
 import { User } from '../user/user.decorator';
-import { CreateVoteDto } from './dtos/create-vote.dto';
+import { CreateVoteDto } from './dtos/vote-recipe.dto';
 import { UpdateVoteDto } from './dtos/update-vote.dto';
 import { VoteService } from './vote.service';
 

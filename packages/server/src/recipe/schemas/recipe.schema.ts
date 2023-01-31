@@ -57,8 +57,8 @@ export class Recipe {
   votes: Vote[];
 
   likes: number;
-
   dislikes: number;
+  getUserVote: (user: UserDocument) => Vote | null;
 
   @Prop({ default: 0 })
   shares: number;
@@ -76,5 +76,10 @@ RecipeSchema.virtual('likes').get(function (this: RecipeDocument) {
 RecipeSchema.virtual('dislikes').get(function (this: RecipeDocument) {
   return this.votes.filter((vote) => vote.vote === 'dislike').length;
 });
+
+RecipeSchema.methods.getUserVote = function (user: UserDocument) {
+  const vote = this.votes.find((vote: Vote) => vote.userId === user.id);
+  return vote || null;
+};
 
 export { RecipeSchema };

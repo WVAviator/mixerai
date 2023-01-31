@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { DatabaseException } from '../exceptions/database.exceptions';
 import { RecipeService } from '../recipe/recipe.service';
 import { RecipeDocument, Vote } from '../recipe/schemas/recipe.schema';
@@ -21,7 +21,10 @@ export class VoteService {
    * @returns A promise that resolves to the vote or null if the user has not voted on this recipe
    */
   async getVote({ recipeId, user }: VoteOptions) {
-    const { userVote } = await this.getRecipeVote(recipeId, user);
+    const { recipe, userVote } = await this.getRecipeVote(recipeId, user);
+    if (!recipe) {
+      throw new NotFoundException('Recipe not found.');
+    }
     return userVote;
   }
 
@@ -31,13 +34,15 @@ export class VoteService {
    * @returns A promise that resolves to the updated recipe document
    */
   async createVote({ recipeId, user, vote }: VoteOptions) {
-    this.logger.log(`User ${user.id} has voted ${vote} on recipe ${recipeId}.`);
     const { recipe, userVote } = await this.getRecipeVote(recipeId, user);
-    this.logger.log(
-      `Checked for previous vote on this recipe by user: ${userVote}`,
-    );
+    if (!recipe) {
+      throw new NotFoundException('Recipe not found.');
+    }
     if (userVote) {
       throw new VoteException('User has already voted on this recipe.');
+    }
+    if (!vote || (vote !== 'like' && vote !== 'dislike')) {
+      throw new VoteException('Vote value must be either "like" or "dislike".');
     }
     try {
       recipe.votes.push({ userId: user.id, vote });
@@ -57,8 +62,14 @@ export class VoteService {
    */
   async updateVote({ recipeId, user, vote: newVote }: VoteOptions) {
     const { recipe, userVote } = await this.getRecipeVote(recipeId, user);
+    if (!recipe) {
+      throw new NotFoundException('Recipe not found.');
+    }
     if (!userVote) {
       throw new VoteException('User has not voted on this recipe.');
+    }
+    if (!newVote || (newVote !== 'like' && newVote !== 'dislike')) {
+      throw new VoteException('Vote value must be either "like" or "dislike".');
     }
     try {
       recipe.votes = recipe.votes.map((vote) => {
@@ -82,6 +93,9 @@ export class VoteService {
    */
   async deleteVote({ recipeId, user }: VoteOptions) {
     const { recipe, userVote } = await this.getRecipeVote(recipeId, user);
+    if (!recipe) {
+      throw new NotFoundException('Recipe not found.');
+    }
     if (!userVote) {
       throw new VoteException('User has not voted on this recipe.');
     }
@@ -102,9 +116,10 @@ export class VoteService {
     user: UserDocument,
   ): Promise<{ recipe: RecipeDocument; userVote: Vote }> {
     const recipe = await this.recipeService.findOne(recipeId);
-    const userVote = recipe.votes.find((vote) => {
-      return vote.userId === user.id;
-    });
+    if (!recipe) {
+      return { recipe: null, userVote: null };
+    }
+    const userVote = recipe.getUserVote(user);
     return { recipe, userVote };
   }
 }

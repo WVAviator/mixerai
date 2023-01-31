@@ -1,3 +1,3 @@
-import { CreateVoteDto } from './create-vote.dto';
+import { CreateVoteDto } from './vote-recipe.dto';
 
 export class UpdateVoteDto extends CreateVoteDto {}
