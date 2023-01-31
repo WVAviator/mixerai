@@ -51,6 +51,7 @@ const styles = StyleSheet.create({
     borderRadius: 2.76,
     width: 255,
     height: 55,
+    overflow: 'hidden',
   },
   iconContainer: {
     display: 'flex',

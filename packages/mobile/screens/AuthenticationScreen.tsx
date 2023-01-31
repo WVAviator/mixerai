@@ -20,13 +20,14 @@ const styles = StyleSheet.create({
     display: 'flex',
     flex: 1,
     height: '100%',
-    backgroundColor: '#fff',
     alignItems: 'center',
-    justifyContent: 'space-evenly',
+    justifyContent: 'flex-start',
   },
   heading: {
     fontSize: 24,
     fontWeight: 'bold',
+    color: '#ffffff',
+    paddingVertical: 100,
   },
 });
 

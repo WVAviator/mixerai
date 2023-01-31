@@ -1,15 +1,27 @@
+import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 const Background: React.FC<React.PropsWithChildren> = ({ children }) => {
-  return <View style={styles.background}>{children}</View>;
+  return (
+    <LinearGradient
+      style={styles.background}
+      colors={['#4f4f4f', '#303030', '#303030']}
+      locations={[0, 0.4, 1]}
+      start={{ x: 0.5, y: 1 }}
+      end={{ x: 0.5, y: 0 }}
+    >
+      {children}
+    </LinearGradient>
+  );
 };
 
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-    backgroundColor:
-      'linear-gradient(0deg, rgba(33,33,33,1) 0%, rgba(147,147,147,1) 5%, rgba(69,69,69,1) 40%, rgba(69,69,69,1) 100%)',
+    width: '100%',
+    height: '100%',
+    padding: 35,
   },
 });
 
