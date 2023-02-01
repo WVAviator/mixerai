@@ -1,16 +1,10 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React from 'react';
-import {
-  Linking,
-  Platform,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { Platform, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import WebView from 'react-native-webview';
 import SafariView from 'react-native-safari-view';
 import { RootStackParamList } from '../App';
+import * as Linking from 'expo-linking';
 import AppleAuthButton from '../components/AppleAuthButton/AppleAuthButton';
 import FacebookAuthIcon from '../components/FacebookAuthButton/FacebookAuthButton';
 import GoogleAuthButton from '../components/GoogleAuthButton/GoogleAuthButton';
@@ -76,7 +70,12 @@ const AuthenticationScreen: React.FC<
       <View style={styles.providers}>
         <View style={styles.provider}>
           <GoogleAuthButton
-            onPress={() => openUrl(`https://api.mixerai.app/auth/google`)}
+            onPress={() => {
+              const redirect = Linking.createURL('Authentication');
+              const url = new URL('https://api.mixerai.app/auth/google');
+              url.searchParams.append('redirect', redirect);
+              openUrl(url.toString());
+            }}
           />
         </View>
         <View style={styles.provider}>

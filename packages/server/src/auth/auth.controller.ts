@@ -8,7 +8,11 @@ import {
   Response,
   UseGuards,
 } from '@nestjs/common';
-import { CookieOptions, Response as ExpressResponse } from 'express';
+import {
+  CookieOptions,
+  Request as ExpressRequest,
+  Response as ExpressResponse,
+} from 'express';
 import { User as UserModel } from '../user/schemas/user.schema';
 import { User } from '../user/user.decorator';
 import { AuthService } from './auth.service';
@@ -17,16 +21,12 @@ import { GoogleOAuthGuard } from './guards/google-oauth.guard';
 @Controller('auth')
 export class AuthController {
   private readonly logger = new Logger(AuthController.name);
-  private redirect: string;
 
-  constructor(private readonly authService: AuthService) {
-    this.redirect = process.env.AUTH_REDIRECT_DEEP_LINK || 'mixerai://';
-  }
+  constructor(private readonly authService: AuthService) {}
 
   @Get('google')
   @UseGuards(GoogleOAuthGuard)
   async googleAuth(@Query('redirect') redirect?: string) {
-    this.redirect = redirect || this.redirect;
     this.logger.log('Redirecting to Google for authentication.');
   }
 
@@ -35,6 +35,7 @@ export class AuthController {
   @Redirect()
   async googleAuthRedirect(
     @User() user: UserModel,
+    @Request() req: ExpressRequest,
     @Response({ passthrough: true }) res: ExpressResponse,
   ) {
     this.logger.log(`Processing Google OAuth callback for: ${user.email}`);
@@ -60,7 +61,8 @@ export class AuthController {
       maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
     });
 
-    const redirectUrl = new URL(this.redirect);
+    // get mixerai-redirect url from the user cookies
+    const redirectUrl = new URL(req.cookies.get('mixerai-redirect'));
 
     const redirectParams = new URLSearchParams({
       id: userData.id,

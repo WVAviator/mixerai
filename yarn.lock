@@ -5439,7 +5439,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/qs@npm:*":
+"@types/qs@npm:*, @types/qs@npm:^6.5.3":
   version: 6.9.7
   resolution: "@types/qs@npm:6.9.7"
   checksum: 7fd6f9c25053e9b5bb6bc9f9f76c1d89e6c04f7707a7ba0e44cc01f17ef5284adb82f230f542c2d5557d69407c9a40f0f3515e8319afd14e1e16b5543ac6cdba
@@ -9071,6 +9071,19 @@ __metadata:
   peerDependencies:
     expo: "*"
   checksum: ef8115405a52cb78f8df8816e7e43f6b0632982d203734a2519dc5dc2712ca2a88bbc40ada401b53d9f160a142071bfa73da20f576917ea4a536883f8e0c507d
+  languageName: node
+  linkType: hard
+
+"expo-linking@npm:~3.3.0":
+  version: 3.3.0
+  resolution: "expo-linking@npm:3.3.0"
+  dependencies:
+    "@types/qs": ^6.5.3
+    expo-constants: ~14.0.0
+    invariant: ^2.2.4
+    qs: ^6.9.1
+    url-parse: ^1.5.9
+  checksum: ff4beff24a971fce24baa5423bab7ef0caabda64f87c9c55d32c409cd8f0e48ea46cc08ab1e54978e51476d7a6dadca05a5ba4ab74e982063d64ddfc8230cb5e
   languageName: node
   linkType: hard
 
@@ -13206,6 +13219,7 @@ __metadata:
     expo: ~47.0.12
     expo-font: ~11.0.1
     expo-linear-gradient: ~12.0.1
+    expo-linking: ~3.3.0
     expo-status-bar: ~1.4.2
     react: 18.1.0
     react-dom: 18.1.0
@@ -14828,7 +14842,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"qs@npm:6.11.0, qs@npm:^6.11.0":
+"qs@npm:6.11.0, qs@npm:^6.11.0, qs@npm:^6.9.1":
   version: 6.11.0
   resolution: "qs@npm:6.11.0"
   dependencies:

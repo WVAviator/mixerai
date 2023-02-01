@@ -15,12 +15,13 @@ const config: LinkingConfig = {
       path: 'Authentication/:params',
       parse: {
         user: (params: string) => {
-          const parsedParams = new URLSearchParams(params);
+          console.log('params', params);
+          const searchParams = new URL(params).searchParams;
           const user: User = {
-            email: parsedParams.get('email') || '',
-            displayName: parsedParams.get('displayName') || '',
-            avatarUrl: parsedParams.get('avatarUrl') || '',
-            id: parsedParams.get('id') || '',
+            email: searchParams.get('email') || '',
+            displayName: searchParams.get('displayName') || '',
+            avatarUrl: searchParams.get('avatarUrl') || '',
+            id: searchParams.get('id') || '',
           };
 
           return user;
