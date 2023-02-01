@@ -73,7 +73,7 @@ export class AuthController {
       statusCode: 302,
       url: `${
         process.env.AUTH_REDIRECT_DEEP_LINK || '/'
-      }${redirectUrl.toString()}`,
+      }/${redirectUrl.toString()}`,
     };
   }
 }
