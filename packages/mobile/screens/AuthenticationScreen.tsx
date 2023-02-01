@@ -1,13 +1,45 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { BlurView } from 'expo-blur';
 import * as Linking from 'expo-linking';
 import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { RootStackParamList } from '../App';
-import AppleAuthButton from '../components/AppleAuthButton/AppleAuthButton';
-import FacebookAuthIcon from '../components/FacebookAuthButton/FacebookAuthButton';
-import GoogleAuthButton from '../components/GoogleAuthButton/GoogleAuthButton';
+import AuthButton from '../components/AuthButton/AuthButton';
+import AppleIcon from '../components/icons/AppleIcon';
+import FacebookIcon from '../components/icons/FacebookIcon';
+import GoogleIcon from '../components/icons/GoogleIcon';
 import { User } from '../types';
+
+interface AuthProvider {
+  text: string;
+  fontSize?: number;
+  icon: React.ReactElement;
+  onPress: () => void;
+}
+
+const providers: AuthProvider[] = [
+  {
+    text: 'Continue with Apple',
+    fontSize: 18,
+    icon: <AppleIcon fill={'white'} />,
+    onPress: async () => {},
+  },
+  {
+    text: 'Continue with Google',
+    fontSize: 18,
+    icon: <GoogleIcon />,
+    onPress: async () => {
+      WebBrowser.openBrowserAsync('https://api.mixerai.app/auth/google');
+    },
+  },
+  {
+    text: 'Continue with Facebook',
+    fontSize: 16,
+    icon: <FacebookIcon />,
+    onPress: async () => {},
+  },
+];
 
 const AuthenticationScreen: React.FC<
   NativeStackScreenProps<RootStackParamList, 'Authentication'>
@@ -35,23 +67,19 @@ const AuthenticationScreen: React.FC<
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>Choose a Login Provider</Text>
-      <View style={styles.providers}>
-        <View style={styles.provider}>
-          <GoogleAuthButton
-            onPress={() =>
-              WebBrowser.openAuthSessionAsync(
-                'https://api.mixerai.app/auth/google'
-              )
-            }
-          />
-        </View>
-        <View style={styles.provider}>
-          <AppleAuthButton />
-        </View>
-        <View style={styles.provider}>
-          <FacebookAuthIcon />
-        </View>
-      </View>
+      <BlurView intensity={110} tint="dark" style={styles.providers}>
+        {providers.map((provider) => (
+          <View style={styles.provider} key={provider.text}>
+            <AuthButton
+              startIcon={provider.icon}
+              fontSize={provider.fontSize}
+              onPress={provider.onPress}
+            >
+              {provider.text}
+            </AuthButton>
+          </View>
+        ))}
+      </BlurView>
     </View>
   );
 };
@@ -62,7 +90,8 @@ const styles = StyleSheet.create({
     flex: 1,
     height: '100%',
     alignItems: 'center',
-    justifyContent: 'flex-start',
+    justifyContent: 'space-around',
+    padding: 20,
   },
   heading: {
     fontSize: 24,
@@ -74,9 +103,14 @@ const styles = StyleSheet.create({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    paddingHorizontal: 32,
+    paddingVertical: 20,
+    backgroundColor: '#ffffff15',
+    borderRadius: 8,
+    // marginVertical: 64,
   },
   provider: {
-    marginVertical: 20,
+    marginVertical: 12,
   },
 });
 

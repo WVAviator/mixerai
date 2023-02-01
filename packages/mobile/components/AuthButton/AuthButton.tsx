@@ -6,28 +6,35 @@ import {
   Text,
   View,
 } from 'react-native';
-import GoogleIcon from './GoogleIcon';
 
-interface GoogleAuthButtonProps extends PressableProps {}
+interface AuthButtonProps extends PressableProps {
+  startIcon?: React.ReactElement;
+  children: string;
+  fontSize?: number;
+}
 
-const GoogleAuthButton: React.FC<GoogleAuthButtonProps> = (props) => {
+const AuthButton: React.FC<AuthButtonProps> = ({
+  startIcon,
+  children,
+  fontSize = 18,
+  ...rest
+}) => {
   return (
     <View style={styles.outer}>
       <Pressable
         android_ripple={{
-          color: '#ffffff35',
-          borderless: true,
+          color: '#ffffff20',
           foreground: true,
-          radius: 148,
+          borderless: true,
         }}
-        {...props}
+        {...rest}
       >
         <View style={styles.inner}>
-          <View style={styles.icon}>
-            <GoogleIcon />
-          </View>
           <View style={styles.fill}>
-            <Text style={styles.text}>Sign in with Google</Text>
+            {startIcon && (
+              <View style={styles.icon}>{React.cloneElement(startIcon)}</View>
+            )}
+            <Text style={{ ...styles.text, fontSize }}>{children}</Text>
           </View>
         </View>
       </Pressable>
@@ -37,20 +44,20 @@ const GoogleAuthButton: React.FC<GoogleAuthButtonProps> = (props) => {
 
 const styles = StyleSheet.create({
   outer: {
-    width: 255,
-    height: 55,
-    borderRadius: 2.76,
+    width: '100%',
+    aspectRatio: 255 / 55,
+    borderRadius: 8,
     overflow: 'hidden',
   },
   inner: {
     display: 'flex',
     flexDirection: 'row',
+    justifyContent: 'space-between',
     borderWidth: 1,
-    borderColor: '#4285F4',
+    borderColor: '#ffffff',
     borderStyle: 'solid',
-    borderRadius: 2.76,
-    width: 255,
-    height: 55,
+    borderRadius: 8,
+    height: '100%',
     overflow: 'hidden',
   },
   icon: {
@@ -58,14 +65,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    width: 55,
+    // width: 55,
+    marginRight: 10,
+    aspectRatio: 1,
     height: '100%',
-    backgroundColor: '#fff',
+    // backgroundColor: '#000000',
   },
   fill: {
-    backgroundColor: '#4285F4',
+    // backgroundColor: '#000000',
     display: 'flex',
-    flexGrow: 1,
+    // flexGrow: 1,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
@@ -77,4 +86,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default GoogleAuthButton;
+export default AuthButton;
