@@ -33,30 +33,23 @@ export class ImageService {
 
     let tempImageUrl: string;
     try {
-      this.logger.log(
-        'Generating image with options: ' + JSON.stringify(options),
-      );
+      this.logger.log(`Generating image with "${options.prompt}"`);
       const imageGenerationResponse = await this.openAIProvider.createImage({
         prompt: options.prompt,
         n: 1,
         size: '512x512',
       });
 
-      this.logger.log(
-        'Image generation response: ' +
-          JSON.stringify(imageGenerationResponse.data),
-      );
-
       tempImageUrl = imageGenerationResponse.data.data[0].url;
     } catch (error) {
       throw new ImageGenerationException(`OpenAI API request error: ${error}`);
     }
 
-    this.logger.log(`Downloading image from ${tempImageUrl}`);
     let imageBuffer: Buffer;
     try {
       imageBuffer = await this.imageDataProvider.getImage(tempImageUrl);
     } catch (error) {
+      this.logger.log(`Unable to download image from ${tempImageUrl}`);
       throw new ImageUploadException(`Error downloading image from OpenAI`, {
         cause: error,
       });
@@ -73,5 +66,20 @@ export class ImageService {
     }
 
     return imageUrl;
+  }
+
+  /**
+   * Deletes an image from S3 given its URL
+   * @param imageUrl The URL of the image to delete
+   */
+  async deleteImage(imageUrl: string) {
+    const key = imageUrl.split('/').pop();
+    try {
+      await this.s3Provider.deleteImage(key);
+    } catch (error) {
+      throw new ImageUploadException(`Error deleting image from S3`, {
+        cause: error,
+      });
+    }
   }
 }

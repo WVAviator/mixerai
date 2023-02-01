@@ -1,5 +1,6 @@
 import { Controller, Delete, Get, Param, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { UserDocument } from './schemas/user.schema';
 import { User } from './user.decorator';
 import { UserService } from './user.service';
 
@@ -9,7 +10,7 @@ export class UserController {
 
   @Get()
   @UseGuards(JwtAuthGuard)
-  me(@User() user) {
+  me(@User() user: UserDocument) {
     return user;
   }
 

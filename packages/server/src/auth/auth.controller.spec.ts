@@ -3,6 +3,7 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { GoogleOAuthGuard } from './guards/google-oauth.guard';
 import { Response as ExpressResponse } from 'express';
+import { User } from '../user/schemas/user.schema';
 
 describe('AuthController', () => {
   let authController: AuthController;
@@ -44,7 +45,7 @@ describe('AuthController', () => {
     it('should process Google OAuth callback', async () => {
       process.env.NODE_ENV = 'production';
 
-      const user = { email: 'test@test.com' };
+      const user = { email: 'test@test.com' } as User;
 
       jest.mock('../user/user.decorator.ts', () => {
         return jest.fn(() => user);

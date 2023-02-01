@@ -40,6 +40,7 @@ describe('ImageService', () => {
           provide: S3Provider,
           useValue: {
             uploadImage: jest.fn(() => 's3 url'),
+            deleteImage: jest.fn(),
           },
         },
       ],
@@ -110,6 +111,32 @@ describe('ImageService', () => {
     it('should throw an error if provided an invalid prompt', async () => {
       await expect(imageService.generateImage({ prompt: '' })).rejects.toThrow(
         ImageGenerationException,
+      );
+    });
+  });
+
+  describe('image delete tests', () => {
+    it('should call the s3 provider to delete an image', async () => {
+      await imageService.deleteImage('test url');
+      expect(s3Provider.deleteImage).toHaveBeenCalled();
+    });
+
+    it('correctly extracts the key from the end of the url', async () => {
+      await imageService.deleteImage(
+        'https://mixerai-recipe-images.s3.amazonaws.com/3c7de90c7d80f1176af244r93d220d31',
+      );
+      expect(s3Provider.deleteImage).toHaveBeenCalledWith(
+        '3c7de90c7d80f1176af244r93d220d31',
+      );
+    });
+
+    it('throws an error if the image fails to delete', async () => {
+      s3Provider.deleteImage = jest.fn(() => {
+        throw new Error('test error');
+      });
+
+      await expect(imageService.deleteImage('test url')).rejects.toThrow(
+        ImageUploadException,
       );
     });
   });

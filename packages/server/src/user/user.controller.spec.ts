@@ -1,6 +1,6 @@
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { User, UserDocument } from './schemas/user.schema';
+import { UserDocument } from './schemas/user.schema';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 
@@ -8,14 +8,14 @@ describe('UserController', () => {
   let userController: UserController;
   let userService: UserService;
 
-  const testUser: User & { id: string } = {
+  const testUser = {
     email: 'test@email.com',
     displayName: 'Test User',
     authService: 'google',
     authServiceId: 'authServiceId',
     avatarUrl: '',
     id: 'userId',
-  };
+  } as UserDocument;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({

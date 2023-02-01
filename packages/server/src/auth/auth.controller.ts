@@ -1,5 +1,13 @@
-import { Controller, Get, Logger, Response, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Logger,
+  Request,
+  Response,
+  UseGuards,
+} from '@nestjs/common';
 import { CookieOptions, Response as ExpressResponse } from 'express';
+import { User as UserModel } from '../user/schemas/user.schema';
 import { User } from '../user/user.decorator';
 import { AuthService } from './auth.service';
 import { GoogleOAuthGuard } from './guards/google-oauth.guard';
@@ -19,7 +27,7 @@ export class AuthController {
   @Get('google/callback')
   @UseGuards(GoogleOAuthGuard)
   async googleAuthRedirect(
-    @User() user,
+    @User() user: UserModel,
     @Response({ passthrough: true }) res: ExpressResponse,
   ) {
     this.logger.log(`Processing Google OAuth callback for: ${user.email}`);

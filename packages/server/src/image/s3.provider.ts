@@ -35,4 +35,17 @@ export class S3Provider {
     const uploadResult = await this.s3.upload(params).promise();
     return uploadResult.Location;
   }
+
+  /**
+   * Extracts the key from the image URL and sends a delete request to S3.
+   * @param url The url of the image to delete
+   */
+  public async deleteImage(key: string): Promise<void> {
+    const params = {
+      Bucket: process.env.AWS_BUCKET_NAME,
+      Key: key,
+    };
+
+    await this.s3.deleteObject(params).promise();
+  }
 }

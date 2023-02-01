@@ -1,6 +1,10 @@
-import { createParamDecorator, ExecutionContext } from '@nestjs/common';
+import {
+  createParamDecorator,
+  ExecutionContext,
+  ForbiddenException,
+} from '@nestjs/common';
 import { Request } from 'express';
-import { User as UserModel } from './schemas/user.schema';
+import { UserDocument } from './schemas/user.schema';
 
 /**
  * A custom decorator that extracts the user from the request object.
@@ -8,6 +12,13 @@ import { User as UserModel } from './schemas/user.schema';
 export const User = createParamDecorator(
   (_: unknown, ctx: ExecutionContext) => {
     const request: Request = ctx.switchToHttp().getRequest();
-    return request.user as UserModel;
+
+    if (!request.user) {
+      throw new ForbiddenException(
+        'You must be logged in to access this route',
+      );
+    }
+
+    return request.user as UserDocument;
   },
 );
