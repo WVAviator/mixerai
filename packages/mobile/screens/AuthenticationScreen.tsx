@@ -1,68 +1,36 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import React from 'react';
-import { Platform, SafeAreaView, StyleSheet, Text, View } from 'react-native';
-import WebView from 'react-native-webview';
-import SafariView from 'react-native-safari-view';
-import { RootStackParamList } from '../App';
 import * as Linking from 'expo-linking';
+import * as WebBrowser from 'expo-web-browser';
+import React from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import { RootStackParamList } from '../App';
 import AppleAuthButton from '../components/AppleAuthButton/AppleAuthButton';
 import FacebookAuthIcon from '../components/FacebookAuthButton/FacebookAuthButton';
 import GoogleAuthButton from '../components/GoogleAuthButton/GoogleAuthButton';
+import { User } from '../types';
 
 const AuthenticationScreen: React.FC<
   NativeStackScreenProps<RootStackParamList, 'Authentication'>
-> = ({ navigation, route }) => {
-  const user = route.params?.user;
-
-  const [uri, setUri] = React.useState<string>('');
-
-  // React.useEffect(() => {
-  //   Linking.addEventListener('url', ({ url }) => handleOpenURL(url));
-  //   const setUpLinking = async () => {
-  //     const url = await Linking.getInitialURL();
-  //     if (url) {
-  //       handleOpenURL(url);
-  //     }
-  //   };
-  //   setUpLinking();
-  //   return () => {
-  //     Linking.removeAllListeners('url');
-  //   }
-  // }, []);
-
-  // const handleOpenUrl = (url) => {
-
-  // }
-
-  if (user) {
-    navigation.navigate('Home', { user });
-  }
-
-  const openUrl = (url: string) => {
-    if (Platform.OS === 'ios') {
-      SafariView.show({
-        url,
-        fromBottom: true,
-      });
-    } else {
-      setUri(url);
-    }
-  };
-
-  if (uri) {
-    return (
-      <SafeAreaView style={{ flex: 1 }}>
-        <WebView
-          source={{ uri }}
-          userAgent={
-            Platform.OS === 'android'
-              ? 'Chrome/18.0.1025.133 Mobile Safari/535.19'
-              : 'AppleWebKit/602.1.50 (KHTML, like Gecko) CriOS/56.0.2924.75'
-          }
-        />
-      </SafeAreaView>
-    );
-  }
+> = ({ navigation }) => {
+  React.useEffect(() => {
+    const urlListener = ({ url }: { url: string }) => {
+      const { queryParams } = Linking.parse(url);
+      if (!queryParams || !queryParams.id) {
+        return;
+      }
+      const user: User = {
+        displayName: queryParams.displayName as string,
+        avatarUrl: queryParams.avatarUrl as string,
+        email: queryParams.email as string,
+        id: queryParams.id as string,
+      };
+      navigation.navigate('Home', { user });
+    };
+    const subscription = Linking.addEventListener('url', urlListener);
+    return () => {
+      subscription.remove();
+    };
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -70,12 +38,11 @@ const AuthenticationScreen: React.FC<
       <View style={styles.providers}>
         <View style={styles.provider}>
           <GoogleAuthButton
-            onPress={() => {
-              const redirect = Linking.createURL('Authentication');
-              const url = new URL('https://api.mixerai.app/auth/google');
-              url.searchParams.append('redirect', redirect);
-              openUrl(url.toString());
-            }}
+            onPress={() =>
+              WebBrowser.openAuthSessionAsync(
+                'https://api.mixerai.app/auth/google'
+              )
+            }
           />
         </View>
         <View style={styles.provider}>

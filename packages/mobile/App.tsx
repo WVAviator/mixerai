@@ -4,20 +4,17 @@ import {
   Theme,
 } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useFonts } from 'expo-font';
 import Background from './components/Background/Background';
 import AuthenticationScreen from './screens/AuthenticationScreen';
 import HomeScreen from './screens/HomeScreen';
 import SecondScreen from './screens/SecondScreen';
-import { useFonts } from 'expo-font';
 import { User } from './types';
-import linking from './config/linking';
 
 export type RootStackParamList = {
   Home: { user: User };
   Second: { name: string };
-  Authentication: {
-    user?: User;
-  };
+  Authentication: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -32,7 +29,7 @@ export default function App() {
   }
   return (
     <Background>
-      <NavigationContainer theme={mainTheme} linking={linking}>
+      <NavigationContainer theme={mainTheme}>
         <Stack.Navigator
           screenOptions={{
             headerShown: false,
