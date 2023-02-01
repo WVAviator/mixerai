@@ -2,6 +2,7 @@ import {
   Controller,
   Get,
   Logger,
+  Query,
   Redirect,
   Request,
   Response,
@@ -16,12 +17,16 @@ import { GoogleOAuthGuard } from './guards/google-oauth.guard';
 @Controller('auth')
 export class AuthController {
   private readonly logger = new Logger(AuthController.name);
+  private redirect: string;
 
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) {
+    this.redirect = process.env.AUTH_REDIRECT_DEEP_LINK || 'mixerai://';
+  }
 
   @Get('google')
   @UseGuards(GoogleOAuthGuard)
-  async googleAuth() {
+  async googleAuth(@Query('redirect') redirect?: string) {
+    this.redirect = redirect || this.redirect;
     this.logger.log('Redirecting to Google for authentication.');
   }
 
@@ -55,25 +60,22 @@ export class AuthController {
       maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
     });
 
-    // const redirectUrl = `${process.env.AUTH_REDIRECT_DEEP_LINK || '/'}?id=${
-    //   userData.id
-    // }/displayName=${userData.displayName}/avatarUrl=${
-    //   userData.avatarUrl
-    // }/email=${userData.email}`;
+    const redirectUrl = new URL(this.redirect);
 
-    // create an encoded url with the above four properties of user
-    const redirectUrl = new URLSearchParams({
+    const redirectParams = new URLSearchParams({
       id: userData.id,
       displayName: userData.displayName,
       avatarUrl: userData.avatarUrl,
       email: userData.email,
     });
 
+    redirectUrl.search = redirectParams.toString();
+
+    this.logger.log(`Redirecting to: ${redirectUrl.toString()}`);
+
     return {
       statusCode: 302,
-      url: `${
-        process.env.AUTH_REDIRECT_DEEP_LINK || '/'
-      }/${redirectUrl.toString()}`,
+      url: redirectUrl.toString(),
     };
   }
 }
