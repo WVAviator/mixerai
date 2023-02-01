@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { Response as ExpressResponse } from 'express';
+import { User } from '../user/schemas/user.schema';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { GoogleOAuthGuard } from './guards/google-oauth.guard';
-import { Request, Response as ExpressResponse } from 'express';
-import { User } from '../user/schemas/user.schema';
 
 describe('AuthController', () => {
   let authController: AuthController;
@@ -64,18 +64,12 @@ describe('AuthController', () => {
         return jest.fn(() => user);
       });
 
-      const req = {
-        cookies: {
-          get: jest.fn(() => 'mixerai://'),
-        },
-      } as Request;
-
       const res = Object.assign(
         { cookie: jest.fn() },
         jest.requireActual<ExpressResponse>('express'),
       );
 
-      await authController.googleAuthRedirect(user, req, res);
+      await authController.googleAuthRedirect(user, res);
       expect(mockAuthService.signIn).toHaveBeenCalledWith(user);
       expect(res.cookie).toHaveBeenCalledWith(
         'mixerai_access_token',
