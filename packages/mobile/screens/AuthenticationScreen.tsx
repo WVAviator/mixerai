@@ -76,9 +76,7 @@ const AuthenticationScreen: React.FC<
       <View style={styles.providers}>
         <View style={styles.provider}>
           <GoogleAuthButton
-            onPress={() =>
-              openUrl(`https://many-fans-send-50-86-32-237.loca.lt/auth/google`)
-            }
+            onPress={() => openUrl(`https://api.mixerai.app/auth/google`)}
           />
         </View>
         <View style={styles.provider}>

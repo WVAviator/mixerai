@@ -55,15 +55,23 @@ export class AuthController {
       maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
     });
 
-    const redirectUrl = `${process.env.AUTH_REDIRECT_DEEP_LINK || '/'}?id=${
-      userData.id
-    }/displayName=${userData.displayName}/avatarUrl=${
-      userData.avatarUrl
-    }/email=${userData.email}`;
+    // const redirectUrl = `${process.env.AUTH_REDIRECT_DEEP_LINK || '/'}?id=${
+    //   userData.id
+    // }/displayName=${userData.displayName}/avatarUrl=${
+    //   userData.avatarUrl
+    // }/email=${userData.email}`;
+
+    // create an encoded url with the above four properties of user
+    const redirectUrl = new URLSearchParams({
+      id: userData.id,
+      displayName: userData.displayName,
+      avatarUrl: userData.avatarUrl,
+      email: userData.email,
+    });
 
     return {
       statusCode: 302,
-      url: redirectUrl,
+      url: redirectUrl.toString(),
     };
   }
 }

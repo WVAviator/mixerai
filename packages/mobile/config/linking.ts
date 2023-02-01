@@ -14,11 +14,17 @@ const config: LinkingConfig = {
     Authentication: {
       path: 'Authentication/:params',
       parse: {
-        user: (params: string) =>
-          params.split('/').reduce((acc, param) => {
-            const [key, value] = param.split('=');
-            return { ...acc, [key]: value };
-          }, {} as User),
+        user: (params: string) => {
+          const parsedParams = new URLSearchParams(params);
+          const user: User = {
+            email: parsedParams.get('email') || '',
+            displayName: parsedParams.get('displayName') || '',
+            avatarUrl: parsedParams.get('avatarUrl') || '',
+            id: parsedParams.get('id') || '',
+          };
+
+          return user;
+        },
       },
     },
   },
