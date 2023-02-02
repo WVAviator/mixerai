@@ -13,7 +13,7 @@ const Background: React.FC<React.PropsWithChildren> = ({ children }) => {
       end={{ x: 0.5, y: 0 }}
     >
       <View style={styles.drink}>
-        <Drink size="80%" />
+        <Drink size="75%" />
       </View>
       {children}
     </LinearGradient>

@@ -3,7 +3,7 @@ import { BlurView } from 'expo-blur';
 import * as Linking from 'expo-linking';
 import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Animated, StyleSheet, Text, View } from 'react-native';
 import { RootStackParamList } from '../App';
 import AuthButton from '../components/AuthButton/AuthButton';
 import AppleIcon from '../components/icons/AppleIcon';
@@ -30,7 +30,7 @@ const providers: AuthProvider[] = [
     fontSize: 18,
     icon: <GoogleIcon />,
     onPress: async () => {
-      WebBrowser.openBrowserAsync('https://api.mixerai.app/auth/google');
+      WebBrowser.openAuthSessionAsync('https://api.mixerai.app/auth/google');
     },
   },
   {
@@ -44,6 +44,16 @@ const providers: AuthProvider[] = [
 const AuthenticationScreen: React.FC<
   NativeStackScreenProps<RootStackParamList, 'Authentication'>
 > = ({ navigation }) => {
+  const fadeAnim = React.useRef(new Animated.Value(0)).current;
+
+  React.useEffect(() => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 800,
+      useNativeDriver: true,
+    }).start();
+  }, [fadeAnim]);
+
   React.useEffect(() => {
     const urlListener = ({ url }: { url: string }) => {
       const { queryParams } = Linking.parse(url);
@@ -66,20 +76,36 @@ const AuthenticationScreen: React.FC<
 
   return (
     <View style={styles.container}>
-      <Text style={styles.heading}>Choose a Login Provider</Text>
-      <BlurView intensity={110} tint="dark" style={styles.providers}>
-        {providers.map((provider) => (
-          <View style={styles.provider} key={provider.text}>
-            <AuthButton
-              startIcon={provider.icon}
-              fontSize={provider.fontSize}
-              onPress={provider.onPress}
-            >
-              {provider.text}
-            </AuthButton>
-          </View>
-        ))}
-      </BlurView>
+      <Text style={styles.heading}>
+        Sign in to find or mix your next favorite cocktail.
+      </Text>
+      <Animated.View
+        style={{
+          opacity: fadeAnim,
+          transform: [
+            {
+              translateY: fadeAnim.interpolate({
+                inputRange: [0, 1],
+                outputRange: [150, 0], // 0 : 150, 0.5 : 75, 1 : 0
+              }),
+            },
+          ],
+        }}
+      >
+        <BlurView intensity={90} tint="dark" style={styles.providers}>
+          {providers.map((provider) => (
+            <View style={styles.provider} key={provider.text}>
+              <AuthButton
+                startIcon={provider.icon}
+                fontSize={provider.fontSize}
+                onPress={provider.onPress}
+              >
+                {provider.text}
+              </AuthButton>
+            </View>
+          ))}
+        </BlurView>
+      </Animated.View>
     </View>
   );
 };
@@ -90,7 +116,7 @@ const styles = StyleSheet.create({
     flex: 1,
     height: '100%',
     alignItems: 'center',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
     padding: 20,
   },
   heading: {
@@ -98,6 +124,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#ffffff',
     paddingVertical: 100,
+    textAlign: 'center',
   },
   providers: {
     display: 'flex',
@@ -107,6 +134,7 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     backgroundColor: '#ffffff15',
     borderRadius: 8,
+    overflow: 'hidden',
     // marginVertical: 64,
   },
   provider: {

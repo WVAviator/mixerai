@@ -21,7 +21,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
   const [fontsLoaded] = useFonts({
-    Helvetica: require('./assets/fonts/Helvetica.ttf'),
+    Roboto: require('./assets/fonts/Roboto-Regular.ttf'),
   });
 
   if (!fontsLoaded) {
