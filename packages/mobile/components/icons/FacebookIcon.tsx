@@ -10,18 +10,11 @@ import Svg, {
 
 const SvgComponent = (props: SvgProps) => (
   <Svg width={24} height={24} fill="none" {...props}>
-    <G clipPath="url(#a)">
-      <Circle cx={12} cy={12} r={12} fill="#fff" />
-      <Path
-        d="M24 12c0-6.624-5.376-12-12-12S0 5.376 0 12c0 5.808 4.128 10.644 9.6 11.76V15.6H7.2V12h2.4V9c0-2.316 1.884-4.2 4.2-4.2h3v3.6h-2.4c-.66 0-1.2.54-1.2 1.2V12h3.6v3.6h-3.6v8.34C19.26 23.34 24 18.228 24 12Z"
-        fill="#1877F2"
-      />
-    </G>
-    <Defs>
-      <ClipPath id="a">
-        <Path fill="#fff" d="M0 0h24v24H0z" />
-      </ClipPath>
-    </Defs>
+    <Circle cx={12} cy={12} r={11} fill="#fff" />
+    <Path
+      d="M23 12c0-6.072-4.928-11-11-11S1 5.928 1 12c0 5.324 3.784 9.757 8.8 10.78V15.3H7.6V12h2.2V9.25a3.854 3.854 0 0 1 3.85-3.85h2.75v3.3h-2.2c-.605 0-1.1.495-1.1 1.1V12h3.3v3.3h-3.3v7.645C18.655 22.395 23 17.709 23 12Z"
+      fill="#1877F2"
+    />
   </Svg>
 );
 

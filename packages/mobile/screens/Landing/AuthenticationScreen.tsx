@@ -4,12 +4,12 @@ import * as Linking from 'expo-linking';
 import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
 import { Animated, StyleSheet, Text, View } from 'react-native';
-import { RootStackParamList } from '../App';
-import AuthButton from '../components/AuthButton/AuthButton';
-import AppleIcon from '../components/icons/AppleIcon';
-import FacebookIcon from '../components/icons/FacebookIcon';
-import GoogleIcon from '../components/icons/GoogleIcon';
-import { User } from '../types';
+import { LandingStackParamList } from '.';
+import AppleIcon from '../../components/icons/AppleIcon';
+import FacebookIcon from '../../components/icons/FacebookIcon';
+import GoogleIcon from '../../components/icons/GoogleIcon';
+import OutlineButton from '../../components/OutlineButton/OutlineButton';
+import { User } from '../../types';
 
 interface AuthProvider {
   text: string;
@@ -22,7 +22,7 @@ const providers: AuthProvider[] = [
   {
     text: 'Continue with Apple',
     fontSize: 18,
-    icon: <AppleIcon fill={'white'} />,
+    icon: <AppleIcon />,
     onPress: async () => {},
   },
   {
@@ -35,20 +35,21 @@ const providers: AuthProvider[] = [
   },
   {
     text: 'Continue with Facebook',
-    fontSize: 16,
+    fontSize: 18,
     icon: <FacebookIcon />,
     onPress: async () => {},
   },
 ];
 
 const AuthenticationScreen: React.FC<
-  NativeStackScreenProps<RootStackParamList, 'Authentication'>
+  NativeStackScreenProps<LandingStackParamList, 'auth'>
 > = ({ navigation }) => {
   const fadeAnim = React.useRef(new Animated.Value(0)).current;
 
   React.useEffect(() => {
     Animated.timing(fadeAnim, {
       toValue: 1,
+      delay: 300,
       duration: 800,
       useNativeDriver: true,
     }).start();
@@ -66,7 +67,7 @@ const AuthenticationScreen: React.FC<
         email: queryParams.email as string,
         id: queryParams.id as string,
       };
-      navigation.navigate('Home', { user });
+      navigation.navigate('home');
     };
     const subscription = Linking.addEventListener('url', urlListener);
     return () => {
@@ -76,9 +77,11 @@ const AuthenticationScreen: React.FC<
 
   return (
     <View style={styles.container}>
-      <Text style={styles.heading}>
-        Sign in to find or mix your next favorite cocktail.
-      </Text>
+      <View style={styles.textContainer}>
+        <Text style={styles.heading}>
+          Sign in to find or mix your next favorite cocktail.
+        </Text>
+      </View>
       <Animated.View
         style={{
           opacity: fadeAnim,
@@ -86,7 +89,7 @@ const AuthenticationScreen: React.FC<
             {
               translateY: fadeAnim.interpolate({
                 inputRange: [0, 1],
-                outputRange: [150, 0], // 0 : 150, 0.5 : 75, 1 : 0
+                outputRange: [300, 0],
               }),
             },
           ],
@@ -95,13 +98,15 @@ const AuthenticationScreen: React.FC<
         <BlurView intensity={90} tint="dark" style={styles.providers}>
           {providers.map((provider) => (
             <View style={styles.provider} key={provider.text}>
-              <AuthButton
-                startIcon={provider.icon}
+              <OutlineButton
+                icon={provider.icon}
                 fontSize={provider.fontSize}
                 onPress={provider.onPress}
+                containerStyle={{ width: '100%' }}
+                width={256}
               >
                 {provider.text}
-              </AuthButton>
+              </OutlineButton>
             </View>
           ))}
         </BlurView>
@@ -112,19 +117,21 @@ const AuthenticationScreen: React.FC<
 
 const styles = StyleSheet.create({
   container: {
-    display: 'flex',
     flex: 1,
-    height: '100%',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: 20,
+    justifyContent: 'flex-start',
+    paddingHorizontal: 32,
+    paddingVertical: 128,
+  },
+  textContainer: {
+    width: '100%',
   },
   heading: {
     fontSize: 24,
     fontWeight: 'bold',
     color: '#ffffff',
-    paddingVertical: 100,
-    textAlign: 'center',
+    paddingBottom: 156,
+    // textAlign: 'center',
   },
   providers: {
     display: 'flex',
@@ -132,13 +139,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: 32,
     paddingVertical: 20,
-    backgroundColor: '#ffffff15',
+    backgroundColor: '#73737384',
     borderRadius: 8,
     overflow: 'hidden',
+    position: 'relative',
+    width: '100%',
     // marginVertical: 64,
   },
   provider: {
     marginVertical: 12,
+    width: '100%',
   },
 });
 

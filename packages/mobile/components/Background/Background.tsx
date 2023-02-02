@@ -7,9 +7,9 @@ const Background: React.FC<React.PropsWithChildren> = ({ children }) => {
   return (
     <LinearGradient
       style={styles.background}
-      colors={['#1F2122', '#1F2122', '#262829', '#1F2122', '#1F2122']}
-      locations={[0, 0.1, 0.25, 0.26, 1]}
-      start={{ x: 0.45, y: 1 }}
+      colors={['#1F2122', '#222425', '#1b1d1e', '#1F2122', '#1F2122']}
+      locations={[0, 0.17, 0.18, 0.4, 1]}
+      start={{ x: 0.5, y: 1 }}
       end={{ x: 0.5, y: 0 }}
     >
       <View style={styles.drink}>
@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
   },
   drink: {
     position: 'absolute',
-    bottom: '10%',
+    bottom: 42,
     width: '100%',
   },
 });
