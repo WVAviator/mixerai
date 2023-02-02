@@ -1,3 +1,4 @@
+import { CompositeScreenProps } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { BlurView } from 'expo-blur';
 import * as Linking from 'expo-linking';
@@ -5,10 +6,12 @@ import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
 import { Animated, StyleSheet, Text, View } from 'react-native';
 import { LandingStackParamList } from '.';
+import { RootStackParamList } from '../../App';
 import AppleIcon from '../../components/icons/AppleIcon';
 import FacebookIcon from '../../components/icons/FacebookIcon';
 import GoogleIcon from '../../components/icons/GoogleIcon';
 import OutlineButton from '../../components/OutlineButton/OutlineButton';
+import useUser from '../../hooks/useUser';
 import { User } from '../../types';
 
 interface AuthProvider {
@@ -41,10 +44,16 @@ const providers: AuthProvider[] = [
   },
 ];
 
-const AuthenticationScreen: React.FC<
-  NativeStackScreenProps<LandingStackParamList, 'auth'>
-> = ({ navigation }) => {
+type AuthenticationScreenProps = CompositeScreenProps<
+  NativeStackScreenProps<LandingStackParamList, 'auth'>,
+  NativeStackScreenProps<RootStackParamList, 'landing'>
+>;
+
+const AuthenticationScreen: React.FC<AuthenticationScreenProps> = ({
+  navigation,
+}) => {
   const fadeAnim = React.useRef(new Animated.Value(0)).current;
+  const { setUser } = useUser();
 
   React.useEffect(() => {
     Animated.timing(fadeAnim, {
@@ -67,7 +76,8 @@ const AuthenticationScreen: React.FC<
         email: queryParams.email as string,
         id: queryParams.id as string,
       };
-      navigation.navigate('home');
+      setUser(user);
+      navigation.navigate('main', { screen: 'discover' });
     };
     const subscription = Linking.addEventListener('url', urlListener);
     return () => {

@@ -4,7 +4,7 @@
     "slug": "mobile",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/branding/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/branding/splash.png",
@@ -20,12 +20,9 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
+        "foregroundImage": "./assets/branding/icon.png",
+        "backgroundColor": "#1F2122"
       }
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
     },
     "scheme": "mixerai"
   }

@@ -3,7 +3,14 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import Drink from '../Drink/Drink';
 
-const Background: React.FC<React.PropsWithChildren> = ({ children }) => {
+interface BackgroundProps {
+  showDrink?: boolean;
+}
+
+const Background: React.FC<React.PropsWithChildren<BackgroundProps>> = ({
+  children,
+  showDrink,
+}) => {
   return (
     <LinearGradient
       style={styles.background}
@@ -12,9 +19,11 @@ const Background: React.FC<React.PropsWithChildren> = ({ children }) => {
       start={{ x: 0.5, y: 1 }}
       end={{ x: 0.5, y: 0 }}
     >
-      <View style={styles.drink}>
-        <Drink size="75%" />
-      </View>
+      {showDrink && (
+        <View style={styles.drink}>
+          <Drink size="75%" />
+        </View>
+      )}
       {children}
     </LinearGradient>
   );

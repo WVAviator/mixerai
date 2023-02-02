@@ -12,7 +12,7 @@ const Stack = createNativeStackNavigator<LandingStackParamList>();
 
 const LandingScreen = () => {
   return (
-    <Background>
+    <Background showDrink={true}>
       <Stack.Navigator
         screenOptions={{
           headerShown: false,

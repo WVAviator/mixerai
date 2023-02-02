@@ -1,12 +1,17 @@
+import { CompositeScreenProps } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { LandingStackParamList } from '.';
+import { RootStackParamList } from '../../App';
 import OutlineButton from '../../components/OutlineButton/OutlineButton';
 
-const HomeScreen: React.FC<
-  NativeStackScreenProps<LandingStackParamList, 'home'>
-> = ({ navigation }) => {
+type HomeScreenProps = CompositeScreenProps<
+  NativeStackScreenProps<LandingStackParamList, 'home'>,
+  NativeStackScreenProps<RootStackParamList, 'landing'>
+>;
+
+const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>
