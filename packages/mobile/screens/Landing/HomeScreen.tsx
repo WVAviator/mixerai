@@ -2,12 +2,11 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { LandingStackParamList } from '.';
-import Logo from '../../components/Logo/Logo';
 import OutlineButton from '../../components/OutlineButton/OutlineButton';
 
 const HomeScreen: React.FC<
   NativeStackScreenProps<LandingStackParamList, 'home'>
-> = ({ navigation, route }) => {
+> = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>
@@ -36,7 +35,6 @@ const styles = StyleSheet.create({
     color: '#ffffff',
   },
   button: {
-    // width: '60%',
     alignSelf: 'flex-start',
     marginVertical: 32,
   },

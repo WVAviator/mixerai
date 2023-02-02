@@ -4,9 +4,13 @@ import {
   Theme,
 } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { createTheme, ThemeProvider } from '@rneui/themed';
-import { useFonts } from 'expo-font';
+import * as Font from 'expo-font';
+import * as SplashScreen from 'expo-splash-screen';
+import React from 'react';
+import { View } from 'react-native';
 import LandingScreen from './screens/Landing';
+
+SplashScreen.preventAutoHideAsync();
 
 export type RootStackParamList = {
   landing: undefined;
@@ -15,25 +19,44 @@ export type RootStackParamList = {
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
-  const [fontsLoaded] = useFonts({
-    Roboto: require('./assets/fonts/Roboto-Regular.ttf'),
-    Rajdhani: require('./assets/fonts/Rajdhani-Regular.ttf'),
-  });
+  const [appReady, setAppReady] = React.useState(false);
 
-  if (!fontsLoaded) {
+  React.useEffect(() => {
+    const prepareApp = async () => {
+      await Promise.all([
+        Font.loadAsync({
+          Roboto: require('./assets/fonts/Roboto-Regular.ttf'),
+          Rajdhani: require('./assets/fonts/Rajdhani-Regular.ttf'),
+        }),
+      ]);
+      setAppReady(true);
+    };
+    prepareApp();
+  }, []);
+
+  const onLayoutRootView = React.useCallback(async () => {
+    if (appReady) {
+      await SplashScreen.hideAsync();
+    }
+  }, [appReady]);
+
+  if (!appReady) {
     return null;
   }
+
   return (
-    <NavigationContainer theme={mainTheme}>
-      <Stack.Navigator
-        screenOptions={{
-          headerShown: false,
-          statusBarColor: 'white',
-        }}
-      >
-        <Stack.Screen name="landing" component={LandingScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
+      <NavigationContainer theme={mainTheme}>
+        <Stack.Navigator
+          screenOptions={{
+            headerShown: false,
+            statusBarColor: 'white',
+          }}
+        >
+          <Stack.Screen name="landing" component={LandingScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </View>
   );
 }
 

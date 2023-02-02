@@ -35,7 +35,7 @@ const providers: AuthProvider[] = [
   },
   {
     text: 'Continue with Facebook',
-    fontSize: 18,
+    fontSize: 16,
     icon: <FacebookIcon />,
     onPress: async () => {},
   },
@@ -131,7 +131,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#ffffff',
     paddingBottom: 156,
-    // textAlign: 'center',
   },
   providers: {
     display: 'flex',
@@ -144,7 +143,6 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     position: 'relative',
     width: '100%',
-    // marginVertical: 64,
   },
   provider: {
     marginVertical: 12,
