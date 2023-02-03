@@ -32,6 +32,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
   async authenticate(req: any, options?: any) {
     this.logger.log('Google OAuth authentication function initiated.');
     options.state = req.query.auid;
+    this.logger.log(`Store auid on options state: ${options.state}`);
     super.authenticate(req, options);
   }
 
@@ -76,6 +77,8 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
 
     const auid: string = request.query.state as string;
 
+    this.logger.log(`Extracted auid: ${auid}`);
+
     if (!auid) {
       this.logger.error(
         'Attempt to access protected route failed - no auid in query parameters.',
@@ -83,9 +86,15 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
       throw new AuthenticationSessionException('No auid in query parameters.');
     }
 
+    this.logger.log(`Updating auth session ${auid} with userId...`);
+
     const { callbackUrl } = await this.authSessionService.updateWithUserId(
       auid,
       userDocument.id,
+    );
+
+    this.logger.log(
+      `Auth session ${auid} updated with userId. Completing OAuth flow...`,
     );
 
     done(null, userDocument, { callbackUrl });

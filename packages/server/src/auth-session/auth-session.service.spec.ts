@@ -151,7 +151,7 @@ describe('AuthSessionService', () => {
 
       await expect(
         authSessionService.updateWithUserId('abc123', 'userId'),
-      ).rejects.toThrow(DatabaseException);
+      ).rejects.toThrow(AuthenticationSessionException);
     });
   });
 });

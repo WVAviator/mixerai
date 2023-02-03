@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { DatabaseException } from '../exceptions/database.exceptions';
@@ -7,12 +7,14 @@ import { AuthSessionDocument } from './schemas/auth-session.schema';
 
 @Injectable()
 export class AuthSessionService {
+  private logger = new Logger(AuthSessionService.name);
   constructor(
     @InjectModel('AuthSession')
     private authSessionModel: Model<AuthSessionDocument>,
   ) {}
 
   async create(auid: string, callbackUrl: string) {
+    this.logger.log(`Creating authentication session for auid "${auid}".`);
     try {
       const authSession = await this.authSessionModel.create({
         auid,
@@ -27,6 +29,10 @@ export class AuthSessionService {
   }
 
   async retrieveAndValidate(auid: string) {
+    this.logger.log(
+      `Attempting to retrieve and validate authentication session for auid "${auid}".`,
+    );
+
     let authSession: AuthSessionDocument;
     try {
       authSession = await this.authSessionModel.findOne({ auid });
@@ -70,21 +76,36 @@ export class AuthSessionService {
   }
 
   async updateWithUserId(auid: string, userId: string) {
+    this.logger.log(
+      `Attempting to update authentication session for auid "${auid}" with user ID "${userId}".`,
+    );
+    let authSession: AuthSessionDocument;
     try {
-      const authSession = await this.authSessionModel.findOne({ auid });
-
-      if (!authSession) {
-        throw new Error('Authentication session expired.');
-      }
-
-      authSession.userId = userId;
-      await authSession.save();
-
-      return authSession;
+      authSession = await this.authSessionModel.findOne({ auid });
     } catch (error) {
       throw new DatabaseException('Error updating authentication session.', {
         cause: error,
       });
     }
+
+    if (!authSession) {
+      throw new AuthenticationSessionException(
+        'Authentication session expired.',
+      );
+    }
+
+    authSession.userId = userId;
+    try {
+      await authSession.save();
+    } catch (error) {
+      throw new DatabaseException(
+        'Error updating retrieved authentication session.',
+        {
+          cause: error,
+        },
+      );
+    }
+
+    return authSession;
   }
 }
