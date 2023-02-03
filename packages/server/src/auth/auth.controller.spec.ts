@@ -47,16 +47,17 @@ describe('AuthController', () => {
           email: 'email',
         },
       } as unknown as Request;
+      const mockResponse = {
+        redirect: jest.fn(),
+      } as unknown as ExpressResponse;
       const processCallbackFunction = jest
         .spyOn(authService, 'processAuthCallback')
         .mockResolvedValue({
           callbackUrl: 'callbackUrl',
         });
-      const result = await authController.googleAuthRedirect(mockRequest);
-      expect(result).toEqual({
-        url: 'callbackUrl',
-        statusCode: 302,
-      });
+      await authController.googleAuthRedirect(mockRequest, mockResponse);
+
+      expect(mockResponse.redirect).toBeCalledWith('callbackUrl');
       expect(processCallbackFunction).toBeCalledWith(mockRequest);
     });
   });

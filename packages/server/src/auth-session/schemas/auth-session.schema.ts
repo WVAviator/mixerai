@@ -20,6 +20,9 @@ export class AuthSession {
 
   @Prop({ default: false })
   void: boolean;
+
+  @Prop({ default: Date.now, expires: 60 })
+  createdAt: Date;
 }
 
 const AuthSessionSchema = SchemaFactory.createForClass(AuthSession);

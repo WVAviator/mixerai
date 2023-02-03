@@ -24,6 +24,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
   async authenticate(req: any, options?: any) {
     this.logger.log('Google OAuth authentication function initiated.');
 
+    this.logger.log('Auth request query: ', req.query);
     const { auid, cb } = req.query;
 
     await this.authSessionService.create(auid, cb);

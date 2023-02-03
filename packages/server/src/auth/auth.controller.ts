@@ -36,14 +36,13 @@ export class AuthController {
 
   @Get('google/callback')
   @UseGuards(GoogleOAuthGuard)
-  @Redirect()
-  async googleAuthRedirect(@Request() request: ExpressRequest) {
+  async googleAuthRedirect(
+    @Request() request: ExpressRequest,
+    @Response() response: ExpressResponse,
+  ) {
     const { callbackUrl } = await this.authService.processAuthCallback(request);
 
-    return {
-      url: callbackUrl || process.env.AUTH_REDIRECT_DEEP_LINK,
-      statusCode: 302,
-    };
+    return response.redirect(callbackUrl);
   }
 
   @Post('login')
