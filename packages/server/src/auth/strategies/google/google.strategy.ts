@@ -1,18 +1,38 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
+import { Request } from 'express';
 import { Profile, Strategy, VerifyCallback } from 'passport-google-oauth20';
-import { User } from '../../../user/schemas/user.schema';
+import { AuthenticationSessionException } from '../../../auth-session/auth-session.exception';
+import { AuthSessionService } from '../../../auth-session/auth-session.service';
+import { DatabaseException } from '../../../exceptions/database.exceptions';
+import { User, UserDocument } from '../../../user/schemas/user.schema';
+import { UserService } from '../../../user/user.service';
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
   private readonly logger = new Logger(GoogleStrategy.name);
-  constructor() {
+  constructor(
+    private userService: UserService,
+    private authSessionService: AuthSessionService,
+  ) {
     super({
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       callbackURL: process.env.GOOGLE_CALLBACK_URL,
       scope: ['email', 'profile'],
+      passReqToCallback: true,
     });
+  }
+
+  /**
+   * The authenticate function is called when the user is redirected to the Google OAuth login page.
+   * @param req The request object.
+   * @param options The options object, including state query params, to be passed to Google.
+   */
+  async authenticate(req: any, options?: any) {
+    this.logger.log('Google OAuth authentication function initiated.');
+    options.state = req.query.auid;
+    super.authenticate(req, options);
   }
 
   /**
@@ -23,17 +43,16 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
    * @param done The callback function that should be called with the user object to be assigned to req.user.
    */
   async validate(
+    request: Request,
     _accessToken: string,
     _refreshToken: string,
     profile: Profile,
     done: VerifyCallback,
   ) {
-    this.logger.log(
-      `Google OAuth callback verification for profile: ${JSON.stringify(
-        profile,
-      )}`,
-    );
     const { id, displayName, emails, photos } = profile;
+
+    this.logger.log(`Google OAuth callback verification for ${displayName}`);
+
     const user: User = {
       email: emails[0].value,
       displayName,
@@ -42,12 +61,33 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
       authServiceId: id,
     };
 
-    this.logger.log(
-      `Constructed user object from profile and assigning to req.user: ${JSON.stringify(
-        user,
-      )}`,
+    let userDocument: UserDocument;
+
+    userDocument = await this.userService.findOneByEmail(user.email);
+
+    if (!userDocument) {
+      this.logger.log(
+        "New user detected. Creating user's account in the database.",
+      );
+      userDocument = await this.userService.create(user);
+    }
+
+    this.logger.log(`Extracting auid from query parameters...`);
+
+    const auid: string = request.query.state as string;
+
+    if (!auid) {
+      this.logger.error(
+        'Attempt to access protected route failed - no auid in query parameters.',
+      );
+      throw new AuthenticationSessionException('No auid in query parameters.');
+    }
+
+    const { callbackUrl } = await this.authSessionService.updateWithUserId(
+      auid,
+      userDocument.id,
     );
 
-    done(null, user);
+    done(null, userDocument, { callbackUrl });
   }
 }

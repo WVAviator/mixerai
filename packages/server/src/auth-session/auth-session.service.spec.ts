@@ -3,6 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { Model } from 'mongoose';
 import { DatabaseException } from '../exceptions/database.exceptions';
 import { MockModel } from '../utils/testing/mock.model';
+import { AuthenticationSessionException } from './auth-session.exception';
 import { AuthSessionService } from './auth-session.service';
 import { AuthSessionDocument } from './schemas/auth-session.schema';
 
@@ -86,7 +87,7 @@ describe('AuthSessionService', () => {
 
       await expect(
         authSessionService.retrieveAndValidate('abc123'),
-      ).rejects.toThrow(DatabaseException);
+      ).rejects.toThrow(AuthenticationSessionException);
     });
 
     it('should throw an error if the auth session is void', async () => {
@@ -104,7 +105,7 @@ describe('AuthSessionService', () => {
 
       await expect(
         authSessionService.retrieveAndValidate('abc123'),
-      ).rejects.toThrow(DatabaseException);
+      ).rejects.toThrow(AuthenticationSessionException);
     });
 
     it('should throw an error if the userId has not been added yet', async () => {
@@ -121,7 +122,7 @@ describe('AuthSessionService', () => {
 
       await expect(
         authSessionService.retrieveAndValidate('abc123'),
-      ).rejects.toThrow(DatabaseException);
+      ).rejects.toThrow(AuthenticationSessionException);
     });
   });
 

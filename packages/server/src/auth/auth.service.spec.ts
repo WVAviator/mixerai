@@ -6,11 +6,15 @@ import { User } from '../user/schemas/user.schema';
 import { JwtPayload } from './strategies/jwt/types';
 import { BadRequestException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
+import { AuthSessionService } from '../auth-session/auth-session.service';
+import { AuthSessionDocument } from '../auth-session/schemas/auth-session.schema';
+import { AuthenticationSessionException } from '../auth-session/auth-session.exception';
 
 describe('AuthService', () => {
   let authService: AuthService;
   let jwtService: JwtService;
   let userService: UserService;
+  let authSessionService: AuthSessionService;
 
   const testUser: User = {
     email: 'test@email.com',
@@ -35,15 +39,7 @@ describe('AuthService', () => {
         {
           provide: UserService,
           useValue: {
-            findOneByEmail: jest.fn((email: string) => {
-              if (email === testUser.email) {
-                return {
-                  ...testUser,
-                  id: 'userId',
-                } as UserDocument;
-              }
-              return null;
-            }),
+            findOneById: jest.fn(() => testUser),
             create: jest.fn((user: User) => {
               return {
                 ...user,
@@ -52,69 +48,70 @@ describe('AuthService', () => {
             }),
           },
         },
+        {
+          provide: AuthSessionService,
+          useValue: {
+            retrieveAndValidate: jest.fn(() => ({
+              userId: 'userId',
+            })),
+          },
+        },
       ],
     }).compile();
 
     jwtService = module.get<JwtService>(JwtService);
     userService = module.get<UserService>(UserService);
     authService = module.get<AuthService>(AuthService);
+    authSessionService = module.get<AuthSessionService>(AuthSessionService);
   });
 
   afterEach(() => {
     jest.resetAllMocks();
   });
 
+  it('should be defined', () => {
+    expect(authService).toBeDefined();
+  });
+
   describe('signIn', () => {
-    const user: User = {
-      email: 'test@email.com',
-    } as User;
+    it('should return a token and userData', async () => {
+      const findByIdFunction = jest
+        .spyOn(userService, 'findOneById')
+        .mockResolvedValue({ ...testUser, id: 'userId' } as UserDocument);
+      const retrieveAndValidateFunction = jest
+        .spyOn(authSessionService, 'retrieveAndValidate')
+        .mockResolvedValue({
+          userId: 'userId',
+        } as AuthSessionDocument);
 
-    const jwtPayload: JwtPayload = {
-      email: 'test@email.com',
-      sub: 'userId',
-    };
+      const { token, userData } = await authService.login({ auid: 'auid' });
 
-    it('should return a JWT if the user exists', async () => {
-      const { token } = await authService.signIn(user);
+      expect(findByIdFunction).toHaveBeenCalledWith('userId');
+      expect(retrieveAndValidateFunction).toHaveBeenCalledWith('auid');
+
       expect(token).toEqual('jwtToken');
-      expect(jwtService.sign).toHaveBeenCalledWith(jwtPayload, {
-        secret: 'jwtSecret',
+      expect(userData).toEqual({
+        ...testUser,
+        id: 'userId',
       });
     });
 
-    it('should throw a BadRequestException if no user is provided', async () => {
-      await expect(() => authService.signIn(undefined)).rejects.toThrow(
+    it('should throw an error if the user is not found', async () => {
+      jest.spyOn(userService, 'findOneById').mockResolvedValue(null);
+
+      await expect(authService.login({ auid: 'auid' })).rejects.toThrowError(
         BadRequestException,
       );
     });
-  });
 
-  describe('registerUser', () => {
-    const testUser2: User = {
-      email: 'test2@example.com',
-      displayName: 'Test User 2',
-      authService: 'google',
-      authServiceId: 'authServiceId',
-      avatarUrl: '',
-    };
+    it('should throw an error if the auth session is not found', async () => {
+      jest
+        .spyOn(authSessionService, 'retrieveAndValidate')
+        .mockRejectedValue(new AuthenticationSessionException());
 
-    it('should register a new user and return a jwt', async () => {
-      const jwt = await authService.registerUser(testUser2);
-      expect(jwt).toEqual('jwtToken');
-      expect(userService.create).toHaveBeenCalledWith(testUser2);
-    });
-
-    it("should create a new user if one doesn't exist when signIn is called", async () => {
-      const jwtPayload: JwtPayload = {
-        email: 'test2@example.com',
-        sub: 'userId',
-      };
-
-      await authService.signIn(testUser2);
-      expect(userService.create).toHaveBeenCalledWith(testUser2);
-      expect(jwtService.sign).toHaveBeenCalledWith(jwtPayload, {
-        secret: 'jwtSecret',
-      });
+      await expect(authService.login({ auid: 'auid' })).rejects.toThrowError(
+        AuthenticationSessionException,
+      );
     });
   });
 });

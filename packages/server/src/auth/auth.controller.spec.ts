@@ -1,46 +1,31 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { Response as ExpressResponse } from 'express';
-import { User } from '../user/schemas/user.schema';
+import { Response as ExpressResponse, Request } from 'express';
+import { User, UserDocument } from '../user/schemas/user.schema';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { GoogleOAuthGuard } from './guards/google-oauth.guard';
 
 describe('AuthController', () => {
   let authController: AuthController;
-  let mockAuthService: AuthService;
+  let authService: AuthService;
   let googleOAuthGuard: GoogleOAuthGuard;
 
   beforeEach(async () => {
-    mockAuthService = {
-      signIn: jest.fn(
-        () =>
-          new Promise((res) =>
-            res({
-              token: 'token',
-              userData: {
-                email: 'email',
-                id: 'id',
-                displayName: 'fakeUser',
-                avatarUrl: 'fakeuser.png',
-              },
-            }),
-          ),
-      ),
-    } as unknown as AuthService;
-
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AuthController],
       providers: [
         {
           provide: AuthService,
-          useValue: mockAuthService,
+          useValue: {
+            login: jest.fn(),
+          },
         },
         GoogleOAuthGuard,
       ],
     }).compile();
 
     authController = module.get<AuthController>(AuthController);
-    mockAuthService = module.get<AuthService>(AuthService);
+    authService = module.get<AuthService>(AuthService);
     googleOAuthGuard = module.get<GoogleOAuthGuard>(GoogleOAuthGuard);
   });
 
@@ -56,22 +41,41 @@ describe('AuthController', () => {
 
   describe('googleAuthRedirect', () => {
     it('should process Google OAuth callback', async () => {
-      process.env.NODE_ENV = 'production';
+      const mockRequest: Request & { info: any } = {
+        info: {
+          callbackUrl: '123',
+        },
+      } as Request & { info: any };
 
-      const user = { email: 'test@test.com', id: '123' } as User;
-
-      jest.mock('../user/user.decorator.ts', () => {
-        return jest.fn(() => user);
+      const redirect = await authController.googleAuthRedirect(mockRequest);
+      expect(redirect).toEqual({
+        url: '123',
+        statusCode: 302,
       });
+    });
+  });
 
-      const res = Object.assign(
-        { cookie: jest.fn() },
-        jest.requireActual<ExpressResponse>('express'),
-      );
+  describe('login', () => {
+    it('should login a user', async () => {
+      const mockUserData = {
+        email: 'email',
+        id: 'id',
+        displayName: 'fakeUser',
+      } as UserDocument;
+      const loginFunction = jest.spyOn(authService, 'login').mockResolvedValue({
+        token: 'token',
+        userData: mockUserData,
+      });
+      const mockResponse = {
+        cookie: jest.fn(),
+      } as unknown as ExpressResponse;
+      const mockDto = {
+        auid: 'auid',
+      };
 
-      await authController.googleAuthRedirect(user, res);
-      expect(mockAuthService.signIn).toHaveBeenCalledWith(user);
-      expect(res.cookie).toHaveBeenCalledWith(
+      const result = await authController.login(mockDto, mockResponse);
+      expect(loginFunction).toBeCalledWith(mockDto);
+      expect(mockResponse.cookie).toBeCalledWith(
         'mixerai_access_token',
         'token',
         expect.objectContaining({
@@ -80,6 +84,10 @@ describe('AuthController', () => {
           signed: true,
         }),
       );
+      expect(result).toEqual({
+        user: mockUserData,
+        message: 'Successfully logged in.',
+      });
     });
   });
 });
