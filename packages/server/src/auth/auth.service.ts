@@ -29,7 +29,11 @@ export class AuthService {
    * @returns A JWT token that should be set on the response cookies.
    */
   async login({ auid }: LoginDto) {
+    this.logger.log(`Fetching auth session with auid: ${auid}...`);
     const authSession = await this.authSessionService.retrieveAndValidate(auid);
+    this.logger.log(
+      `Auth session found: ${authSession}. Fetching user with id: ${authSession.userId}...`,
+    );
     const user = await this.userService.findOneById(authSession.userId);
 
     if (!user) {

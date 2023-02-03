@@ -50,8 +50,10 @@ export class AuthController {
     @Body() loginDto: LoginDto,
     @Response() response: ExpressResponse,
   ) {
+    this.logger.log(`Logging in user with auid: ${loginDto.auid}.`);
     const { token, userData } = await this.authService.login(loginDto);
 
+    this.logger.log(`Setting cookie for user with auid: ${loginDto.auid}.`);
     const cookieOptions: CookieOptions = {
       httpOnly: true,
       secure: true,

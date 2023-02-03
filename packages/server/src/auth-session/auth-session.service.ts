@@ -15,6 +15,9 @@ export class AuthSessionService {
 
   async create(auid: string, callbackUrl: string) {
     this.logger.log(`Creating authentication session for auid "${auid}".`);
+
+    if (!auid) return;
+
     try {
       const authSession = await this.authSessionModel.create({
         auid,
