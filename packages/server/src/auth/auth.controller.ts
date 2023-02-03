@@ -48,7 +48,7 @@ export class AuthController {
   @Post('login')
   async login(
     @Body() loginDto: LoginDto,
-    @Response() response: ExpressResponse,
+    @Response({ passthrough: true }) response: ExpressResponse,
   ) {
     this.logger.log(`Logging in user with auid: ${loginDto.auid}.`);
     const { token, userData } = await this.authService.login(loginDto);

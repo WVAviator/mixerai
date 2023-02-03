@@ -67,6 +67,8 @@ export class AuthSessionService {
 
     try {
       await authSession.save();
+
+      this.logger.log('Authentication session complete.');
       return authSession;
     } catch (error) {
       throw new DatabaseException(
