@@ -4,7 +4,6 @@ import { Request } from 'express';
 import { Profile, Strategy, VerifyCallback } from 'passport-google-oauth20';
 import { AuthenticationSessionException } from '../../../auth-session/auth-session.exception';
 import { AuthSessionService } from '../../../auth-session/auth-session.service';
-import { DatabaseException } from '../../../exceptions/database.exceptions';
 import { User, UserDocument } from '../../../user/schemas/user.schema';
 import { UserService } from '../../../user/user.service';
 
@@ -31,7 +30,12 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
    */
   async authenticate(req: any, options?: any) {
     this.logger.log('Google OAuth authentication function initiated.');
-    options.state = req.query.auid;
+
+    const { auid, cb } = req.query;
+
+    await this.authSessionService.create(auid, cb);
+
+    options.state = auid;
     this.logger.log(`Store auid on options state: ${options.state}`);
     super.authenticate(req, options);
   }

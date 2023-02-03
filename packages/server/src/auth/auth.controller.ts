@@ -4,24 +4,19 @@ import {
   Get,
   Logger,
   Post,
-  Query,
   Redirect,
   Request,
   Response,
   UseGuards,
-  UseInterceptors,
 } from '@nestjs/common';
 import {
-  Response as ExpressResponse,
-  Request as ExpressRequest,
   CookieOptions,
+  Request as ExpressRequest,
+  Response as ExpressResponse,
 } from 'express';
-import { User as UserModel } from '../user/schemas/user.schema';
-import { User } from '../user/user.decorator';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dtos/login.dto';
 import { GoogleOAuthGuard } from './guards/google-oauth.guard';
-import { EstablishAuthSession } from './interceptors/establish-auth-session.interceptor';
 
 @Controller('auth')
 export class AuthController {
@@ -30,7 +25,6 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Get('google')
-  @UseInterceptors(EstablishAuthSession)
   @UseGuards(GoogleOAuthGuard)
   async googleAuth() {
     this.logger.log('Redirecting to Google for authentication.');
