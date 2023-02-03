@@ -4,6 +4,7 @@ import {
   Get,
   Logger,
   Post,
+  Query,
   Redirect,
   Request,
   Response,
@@ -14,6 +15,9 @@ import {
   Request as ExpressRequest,
   Response as ExpressResponse,
 } from 'express';
+import { userInfo } from 'os';
+import { UserDocument } from '../user/schemas/user.schema';
+import { User } from '../user/user.decorator';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dtos/login.dto';
 import { GoogleOAuthGuard } from './guards/google-oauth.guard';
@@ -33,10 +37,9 @@ export class AuthController {
   @Get('google/callback')
   @UseGuards(GoogleOAuthGuard)
   @Redirect()
-  async googleAuthRedirect(@Request() request: ExpressRequest & { info: any }) {
-    this.logger.log('Redirecting to app after Google authentication.');
-    const { callbackUrl } = request.info;
-    this.logger.log(`Callback URL: ${callbackUrl}`);
+  async googleAuthRedirect(@Request() request: ExpressRequest) {
+    const { callbackUrl } = await this.authService.processAuthCallback(request);
+
     return {
       url: callbackUrl || process.env.AUTH_REDIRECT_DEEP_LINK,
       statusCode: 302,

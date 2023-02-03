@@ -9,7 +9,6 @@ import { PassportStrategy } from '@nestjs/passport';
 
 describe('GoogleStrategy', () => {
   let googleStrategy: GoogleStrategy;
-  let userService: UserService;
   let authSessionService: AuthSessionService;
 
   process.env.GOOGLE_CLIENT_ID = 'google-client-id';
@@ -20,52 +19,26 @@ describe('GoogleStrategy', () => {
       providers: [
         GoogleStrategy,
         {
-          provide: UserService,
-          useValue: {
-            create: jest.fn(
-              (user: User) =>
-                ({
-                  ...user,
-                  id: 'userId',
-                } as UserDocument),
-            ),
-            findOneByEmail: jest.fn(),
-          },
-        },
-        {
           provide: AuthSessionService,
           useValue: {
             create: jest.fn(),
-            updateWithUserId: jest.fn((auid: string, userId: string) => ({
-              auid,
-              userId,
-              callbackUrl: 'callbackUrl',
-            })),
           },
         },
       ],
     }).compile();
 
     googleStrategy = module.get<GoogleStrategy>(GoogleStrategy);
-    userService = module.get<UserService>(UserService);
     authSessionService = module.get<AuthSessionService>(AuthSessionService);
   });
 
   describe('validate', () => {
     const testUser = {
-      id: 'userId',
       email: 'test@example.com',
       displayName: 'John Doe',
       avatarUrl: 'abc.png',
       authService: 'google',
       authServiceId: '123',
     } as UserDocument;
-
-    const testRequest = {
-      query: {
-        state: 'auid',
-      } as unknown,
-    } as Request;
 
     const testProfile = {
       id: '123',
@@ -75,40 +48,18 @@ describe('GoogleStrategy', () => {
     } as GoogleProfile;
 
     it('should return a user object', async () => {
-      const findByEmailFunction = jest
-        .spyOn(userService, 'findOneByEmail')
-        .mockResolvedValue(null);
-      const createFunction = jest
-        .spyOn(userService, 'create')
-        .mockResolvedValue(testUser);
-      const updateAuthFunction = jest.spyOn(
-        authSessionService,
-        'updateWithUserId',
-      );
       const accessToken = 'access-token';
       const refreshToken = 'refresh-token';
 
       const done = jest.fn();
       await googleStrategy.validate(
-        testRequest,
         accessToken,
         refreshToken,
         testProfile,
         done,
       );
 
-      expect(done).toHaveBeenCalledWith(null, testUser, {
-        callbackUrl: 'callbackUrl',
-      });
-      expect(findByEmailFunction).toHaveBeenCalledWith('test@example.com');
-      expect(createFunction).toHaveBeenCalledWith({
-        email: 'test@example.com',
-        displayName: 'John Doe',
-        avatarUrl: 'abc.png',
-        authService: 'google',
-        authServiceId: '123',
-      });
-      expect(updateAuthFunction).toHaveBeenCalledWith('auid', testUser.id);
+      expect(done).toHaveBeenCalledWith(null, testUser);
     });
 
     it('should handle users with no photos', async () => {
@@ -120,24 +71,12 @@ describe('GoogleStrategy', () => {
       } as GoogleProfile;
 
       const done = jest.fn();
-      await googleStrategy.validate(
-        testRequest,
-        accessToken,
-        refreshToken,
-        profile,
-        done,
-      );
+      await googleStrategy.validate(accessToken, refreshToken, profile, done);
 
-      expect(done).toHaveBeenCalledWith(
-        null,
-        {
-          ...testUser,
-          avatarUrl: '',
-        },
-        {
-          callbackUrl: 'callbackUrl',
-        },
-      );
+      expect(done).toHaveBeenCalledWith(null, {
+        ...testUser,
+        avatarUrl: '',
+      });
     });
   });
 });

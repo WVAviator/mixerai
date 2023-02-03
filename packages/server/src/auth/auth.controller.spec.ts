@@ -18,6 +18,7 @@ describe('AuthController', () => {
           provide: AuthService,
           useValue: {
             login: jest.fn(),
+            processAuthCallback: jest.fn(),
           },
         },
         GoogleOAuthGuard,
@@ -41,17 +42,22 @@ describe('AuthController', () => {
 
   describe('googleAuthRedirect', () => {
     it('should process Google OAuth callback', async () => {
-      const mockRequest: Request & { info: any } = {
-        info: {
-          callbackUrl: '123',
+      const mockRequest = {
+        user: {
+          email: 'email',
         },
-      } as Request & { info: any };
-
-      const redirect = await authController.googleAuthRedirect(mockRequest);
-      expect(redirect).toEqual({
-        url: '123',
+      } as unknown as Request;
+      const processCallbackFunction = jest
+        .spyOn(authService, 'processAuthCallback')
+        .mockResolvedValue({
+          callbackUrl: 'callbackUrl',
+        });
+      const result = await authController.googleAuthRedirect(mockRequest);
+      expect(result).toEqual({
+        url: 'callbackUrl',
         statusCode: 302,
       });
+      expect(processCallbackFunction).toBeCalledWith(mockRequest);
     });
   });
 

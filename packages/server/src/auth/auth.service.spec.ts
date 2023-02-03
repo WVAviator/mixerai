@@ -9,6 +9,7 @@ import { Test } from '@nestjs/testing';
 import { AuthSessionService } from '../auth-session/auth-session.service';
 import { AuthSessionDocument } from '../auth-session/schemas/auth-session.schema';
 import { AuthenticationSessionException } from '../auth-session/auth-session.exception';
+import { Request } from 'express';
 
 describe('AuthService', () => {
   let authService: AuthService;
@@ -39,7 +40,8 @@ describe('AuthService', () => {
         {
           provide: UserService,
           useValue: {
-            findOneById: jest.fn(() => testUser),
+            findOneById: jest.fn(() => new Promise((res) => res(testUser))),
+            findOneByEmail: jest.fn(() => new Promise((res) => res(testUser))),
             create: jest.fn((user: User) => {
               return {
                 ...user,
@@ -54,6 +56,7 @@ describe('AuthService', () => {
             retrieveAndValidate: jest.fn(() => ({
               userId: 'userId',
             })),
+            updateWithUserId: jest.fn(),
           },
         },
       ],
@@ -112,6 +115,38 @@ describe('AuthService', () => {
       await expect(authService.login({ auid: 'auid' })).rejects.toThrowError(
         AuthenticationSessionException,
       );
+    });
+  });
+
+  describe('processAuthCallback', () => {
+    it('should return a callback url given a valid request', async () => {
+      const mockRequest = {
+        query: {
+          state: '123',
+        },
+        user: {
+          email: 'email',
+        },
+      } as unknown as Request;
+
+      const findUserFunction = jest
+        .spyOn(userService, 'findOneByEmail')
+        .mockResolvedValue({
+          id: 'userId',
+        } as UserDocument);
+      const updateFunction = jest
+        .spyOn(authSessionService, 'updateWithUserId')
+        .mockResolvedValue({
+          callbackUrl: 'callbackUrl',
+        } as AuthSessionDocument);
+
+      const result = await authService.processAuthCallback(mockRequest);
+
+      expect(updateFunction).toHaveBeenCalledWith('123', 'userId');
+      expect(findUserFunction).toHaveBeenCalledWith('email');
+      expect(result).toEqual({
+        callbackUrl: 'callbackUrl',
+      });
     });
   });
 });
