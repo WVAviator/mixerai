@@ -8697,17 +8697,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"escape-string-regexp@npm:2.0.0, escape-string-regexp@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "escape-string-regexp@npm:2.0.0"
+  checksum: 9f8a2d5743677c16e85c810e3024d54f0c8dea6424fad3c79ef6666e81dd0846f7437f5e729dfcdac8981bc9e5294c39b4580814d114076b8d36318f46ae4395
+  languageName: node
+  linkType: hard
+
 "escape-string-regexp@npm:^1.0.5":
   version: 1.0.5
   resolution: "escape-string-regexp@npm:1.0.5"
   checksum: 6092fda75c63b110c706b6a9bfde8a612ad595b628f0bd2147eea1d3406723020810e591effc7db1da91d80a71a737a313567c5abb3813e8d9c71f4aa595b410
-  languageName: node
-  linkType: hard
-
-"escape-string-regexp@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "escape-string-regexp@npm:2.0.0"
-  checksum: 9f8a2d5743677c16e85c810e3024d54f0c8dea6424fad3c79ef6666e81dd0846f7437f5e729dfcdac8981bc9e5294c39b4580814d114076b8d36318f46ae4395
   languageName: node
   linkType: hard
 
@@ -9048,6 +9048,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"expo-auth-session@npm:~3.8.0":
+  version: 3.8.0
+  resolution: "expo-auth-session@npm:3.8.0"
+  dependencies:
+    expo-constants: ~14.0.0
+    expo-crypto: ~12.0.0
+    expo-linking: ~3.3.0
+    expo-web-browser: ~12.0.0
+    invariant: ^2.2.4
+    qs: 6.9.1
+  peerDependencies:
+    expo-random: "*"
+  peerDependenciesMeta:
+    expo-random:
+      optional: true
+  checksum: 2863db5df3ec8a8892d0ef8fde7606fdf04230216101e55ae879d63b6df0d26a62cbf7ddfa5cf947a316a2ef29f2eeb86891e988c34b1a1f7ee4e3ce6ac4ac1b
+  languageName: node
+  linkType: hard
+
 "expo-blur@npm:~12.0.1":
   version: 12.0.1
   resolution: "expo-blur@npm:12.0.1"
@@ -9066,6 +9085,15 @@ __metadata:
   peerDependencies:
     expo: "*"
   checksum: beca1604e8f3e16914dd9de8270647d987f5d8e21dd34099356753cc0ef367785a2fdb12234238ee56672002d29befc44006d3a984ec01b94029f3b651e89112
+  languageName: node
+  linkType: hard
+
+"expo-crypto@npm:~12.0.0":
+  version: 12.0.0
+  resolution: "expo-crypto@npm:12.0.0"
+  peerDependencies:
+    expo: "*"
+  checksum: 0d3e90b1c5718bfea0134cc589d2ef9362bc39d4cd704cac880763d97ca439e8f59dd89eece2463635421bd923fa090d19a4842db4e9e3309da1e9b764d87774
   languageName: node
   linkType: hard
 
@@ -9153,6 +9181,15 @@ __metadata:
     compare-versions: ^3.4.0
     invariant: ^2.2.4
   checksum: 6a2b6b5d1f56f197ddf8b3f3a638d8f15534657218bdf895bd96c07cb34fc8404761d6a9206527fa5b67baade60858b4530de147fe1f3b7db8205c5d9d059b31
+  languageName: node
+  linkType: hard
+
+"expo-secure-store@npm:~12.0.0":
+  version: 12.0.0
+  resolution: "expo-secure-store@npm:12.0.0"
+  peerDependencies:
+    expo: "*"
+  checksum: 47d72b0bdd9e900e4b2a4d348e79ec6fd0a1c7d1ae7933f7bb237341cea4dbe461a5ebd92f3682859769318b96c3244d776d4324af35e49d6f7d8f430e20d40c
   languageName: node
   linkType: hard
 
@@ -13284,10 +13321,13 @@ __metadata:
     "@types/react-native": ~0.70.6
     "@types/react-native-safari-view": ^2.0.5
     expo: ~47.0.12
+    expo-application: ~5.0.1
+    expo-auth-session: ~3.8.0
     expo-blur: ~12.0.1
     expo-font: ~11.0.1
     expo-linear-gradient: ~12.0.1
     expo-linking: ~3.3.0
+    expo-secure-store: ~12.0.0
     expo-splash-screen: ~0.17.5
     expo-status-bar: ~1.4.2
     expo-web-browser: ~12.0.0
@@ -13300,6 +13340,7 @@ __metadata:
     react-native-svg: 13.4.0
     react-native-vector-icons: ^9.2.0
     react-native-web: ~0.18.9
+    react-native-webview: ^11.26.1
     typescript: ^4.6.3
   languageName: unknown
   linkType: soft
@@ -14944,6 +14985,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"qs@npm:6.9.1":
+  version: 6.9.1
+  resolution: "qs@npm:6.9.1"
+  checksum: b8ad80e09bb52232963aadd9276b8d3802723c9ecd31388ff129a7ab5542e7dc67c43a05b2250f973be460d2c734f16d8d908216e5340024349763ee5e19666c
+  languageName: node
+  linkType: hard
+
 "query-string@npm:^5.0.1":
   version: 5.1.1
   resolution: "query-string@npm:5.1.1"
@@ -15212,6 +15260,19 @@ __metadata:
     react: ^17.0.2 || ^18.0.0
     react-dom: ^17.0.2 || ^18.0.0
   checksum: 2549a7e316e5e6ac2b59eac0c500bc8e021f32854bd852d4bf719eebad9ef9fbccbeb6fd3f4654d3d3f971c7af43240139affc8b3f36ad288908e7aeea32c43e
+  languageName: node
+  linkType: hard
+
+"react-native-webview@npm:^11.26.1":
+  version: 11.26.1
+  resolution: "react-native-webview@npm:11.26.1"
+  dependencies:
+    escape-string-regexp: 2.0.0
+    invariant: 2.2.4
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: d2f95a89e944a2f1e8cf402e4e274f3568edae42e7ef190915e9fba8004a01d699c962459bdc9688c159060538e90aea3017cab24e6f4112021cbbc10ef57104
   languageName: node
   linkType: hard
 

@@ -63,7 +63,7 @@ export default function App() {
       <UserProvider value={{ user, setUser }}>
         <NavigationContainer theme={mainTheme}>
           <Stack.Navigator
-            initialRouteName={user ? 'main' : 'landing'}
+            initialRouteName={'landing'}
             screenOptions={{
               headerShown: false,
               statusBarColor: 'white',

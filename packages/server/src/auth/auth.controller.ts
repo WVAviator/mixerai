@@ -1,11 +1,4 @@
-import {
-  Controller,
-  Get,
-  Logger,
-  Redirect,
-  Response,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Get, Logger, Response, UseGuards } from '@nestjs/common';
 import { Response as ExpressResponse } from 'express';
 import { User as UserModel } from '../user/schemas/user.schema';
 import { User } from '../user/user.decorator';
@@ -24,33 +17,21 @@ export class AuthController {
     this.logger.log('Redirecting to Google for authentication.');
   }
 
-  @Get('google/login')
-  @UseGuards(GoogleOAuthGuard)
-  async googleAuthLogin(
-    @User() user: UserModel,
-    @Response({ passthrough: false }) response: ExpressResponse,
-  ) {
-    this.logger.log(`Processing Google login for: ${user.email}`);
-    const { token, userData } = await this.authService.signIn(user);
-
-    return response.set('mixerai_token', token).json({ user: userData });
-  }
-
   @Get('google/callback')
   @UseGuards(GoogleOAuthGuard)
-  @Redirect()
   async googleAuthRedirect(
     @User() user: UserModel,
-    @Response({ passthrough: false }) res: ExpressResponse,
+    @Response() response: ExpressResponse,
   ) {
-    this.logger.log(`Processing Google OAuth callback for: ${user.email}`);
+    const { token } = await this.authService.signIn(user);
 
-    const redirectUrl = new URL(
-      process.env.AUTH_REDIRECT_DEEP_LINK || 'mixerai://',
-    );
+    response.cookie('mixerai_access_token', token, {
+      httpOnly: true,
+      signed: true,
+      secure: true,
+      expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
+    });
 
-    this.logger.log(`Redirecting to: ${redirectUrl.toString()}`);
-
-    return res.redirect(redirectUrl.toString());
+    return response.redirect(process.env.AUTH_REDIRECT_DEEP_LINK);
   }
 }
