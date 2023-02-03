@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { Response as ExpressResponse, Request } from 'express';
-import { User, UserDocument } from '../user/schemas/user.schema';
+import { Request, Response as ExpressResponse } from 'express';
+import { UserDocument } from '../user/schemas/user.schema';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { GoogleOAuthGuard } from './guards/google-oauth.guard';

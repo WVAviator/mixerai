@@ -41,7 +41,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
       this.logger.error(`User with id: ${payload.sub} not found.`);
       throw new UnauthorizedException('Please log in to continue.');
     }
-    this.logger.log(`User authenticated: ${JSON.stringify(user)}`);
+    this.logger.log(`User authenticated: ${user.email}`);
 
     return user;
   }

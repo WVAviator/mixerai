@@ -4,8 +4,6 @@ import {
   Get,
   Logger,
   Post,
-  Query,
-  Redirect,
   Request,
   Response,
   UseGuards,
@@ -15,9 +13,6 @@ import {
   Request as ExpressRequest,
   Response as ExpressResponse,
 } from 'express';
-import { userInfo } from 'os';
-import { UserDocument } from '../user/schemas/user.schema';
-import { User } from '../user/user.decorator';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dtos/login.dto';
 import { GoogleOAuthGuard } from './guards/google-oauth.guard';

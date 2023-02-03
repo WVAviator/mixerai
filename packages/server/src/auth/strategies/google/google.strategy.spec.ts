@@ -1,11 +1,8 @@
-import { GoogleStrategy } from './google.strategy';
 import { Test } from '@nestjs/testing';
-import { Profile as GoogleProfile, Strategy } from 'passport-google-oauth20';
-import { Request } from 'express';
-import { UserService } from '../../../user/user.service';
+import { Profile as GoogleProfile } from 'passport-google-oauth20';
 import { AuthSessionService } from '../../../auth-session/auth-session.service';
-import { User, UserDocument } from '../../../user/schemas/user.schema';
-import { PassportStrategy } from '@nestjs/passport';
+import { UserDocument } from '../../../user/schemas/user.schema';
+import { GoogleStrategy } from './google.strategy';
 
 describe('GoogleStrategy', () => {
   let googleStrategy: GoogleStrategy;

@@ -1,14 +1,9 @@
-import {
-  BadRequestException,
-  Injectable,
-  InternalServerErrorException,
-  Logger,
-} from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { AuthenticationSessionException } from '../auth-session/auth-session.exception';
 import { AuthSessionService } from '../auth-session/auth-session.service';
-import { User, UserDocument } from '../user/schemas/user.schema';
+import { User } from '../user/schemas/user.schema';
 import { UserService } from '../user/user.service';
 import { LoginDto } from './dtos/login.dto';
 import { JwtPayload } from './strategies/jwt/types';

@@ -1,15 +1,14 @@
-import { UserDocument } from './../user/schemas/user.schema';
-import { AuthService } from './auth.service';
-import { JwtService } from '@nestjs/jwt';
-import { UserService } from '../user/user.service';
-import { User } from '../user/schemas/user.schema';
-import { JwtPayload } from './strategies/jwt/types';
 import { BadRequestException } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { Test } from '@nestjs/testing';
+import { Request } from 'express';
+import { AuthenticationSessionException } from '../auth-session/auth-session.exception';
 import { AuthSessionService } from '../auth-session/auth-session.service';
 import { AuthSessionDocument } from '../auth-session/schemas/auth-session.schema';
-import { AuthenticationSessionException } from '../auth-session/auth-session.exception';
-import { Request } from 'express';
+import { User } from '../user/schemas/user.schema';
+import { UserService } from '../user/user.service';
+import { UserDocument } from './../user/schemas/user.schema';
+import { AuthService } from './auth.service';
 
 describe('AuthService', () => {
   let authService: AuthService;
