@@ -17,5 +17,8 @@
   "devDependencies": {
     "lerna": "^6.4.1"
   },
-  "packageManager": "yarn@3.3.1"
+  "packageManager": "yarn@3.3.1",
+  "dependencies": {
+    "@expo/vector-icons": "^13.0.0"
+  }
 }

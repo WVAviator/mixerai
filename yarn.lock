@@ -14337,6 +14337,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "mixerai@workspace:."
   dependencies:
+    "@expo/vector-icons": ^13.0.0
     lerna: ^6.4.1
   languageName: unknown
   linkType: soft

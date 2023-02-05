@@ -4,7 +4,9 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { MainStackParamList } from '.';
 import { RootStackParamList } from '../../App';
+import RecipeList from '../../components/RecipeList/RecipeList';
 import useUser from '../../hooks/useUser';
+import { Recipe } from '../../types';
 
 type DiscoverScreenProps = CompositeScreenProps<
   NativeStackScreenProps<MainStackParamList, 'discover'>,
@@ -31,6 +33,14 @@ const DiscoverScreen: React.FC<DiscoverScreenProps> = ({
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Welcome, {user.displayName}!</Text>
+      <RecipeList
+        onSelectRecipe={(recipe: Recipe) => {
+          navigation.navigate('main', {
+            screen: 'recipe',
+            params: { id: recipe.id },
+          });
+        }}
+      />
     </View>
   );
 };

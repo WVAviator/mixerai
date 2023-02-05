@@ -5,9 +5,14 @@ import {
 import { RootStackParamList } from '../../App';
 import Background from '../../components/Background/Background';
 import DiscoverScreen from './DiscoverScreen';
+import React from 'react';
+import RecipeScreen from './RecipeScreen';
 
 export type MainStackParamList = {
   discover: undefined;
+  recipe: {
+    id: string;
+  };
 };
 
 const Stack = createNativeStackNavigator<MainStackParamList>();
@@ -26,6 +31,7 @@ const MainScreen: React.FC<MainScreenProps> = () => {
         initialRouteName="discover"
       >
         <Stack.Screen name="discover" component={DiscoverScreen} />
+        <Stack.Screen name="recipe" component={RecipeScreen} />
       </Stack.Navigator>
     </Background>
   );
