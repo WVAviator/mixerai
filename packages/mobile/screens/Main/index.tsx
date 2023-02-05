@@ -9,12 +9,14 @@ import React from 'react';
 import RecipeScreen from './RecipeScreen';
 import BottomNavigation from '../../components/BottomNavigation/BottomNavigation';
 import { FontAwesome5 } from '@expo/vector-icons';
+import CreateScreen from './CreateScreen';
 
 export type MainStackParamList = {
   discover: undefined;
   recipe: {
     id: string;
   };
+  create: undefined;
 };
 
 const Stack = createNativeStackNavigator<MainStackParamList>();
@@ -22,7 +24,6 @@ const Stack = createNativeStackNavigator<MainStackParamList>();
 type MainScreenProps = NativeStackScreenProps<RootStackParamList, 'main'>;
 
 const MainScreen: React.FC<MainScreenProps> = ({ navigation }) => {
-  const navigationRef = React.useRef(null);
   return (
     <Background>
       <Stack.Navigator
@@ -35,6 +36,7 @@ const MainScreen: React.FC<MainScreenProps> = ({ navigation }) => {
       >
         <Stack.Screen name="discover" component={DiscoverScreen} />
         <Stack.Screen name="recipe" component={RecipeScreen} />
+        <Stack.Screen name="create" component={CreateScreen} />
       </Stack.Navigator>
       <BottomNavigation
         options={[
@@ -49,7 +51,7 @@ const MainScreen: React.FC<MainScreenProps> = ({ navigation }) => {
             label: 'Create',
             icon: <FontAwesome5 name="plus" size={24} color="white" />,
             onPress: () => {
-              navigation.navigate('main', { screen: 'discover' });
+              navigation.navigate('main', { screen: 'create' });
             },
           },
           {

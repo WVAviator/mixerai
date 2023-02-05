@@ -19,6 +19,7 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ options }) => {
           <TouchableOpacity
             accessibilityLabel={option.label}
             key={option.label}
+            onPress={option.onPress}
           >
             <View style={styles.iconContainer}>
               {React.cloneElement(option.icon, {
