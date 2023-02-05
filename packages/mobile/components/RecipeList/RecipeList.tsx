@@ -2,6 +2,7 @@ import { Image, ListItem } from '@rneui/base';
 import React from 'react';
 import {
   FlatList,
+  RefreshControl,
   StyleSheet,
   Text,
   TouchableHighlight,
@@ -24,13 +25,15 @@ interface RecipeListProps {
 
 const RecipeList: React.FC<RecipeListProps> = ({ onSelectRecipe }) => {
   const [recipes, setRecipes] = React.useState<Recipe[]>([]);
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const getRecipes = async () => {
+    const response = await fetch('https://api.mixerai.app/recipe');
+    const data = await response.json();
+    setRecipes(data);
+  };
 
   React.useEffect(() => {
-    const getRecipes = async () => {
-      const response = await fetch('https://api.mixerai.app/recipe');
-      const data = await response.json();
-      setRecipes(data);
-    };
     getRecipes();
   }, []);
 
@@ -39,6 +42,21 @@ const RecipeList: React.FC<RecipeListProps> = ({ onSelectRecipe }) => {
       <FlatList
         data={recipes}
         showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            tintColor="#FFFFFF"
+            onRefresh={async () => {
+              setRefreshing(true);
+              const minWait = new Promise((resolve) =>
+                setTimeout(resolve, 1000)
+              );
+              const recipeWait = getRecipes();
+              await Promise.all([minWait, recipeWait]);
+              setRefreshing(false);
+            }}
+          />
+        }
         renderItem={({ item: recipe }) => {
           return (
             <TouchableHighlight
