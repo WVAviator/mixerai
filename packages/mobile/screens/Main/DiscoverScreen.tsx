@@ -4,6 +4,7 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { MainStackParamList } from '.';
 import { RootStackParamList } from '../../App';
+import Header from '../../components/Header/Header';
 import RecipeList from '../../components/RecipeList/RecipeList';
 import useUser from '../../hooks/useUser';
 import { Recipe } from '../../types';
@@ -31,17 +32,21 @@ const DiscoverScreen: React.FC<DiscoverScreenProps> = ({
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Welcome, {user.displayName}!</Text>
-      <RecipeList
-        onSelectRecipe={(recipe: Recipe) => {
-          navigation.navigate('main', {
-            screen: 'recipe',
-            params: { id: recipe.id },
-          });
-        }}
-      />
-    </View>
+    <>
+      <Header>
+        <Text style={styles.text}>Welcome, {user.displayName}!</Text>
+      </Header>
+      <View style={styles.container}>
+        <RecipeList
+          onSelectRecipe={(recipe: Recipe) => {
+            navigation.navigate('main', {
+              screen: 'recipe',
+              params: { id: recipe.id },
+            });
+          }}
+        />
+      </View>
+    </>
   );
 };
 

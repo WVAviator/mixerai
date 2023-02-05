@@ -3,6 +3,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Recipe, Vote } from '../../types';
 import { Ionicons, AntDesign } from '@expo/vector-icons';
 import useUserVoting from '../../hooks/useUserVoting';
+import Header from '../Header/Header';
 
 interface RecipeHeaderBarProps {
   recipe: Recipe;
@@ -16,34 +17,32 @@ const RecipeHeaderBar: React.FC<RecipeHeaderBarProps> = ({
   const { isLiked, isDisliked, like, dislike } = useUserVoting(recipe.id);
 
   return (
-    <View style={styles.container}>
-      <View style={styles.inner}>
-        <TouchableOpacity onPress={onBack}>
-          <View style={styles.backContainer}>
-            <Ionicons name="arrow-back" size={24} color="white" />
-          </View>
-        </TouchableOpacity>
-        <View style={styles.titleContainer}>
-          <Text style={styles.title}>{recipe.title}</Text>
+    <Header padding={0}>
+      <TouchableOpacity onPress={onBack}>
+        <View style={styles.backContainer}>
+          <Ionicons name="arrow-back" size={24} color="white" />
         </View>
-        <View style={styles.votesContainer}>
-          <TouchableOpacity onPress={like}>
-            <AntDesign
-              name={isLiked ? 'like1' : 'like2'}
-              size={24}
-              color="white"
-            />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={dislike}>
-            <AntDesign
-              name={isDisliked ? 'dislike1' : 'dislike2'}
-              size={24}
-              color="white"
-            />
-          </TouchableOpacity>
-        </View>
+      </TouchableOpacity>
+      <View style={styles.titleContainer}>
+        <Text style={styles.title}>{recipe.title}</Text>
       </View>
-    </View>
+      <View style={styles.votesContainer}>
+        <TouchableOpacity onPress={like}>
+          <AntDesign
+            name={isLiked ? 'like1' : 'like2'}
+            size={24}
+            color="white"
+          />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={dislike}>
+          <AntDesign
+            name={isDisliked ? 'dislike1' : 'dislike2'}
+            size={24}
+            color="white"
+          />
+        </TouchableOpacity>
+      </View>
+    </Header>
   );
 };
 
