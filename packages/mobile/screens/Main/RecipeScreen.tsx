@@ -68,7 +68,9 @@ const RecipeScreen: React.FC<RecipeScreenProps> = ({ navigation, route }) => {
                         <Text style={{ marginRight: 16, width: 96 }}>
                           {ingredient.amount}
                         </Text>
-                        <Text>{ingredient.name}</Text>
+                        <Text style={{ flexWrap: 'wrap', flex: 1 }}>
+                          {ingredient.name}
+                        </Text>
                       </View>
                       {index < recipe.ingredients.length - 1 && (
                         <View style={styles.divider} />

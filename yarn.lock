@@ -14337,7 +14337,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "mixerai@workspace:."
   dependencies:
-    "@expo/vector-icons": ^13.0.0
     lerna: ^6.4.1
   languageName: unknown
   linkType: soft
@@ -14390,6 +14389,7 @@ __metadata:
     "@babel/core": ^7.12.9
     "@babel/plugin-proposal-private-methods": ^7.18.6
     "@babel/preset-react": ^7.18.6
+    "@expo/vector-icons": ^13.0.0
     "@react-navigation/native": ^6.1.2
     "@react-navigation/native-stack": ^6.9.8
     "@rneui/base": ^4.0.0-rc.7

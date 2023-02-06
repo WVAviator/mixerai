@@ -1,3 +1,4 @@
+import { AntDesign, FontAwesome5, Ionicons } from '@expo/vector-icons';
 import {
   DefaultTheme,
   NavigationContainer,
@@ -13,6 +14,7 @@ import UserProvider from './context/UserProvider';
 import LandingScreen, { LandingStackParamList } from './screens/Landing';
 import MainScreen, { MainStackParamList } from './screens/Main';
 import { User } from './types';
+import serverInstance from './utilities/serverInstance';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -29,17 +31,25 @@ export default function App() {
 
   React.useEffect(() => {
     const establishSession = async () => {
-      const response = await fetch('https://api.mixerai.app/user');
-      if (response.ok) {
-        const user: User = await response.json();
-        setUser(user);
+      try {
+        const response = await serverInstance.get('/user');
+        setUser(response.data);
+      } catch (error) {
+        console.log('User is not logged in');
+        return;
       }
+      console.log('User is logged in');
     };
     const prepareApp = async () => {
+      console.log(FontAwesome5.font);
       await Promise.all([
         Font.loadAsync({
           Roboto: require('./assets/fonts/Roboto-Regular.ttf'),
           Rajdhani: require('./assets/fonts/Rajdhani-Regular.ttf'),
+          Ionicons: require('./assets/fonts/Ionicons.ttf'),
+          FontAwesome5Free_Regular: require('./assets/fonts/FontAwesome5_Regular.ttf'),
+          // FontAwesome5Free_Solid: require('./assets/fonts/FontAwesome5_Solid.ttf'),
+          AntDesign: require('./assets/fonts/AntDesign.ttf'),
         }),
         establishSession(),
       ]);
@@ -66,7 +76,8 @@ export default function App() {
             initialRouteName={user ? 'main' : 'landing'}
             screenOptions={{
               headerShown: false,
-              statusBarColor: 'white',
+              statusBarColor: '#C0630D',
+              statusBarTranslucent: true,
             }}
           >
             <Stack.Screen name="landing" component={LandingScreen} />

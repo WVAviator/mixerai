@@ -33,7 +33,7 @@ const CreateScreen: React.FC<CreateScreenProps> = ({ navigation }) => {
     setLoading(false);
     console.log('Finished creating recipe', recipe);
     console.log('Navigating to recipe screen', recipe.id);
-    navigation.navigate('recipe', { id: recipe.id });
+    navigation.replace('recipe', { id: recipe.id });
   };
 
   const promptForm = (

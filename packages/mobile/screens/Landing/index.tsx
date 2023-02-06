@@ -2,6 +2,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Background from '../../components/Background/Background';
 import AuthenticationScreen from './AuthenticationScreen';
 import HomeScreen from './HomeScreen';
+import React from 'react';
 
 export type LandingStackParamList = {
   home: undefined;

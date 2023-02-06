@@ -42,6 +42,7 @@ const RecipeList: React.FC<RecipeListProps> = ({ onSelectRecipe }) => {
       <FlatList
         data={recipes}
         showsVerticalScrollIndicator={false}
+        style={{ paddingVertical: 32, marginBottom: 10 }}
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
@@ -57,9 +58,10 @@ const RecipeList: React.FC<RecipeListProps> = ({ onSelectRecipe }) => {
             }}
           />
         }
-        renderItem={({ item: recipe }) => {
+        renderItem={({ item: recipe, index }) => {
           return (
             <TouchableHighlight
+              style={{ marginBottom: index === recipes.length - 1 ? 42 : 0 }}
               onPress={() => {
                 onSelectRecipe(recipe);
               }}

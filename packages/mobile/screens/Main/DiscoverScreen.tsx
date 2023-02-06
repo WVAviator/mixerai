@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
     padding: 32,
-    paddingVertical: 128,
+    paddingVertical: 80,
   },
   text: {
     fontSize: 24,

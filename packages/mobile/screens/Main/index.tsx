@@ -9,6 +9,7 @@ import React from 'react';
 import RecipeScreen from './RecipeScreen';
 import BottomNavigation from '../../components/BottomNavigation/BottomNavigation';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
 import CreateScreen from './CreateScreen';
 
 export type MainStackParamList = {
@@ -49,7 +50,7 @@ const MainScreen: React.FC<MainScreenProps> = ({ navigation }) => {
           },
           {
             label: 'Create',
-            icon: <FontAwesome5 name="plus" size={24} color="white" />,
+            icon: <AntDesign name="plussquareo" size={24} color="white" />,
             onPress: () => {
               navigation.navigate('main', { screen: 'create' });
             },

@@ -20,7 +20,8 @@ const useAuthentication = (authRoute: string) => {
 
     const result = await WebBrowser.openAuthSessionAsync(authUrl.toString());
 
-    if (result.type !== 'success') {
+    if (result.type !== 'success' && result.type !== 'dismiss') {
+      console.log('Auth session failed', result);
       onError && onError('Unable to complete login. Please try again.');
       return;
     }
