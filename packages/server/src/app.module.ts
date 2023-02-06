@@ -8,6 +8,7 @@ import { GenerateModule } from './generate/generate.module';
 import { ImageModule } from './image/image.module';
 import { OpenAIModule } from './openai/openai.module';
 import { VoteModule } from './vote/vote.module';
+import { AuthSessionModule } from './auth-session/auth-session.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { VoteModule } from './vote/vote.module';
     ImageModule,
     OpenAIModule,
     VoteModule,
+    AuthSessionModule,
   ],
 })
 export class AppModule {}

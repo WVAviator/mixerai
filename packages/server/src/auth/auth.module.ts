@@ -1,3 +1,4 @@
+import { AuthSessionModule } from './../auth-session/auth-session.module';
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { UserModule } from '../user/user.module';
@@ -9,6 +10,7 @@ import { JwtStrategy } from './strategies/jwt/jwt.strategy';
 @Module({
   imports: [
     UserModule,
+    AuthSessionModule,
     JwtModule.register({
       secret: process.env.JWT_SECRET,
     }),

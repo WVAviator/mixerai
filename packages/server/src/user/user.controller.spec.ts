@@ -53,13 +53,13 @@ describe('UserController', () => {
     expect(userController).toBeDefined();
   });
 
-  describe('me', () => {
+  describe('getCurrentUser', () => {
     jest.mock('../user/user.decorator.ts', () => {
       return jest.fn(() => testUser);
     });
 
     it('should return the user', async () => {
-      const user = await userController.me(testUser);
+      const user = await userController.getCurrentUser(testUser);
       expect(user).toEqual(testUser);
     });
   });

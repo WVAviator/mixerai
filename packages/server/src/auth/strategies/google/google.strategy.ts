@@ -1,18 +1,37 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Profile, Strategy, VerifyCallback } from 'passport-google-oauth20';
+import { AuthSessionService } from '../../../auth-session/auth-session.service';
 import { User } from '../../../user/schemas/user.schema';
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
   private readonly logger = new Logger(GoogleStrategy.name);
-  constructor() {
+  constructor(private authSessionService: AuthSessionService) {
     super({
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: 'http://localhost:4000/auth/google/callback',
+      callbackURL: process.env.GOOGLE_CALLBACK_URL,
       scope: ['email', 'profile'],
     });
+  }
+
+  /**
+   * The authenticate function is called when the user is redirected to the Google OAuth login page.
+   * @param req The request object.
+   * @param options The options object, including state query params, to be passed to Google.
+   */
+  async authenticate(req: any, options?: any) {
+    this.logger.log('Google OAuth authentication function initiated.');
+
+    this.logger.log('Auth request query: ', req.query);
+    const { auid, cb } = req.query;
+
+    await this.authSessionService.create(auid, cb);
+
+    options.state = auid;
+    this.logger.log(`Store auid on options state: ${options.state}`);
+    super.authenticate(req, options);
   }
 
   /**
@@ -28,12 +47,10 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     profile: Profile,
     done: VerifyCallback,
   ) {
-    this.logger.log(
-      `Google OAuth callback verification for profile: ${JSON.stringify(
-        profile,
-      )}`,
-    );
     const { id, displayName, emails, photos } = profile;
+
+    this.logger.log(`Google OAuth callback verification for ${displayName}`);
+
     const user: User = {
       email: emails[0].value,
       displayName,
@@ -41,12 +58,6 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
       authService: 'google',
       authServiceId: id,
     };
-
-    this.logger.log(
-      `Constructed user object from profile and assigning to req.user: ${JSON.stringify(
-        user,
-      )}`,
-    );
 
     done(null, user);
   }

@@ -67,11 +67,9 @@ describe('UserService', () => {
       expect(user).toBeDefined();
     });
 
-    it("should throw a not found exception when user doesn't exist", async () => {
+    it("should return null when user doesn't exist", async () => {
       jest.spyOn(mockUserModel, 'findOne').mockResolvedValue(null);
-      await expect(userService.findOneByEmail('test')).rejects.toThrow(
-        NotFoundException,
-      );
+      expect(userService.findOneByEmail('test')).resolves.toBeNull();
     });
 
     it('should throw an internal server error if the databse fails to connect', async () => {

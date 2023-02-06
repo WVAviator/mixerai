@@ -10,7 +10,7 @@ export class UserController {
 
   @Get()
   @UseGuards(JwtAuthGuard)
-  me(@User() user: UserDocument) {
+  getCurrentUser(@User() user: UserDocument) {
     return user;
   }
 

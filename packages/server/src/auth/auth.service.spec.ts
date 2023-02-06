@@ -1,16 +1,20 @@
+import { BadRequestException } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { Test } from '@nestjs/testing';
+import { Request } from 'express';
+import { AuthenticationSessionException } from '../auth-session/auth-session.exception';
+import { AuthSessionService } from '../auth-session/auth-session.service';
+import { AuthSessionDocument } from '../auth-session/schemas/auth-session.schema';
+import { User } from '../user/schemas/user.schema';
+import { UserService } from '../user/user.service';
 import { UserDocument } from './../user/schemas/user.schema';
 import { AuthService } from './auth.service';
-import { JwtService } from '@nestjs/jwt';
-import { UserService } from '../user/user.service';
-import { User } from '../user/schemas/user.schema';
-import { JwtPayload } from './strategies/jwt/types';
-import { BadRequestException } from '@nestjs/common';
-import { Test } from '@nestjs/testing';
 
 describe('AuthService', () => {
   let authService: AuthService;
   let jwtService: JwtService;
   let userService: UserService;
+  let authSessionService: AuthSessionService;
 
   const testUser: User = {
     email: 'test@email.com',
@@ -35,15 +39,8 @@ describe('AuthService', () => {
         {
           provide: UserService,
           useValue: {
-            findOneByEmail: jest.fn((email: string) => {
-              if (email === testUser.email) {
-                return {
-                  ...testUser,
-                  id: 'userId',
-                } as UserDocument;
-              }
-              return null;
-            }),
+            findOneById: jest.fn(() => new Promise((res) => res(testUser))),
+            findOneByEmail: jest.fn(() => new Promise((res) => res(testUser))),
             create: jest.fn((user: User) => {
               return {
                 ...user,
@@ -52,68 +49,102 @@ describe('AuthService', () => {
             }),
           },
         },
+        {
+          provide: AuthSessionService,
+          useValue: {
+            retrieveAndValidate: jest.fn(() => ({
+              userId: 'userId',
+            })),
+            updateWithUserId: jest.fn(),
+          },
+        },
       ],
     }).compile();
 
     jwtService = module.get<JwtService>(JwtService);
     userService = module.get<UserService>(UserService);
     authService = module.get<AuthService>(AuthService);
+    authSessionService = module.get<AuthSessionService>(AuthSessionService);
   });
 
   afterEach(() => {
     jest.resetAllMocks();
   });
 
+  it('should be defined', () => {
+    expect(authService).toBeDefined();
+  });
+
   describe('signIn', () => {
-    const user: User = {
-      email: 'test@email.com',
-    } as User;
+    it('should return a token and userData', async () => {
+      const findByIdFunction = jest
+        .spyOn(userService, 'findOneById')
+        .mockResolvedValue({ ...testUser, id: 'userId' } as UserDocument);
+      const retrieveAndValidateFunction = jest
+        .spyOn(authSessionService, 'retrieveAndValidate')
+        .mockResolvedValue({
+          userId: 'userId',
+        } as AuthSessionDocument);
 
-    const jwtPayload: JwtPayload = {
-      email: 'test@email.com',
-      sub: 'userId',
-    };
+      const { token, userData } = await authService.login({ auid: 'auid' });
 
-    it('should return a JWT if the user exists', async () => {
-      const jwt = await authService.signIn(user);
-      expect(jwt).toEqual('jwtToken');
-      expect(jwtService.sign).toHaveBeenCalledWith(jwtPayload, {
-        secret: 'jwtSecret',
+      expect(findByIdFunction).toHaveBeenCalledWith('userId');
+      expect(retrieveAndValidateFunction).toHaveBeenCalledWith('auid');
+
+      expect(token).toEqual('jwtToken');
+      expect(userData).toEqual({
+        ...testUser,
+        id: 'userId',
       });
     });
 
-    it('should throw a BadRequestException if no user is provided', async () => {
-      await expect(() => authService.signIn(undefined)).rejects.toThrow(
+    it('should throw an error if the user is not found', async () => {
+      jest.spyOn(userService, 'findOneById').mockResolvedValue(null);
+
+      await expect(authService.login({ auid: 'auid' })).rejects.toThrowError(
         BadRequestException,
+      );
+    });
+
+    it('should throw an error if the auth session is not found', async () => {
+      jest
+        .spyOn(authSessionService, 'retrieveAndValidate')
+        .mockRejectedValue(new AuthenticationSessionException());
+
+      await expect(authService.login({ auid: 'auid' })).rejects.toThrowError(
+        AuthenticationSessionException,
       );
     });
   });
 
-  describe('registerUser', () => {
-    const testUser2: User = {
-      email: 'test2@example.com',
-      displayName: 'Test User 2',
-      authService: 'google',
-      authServiceId: 'authServiceId',
-      avatarUrl: '',
-    };
+  describe('processAuthCallback', () => {
+    it('should return a callback url given a valid request', async () => {
+      const mockRequest = {
+        query: {
+          state: '123',
+        },
+        user: {
+          email: 'email',
+        },
+      } as unknown as Request;
 
-    it('should register a new user and return a jwt', async () => {
-      const jwt = await authService.registerUser(testUser2);
-      expect(jwt).toEqual('jwtToken');
-      expect(userService.create).toHaveBeenCalledWith(testUser2);
-    });
+      const findUserFunction = jest
+        .spyOn(userService, 'findOneByEmail')
+        .mockResolvedValue({
+          id: 'userId',
+        } as UserDocument);
+      const updateFunction = jest
+        .spyOn(authSessionService, 'updateWithUserId')
+        .mockResolvedValue({
+          callbackUrl: 'callbackUrl',
+        } as AuthSessionDocument);
 
-    it("should create a new user if one doesn't exist when signIn is called", async () => {
-      const jwtPayload: JwtPayload = {
-        email: 'test2@example.com',
-        sub: 'userId',
-      };
+      const result = await authService.processAuthCallback(mockRequest);
 
-      await authService.signIn(testUser2);
-      expect(userService.create).toHaveBeenCalledWith(testUser2);
-      expect(jwtService.sign).toHaveBeenCalledWith(jwtPayload, {
-        secret: 'jwtSecret',
+      expect(updateFunction).toHaveBeenCalledWith('123', 'userId');
+      expect(findUserFunction).toHaveBeenCalledWith('email');
+      expect(result).toEqual({
+        callbackUrl: 'callbackUrl',
       });
     });
   });
