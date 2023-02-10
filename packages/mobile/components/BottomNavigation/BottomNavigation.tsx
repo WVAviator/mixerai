@@ -1,13 +1,13 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
-interface NavigationOption {
+export interface NavigationOption {
   icon: React.ReactElement;
   label: string;
   onPress: () => void;
 }
 
-interface BottomNavigationProps {
+export interface BottomNavigationProps {
   options: NavigationOption[];
 }
 
@@ -38,10 +38,10 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     height: 90,
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
+    // position: 'absolute',
+    // bottom: 0,
+    // left: 0,
+    // right: 0,
     overflow: 'hidden',
     backgroundColor: '#C0630D',
     flexDirection: 'row',

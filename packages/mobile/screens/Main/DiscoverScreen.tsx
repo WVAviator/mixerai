@@ -33,9 +33,9 @@ const DiscoverScreen: React.FC<DiscoverScreenProps> = ({
 
   return (
     <>
-      <Header>
+      {/* <Header>
         <Text style={styles.text}>Welcome, {user.displayName}!</Text>
-      </Header>
+      </Header> */}
       <View style={styles.container}>
         <RecipeList
           onSelectRecipe={(recipe: Recipe) => {
@@ -53,10 +53,8 @@ const DiscoverScreen: React.FC<DiscoverScreenProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'flex-start',
-    justifyContent: 'flex-start',
-    padding: 32,
-    paddingVertical: 80,
+    paddingHorizontal: 20,
+    width: '100%',
   },
   text: {
     fontSize: 24,

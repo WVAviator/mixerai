@@ -10,7 +10,7 @@ import * as Font from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import React from 'react';
 import { View } from 'react-native';
-import UserProvider from './context/UserProvider';
+import UserProvider from './context/UserProvider/UserProvider';
 import LandingScreen, { LandingStackParamList } from './screens/Landing';
 import MainScreen, { MainStackParamList } from './screens/Main';
 import { User } from './types';

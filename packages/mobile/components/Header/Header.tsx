@@ -1,8 +1,9 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
-interface HeaderProps {
+export interface HeaderProps {
   padding?: number;
+  children?: React.ReactNode;
 }
 
 const Header: React.FC<React.PropsWithChildren<HeaderProps>> = ({
@@ -22,10 +23,10 @@ const styles = StyleSheet.create({
 
     height: 100,
     backgroundColor: '#C0630D',
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
+    // position: 'absolute',
+    // top: 0,
+    // left: 0,
+    // right: 0,
     overflow: 'hidden',
     zIndex: 1,
     paddingHorizontal: 20,

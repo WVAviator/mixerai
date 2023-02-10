@@ -12,7 +12,10 @@ import {
 } from 'react-native';
 import { MainStackParamList } from '.';
 import { RootStackParamList } from '../../App';
+import Header from '../../components/Header/Header';
 import RecipeHeaderBar from '../../components/RecipeHeaderBar/RecipeHeaderBar';
+import useHeader from '../../hooks/useHeader';
+import useRecipe from '../../hooks/useRecipe';
 import { Recipe } from '../../types';
 
 type RecipeScreenProps = CompositeScreenProps<
@@ -21,22 +24,25 @@ type RecipeScreenProps = CompositeScreenProps<
 >;
 
 const RecipeScreen: React.FC<RecipeScreenProps> = ({ navigation, route }) => {
-  const [recipe, setRecipe] = React.useState<Recipe | null>(null);
+  const { recipe, error } = useRecipe(route.params.id);
+  const { setHeaderContents } = useHeader();
 
   React.useEffect(() => {
-    const getRecipe = async () => {
-      const response = await fetch(
-        `https://api.mixerai.app/recipe/${route.params.id}`
-      );
-      const recipe = await response.json();
-      setRecipe(recipe);
-    };
-
-    getRecipe();
+    setHeaderContents();
   }, []);
 
   if (!recipe) {
-    return <Skeleton />;
+    return (
+      <>
+        <Header />
+        <Skeleton height={300} />
+        <View style={styles.inner}>
+          <Skeleton height={50} style={{ marginBottom: 20 }} />
+          <Skeleton height={40} style={{ marginBottom: 20 }} />
+          <Skeleton height={300} />
+        </View>
+      </>
+    );
   }
 
   return (
@@ -64,7 +70,10 @@ const RecipeScreen: React.FC<RecipeScreenProps> = ({ navigation, route }) => {
                 {recipe.ingredients.map((ingredient, index) => {
                   return (
                     <>
-                      <View key={ingredient.name} style={styles.ingredient}>
+                      <View
+                        key={`${recipe.title}-${ingredient.name}`}
+                        style={styles.ingredient}
+                      >
                         <Text style={{ marginRight: 16, width: 96 }}>
                           {ingredient.amount}
                         </Text>

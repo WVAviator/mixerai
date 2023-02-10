@@ -38,65 +38,57 @@ const RecipeList: React.FC<RecipeListProps> = ({ onSelectRecipe }) => {
   }, []);
 
   return (
-    <View style={styles.container}>
-      <FlatList
-        data={recipes}
-        showsVerticalScrollIndicator={false}
-        style={{ paddingVertical: 32, marginBottom: 10 }}
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            tintColor="#FFFFFF"
-            onRefresh={async () => {
-              setRefreshing(true);
-              const minWait = new Promise((resolve) =>
-                setTimeout(resolve, 1000)
-              );
-              const recipeWait = getRecipes();
-              await Promise.all([minWait, recipeWait]);
-              setRefreshing(false);
+    // <View style={styles.container}>
+    <FlatList
+      data={recipes}
+      showsVerticalScrollIndicator={false}
+      style={{ paddingTop: 20 }}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          tintColor="#FFFFFF"
+          onRefresh={async () => {
+            setRefreshing(true);
+            const minWait = new Promise((resolve) => setTimeout(resolve, 1000));
+            const recipeWait = getRecipes();
+            await Promise.all([minWait, recipeWait]);
+            setRefreshing(false);
+          }}
+        />
+      }
+      renderItem={({ item: recipe, index }) => {
+        return (
+          <TouchableHighlight
+            // style={{ marginBottom: index === recipes.length - 1 ? 42 : 0 }}
+            onPress={() => {
+              onSelectRecipe(recipe);
             }}
-          />
-        }
-        renderItem={({ item: recipe, index }) => {
-          return (
-            <TouchableHighlight
-              style={{ marginBottom: index === recipes.length - 1 ? 42 : 0 }}
-              onPress={() => {
-                onSelectRecipe(recipe);
-              }}
-            >
-              <ListItem style={styles.listItem}>
-                <ListItem.Content style={styles.content}>
-                  <Image
-                    style={styles.image}
-                    source={{ uri: recipe.imageUrl }}
-                  />
-                  <View style={styles.titleContainer}>
-                    <ListItem.Title style={[styles.text, styles.title]}>
-                      {recipe.title}
-                    </ListItem.Title>
-                    <ListItem.Subtitle
-                      style={[styles.text, styles.description]}
-                    >
-                      {cutoffText(recipe.description, 100)}
-                    </ListItem.Subtitle>
-                  </View>
-                </ListItem.Content>
-              </ListItem>
-            </TouchableHighlight>
-          );
-        }}
-        keyExtractor={(recipe) => recipe.id}
-      ></FlatList>
-    </View>
+          >
+            <ListItem style={styles.listItem}>
+              <ListItem.Content style={styles.content}>
+                <Image style={styles.image} source={{ uri: recipe.imageUrl }} />
+                <View style={styles.titleContainer}>
+                  <ListItem.Title style={[styles.text, styles.title]}>
+                    {recipe.title}
+                  </ListItem.Title>
+                  <ListItem.Subtitle style={[styles.text, styles.description]}>
+                    {cutoffText(recipe.description, 100)}
+                  </ListItem.Subtitle>
+                </View>
+              </ListItem.Content>
+            </ListItem>
+          </TouchableHighlight>
+        );
+      }}
+      keyExtractor={(recipe) => recipe.id}
+    ></FlatList>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    width: '100%',
-  },
+  // container: {
+  //   width: '100%',
+  // },
   listItem: {
     backgroundColor: '#d4d4d4',
     borderRadius: 6,
