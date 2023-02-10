@@ -1,9 +1,8 @@
 import { CompositeScreenProps } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { Card, Skeleton, Text } from '@rneui/base';
+import { Skeleton, Text } from '@rneui/base';
 import React from 'react';
 import {
-  FlatList,
   Image,
   SafeAreaView,
   ScrollView,
@@ -16,7 +15,6 @@ import Header from '../../components/Header/Header';
 import RecipeHeaderBar from '../../components/RecipeHeaderBar/RecipeHeaderBar';
 import useHeader from '../../hooks/useHeader';
 import useRecipe from '../../hooks/useRecipe';
-import { Recipe } from '../../types';
 
 type RecipeScreenProps = CompositeScreenProps<
   NativeStackScreenProps<MainStackParamList, 'recipe'>,
@@ -25,11 +23,16 @@ type RecipeScreenProps = CompositeScreenProps<
 
 const RecipeScreen: React.FC<RecipeScreenProps> = ({ navigation, route }) => {
   const { recipe, error } = useRecipe(route.params.id);
-  const { setHeaderContents } = useHeader();
-
-  React.useEffect(() => {
-    setHeaderContents();
-  }, []);
+  useHeader({
+    navigation,
+    contents: (
+      <RecipeHeaderBar recipe={recipe!} onBack={() => navigation.goBack()} />
+    ),
+    props: {
+      padding: 0,
+    },
+    dependencies: [recipe],
+  });
 
   if (!recipe) {
     return (
@@ -47,13 +50,6 @@ const RecipeScreen: React.FC<RecipeScreenProps> = ({ navigation, route }) => {
 
   return (
     <>
-      <RecipeHeaderBar
-        recipe={recipe}
-        onBack={() => {
-          navigation.goBack();
-        }}
-      />
-
       <SafeAreaView style={styles.container}>
         <ScrollView contentContainerStyle={styles.scrollview}>
           <Image
@@ -82,7 +78,10 @@ const RecipeScreen: React.FC<RecipeScreenProps> = ({ navigation, route }) => {
                         </Text>
                       </View>
                       {index < recipe.ingredients.length - 1 && (
-                        <View style={styles.divider} />
+                        <View
+                          key={`${recipe.title}-${ingredient.name}-divider`}
+                          style={styles.divider}
+                        />
                       )}
                     </>
                   );
@@ -105,9 +104,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
   },
-  scrollview: {
-    paddingVertical: 50,
-  },
+  scrollview: {},
   inner: {
     padding: 20,
     width: '100%',

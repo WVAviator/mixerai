@@ -4,8 +4,8 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { MainStackParamList } from '.';
 import { RootStackParamList } from '../../App';
-import Header from '../../components/Header/Header';
 import RecipeList from '../../components/RecipeList/RecipeList';
+import useHeader from '../../hooks/useHeader';
 import useUser from '../../hooks/useUser';
 import { Recipe } from '../../types';
 
@@ -14,39 +14,27 @@ type DiscoverScreenProps = CompositeScreenProps<
   NativeStackScreenProps<RootStackParamList, 'main'>
 >;
 
-const DiscoverScreen: React.FC<DiscoverScreenProps> = ({
-  navigation,
-  route,
-}) => {
+const DiscoverScreen: React.FC<DiscoverScreenProps> = ({ navigation }) => {
   const { user } = useUser();
 
-  React.useEffect(() => {
-    if (!user) {
-      console.log('no user, redirecting to auth screen');
-      navigation.navigate('landing', { screen: 'auth' });
-    }
-  }, [user]);
-
-  if (!user) {
-    return null;
-  }
+  useHeader({
+    navigation,
+    contents: <Text style={styles.text}>Welcome, {user?.displayName}!</Text>,
+    props: { padding: 20 },
+    dependencies: [user],
+  });
 
   return (
-    <>
-      {/* <Header>
-        <Text style={styles.text}>Welcome, {user.displayName}!</Text>
-      </Header> */}
-      <View style={styles.container}>
-        <RecipeList
-          onSelectRecipe={(recipe: Recipe) => {
-            navigation.navigate('main', {
-              screen: 'recipe',
-              params: { id: recipe.id },
-            });
-          }}
-        />
-      </View>
-    </>
+    <View style={styles.container}>
+      <RecipeList
+        onSelectRecipe={(recipe: Recipe) => {
+          navigation.navigate('main', {
+            screen: 'recipe',
+            params: { id: recipe.id },
+          });
+        }}
+      />
+    </View>
   );
 };
 

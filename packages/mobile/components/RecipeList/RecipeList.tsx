@@ -4,10 +4,10 @@ import {
   FlatList,
   RefreshControl,
   StyleSheet,
-  Text,
   TouchableHighlight,
   View,
 } from 'react-native';
+import useRecipeList from '../../hooks/useRecipeList';
 import { Recipe } from '../../types';
 
 const cutoffText = (text: string, length: number) => {
@@ -24,21 +24,9 @@ interface RecipeListProps {
 }
 
 const RecipeList: React.FC<RecipeListProps> = ({ onSelectRecipe }) => {
-  const [recipes, setRecipes] = React.useState<Recipe[]>([]);
-  const [refreshing, setRefreshing] = React.useState(false);
-
-  const getRecipes = async () => {
-    const response = await fetch('https://api.mixerai.app/recipe');
-    const data = await response.json();
-    setRecipes(data);
-  };
-
-  React.useEffect(() => {
-    getRecipes();
-  }, []);
+  const { recipes, refreshing, onRefresh } = useRecipeList();
 
   return (
-    // <View style={styles.container}>
     <FlatList
       data={recipes}
       showsVerticalScrollIndicator={false}
@@ -47,19 +35,13 @@ const RecipeList: React.FC<RecipeListProps> = ({ onSelectRecipe }) => {
         <RefreshControl
           refreshing={refreshing}
           tintColor="#FFFFFF"
-          onRefresh={async () => {
-            setRefreshing(true);
-            const minWait = new Promise((resolve) => setTimeout(resolve, 1000));
-            const recipeWait = getRecipes();
-            await Promise.all([minWait, recipeWait]);
-            setRefreshing(false);
-          }}
+          onRefresh={onRefresh}
         />
       }
       renderItem={({ item: recipe, index }) => {
         return (
           <TouchableHighlight
-            // style={{ marginBottom: index === recipes.length - 1 ? 42 : 0 }}
+            style={{ marginBottom: index === recipes.length - 1 ? 42 : 0 }}
             onPress={() => {
               onSelectRecipe(recipe);
             }}
@@ -81,14 +63,11 @@ const RecipeList: React.FC<RecipeListProps> = ({ onSelectRecipe }) => {
         );
       }}
       keyExtractor={(recipe) => recipe.id}
-    ></FlatList>
+    />
   );
 };
 
 const styles = StyleSheet.create({
-  // container: {
-  //   width: '100%',
-  // },
   listItem: {
     backgroundColor: '#d4d4d4',
     borderRadius: 6,

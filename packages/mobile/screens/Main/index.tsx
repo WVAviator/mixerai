@@ -1,19 +1,17 @@
+import { AntDesign, FontAwesome5 } from '@expo/vector-icons';
 import {
   createNativeStackNavigator,
   NativeStackScreenProps,
 } from '@react-navigation/native-stack';
+import React from 'react';
+import { Text } from 'react-native';
 import { RootStackParamList } from '../../App';
 import Background from '../../components/Background/Background';
-import DiscoverScreen from './DiscoverScreen';
-import React from 'react';
-import RecipeScreen from './RecipeScreen';
-import BottomNavigation from '../../components/BottomNavigation/BottomNavigation';
-import { FontAwesome5 } from '@expo/vector-icons';
-import { AntDesign } from '@expo/vector-icons';
-import CreateScreen from './CreateScreen';
-import useUser from '../../hooks/useUser';
-import { Text } from 'react-native';
 import NavigationProvider from '../../context/NavigationProvider/NavigationProvider';
+import useUser from '../../hooks/useUser';
+import CreateScreen from './CreateScreen';
+import DiscoverScreen from './DiscoverScreen';
+import RecipeScreen from './RecipeScreen';
 
 export type MainStackParamList = {
   discover: undefined;
@@ -29,6 +27,13 @@ type MainScreenProps = NativeStackScreenProps<RootStackParamList, 'main'>;
 
 const MainScreen: React.FC<MainScreenProps> = ({ navigation }) => {
   const { user } = useUser();
+
+  React.useEffect(() => {
+    if (!user) {
+      console.log('no user, redirecting to auth screen');
+      navigation.navigate('landing', { screen: 'auth' });
+    }
+  }, [user]);
 
   const defaultFooterOptions = {
     options: [
@@ -70,6 +75,10 @@ const MainScreen: React.FC<MainScreenProps> = ({ navigation }) => {
       </Text>
     ),
   };
+
+  if (!user) {
+    return null;
+  }
 
   return (
     <Background>

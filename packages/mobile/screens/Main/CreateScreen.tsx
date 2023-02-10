@@ -1,6 +1,5 @@
 import { CompositeScreenProps } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { Input } from '@rneui/base';
 import React from 'react';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
 import { MainStackParamList } from '.';

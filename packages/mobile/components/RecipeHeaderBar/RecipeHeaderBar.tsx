@@ -1,9 +1,8 @@
+import { AntDesign, Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { Recipe, Vote } from '../../types';
-import { Ionicons, AntDesign } from '@expo/vector-icons';
 import useUserVoting from '../../hooks/useUserVoting';
-import Header from '../Header/Header';
+import { Recipe } from '../../types';
 
 interface RecipeHeaderBarProps {
   recipe: Recipe;
@@ -17,7 +16,7 @@ const RecipeHeaderBar: React.FC<RecipeHeaderBarProps> = ({
   const { isLiked, isDisliked, like, dislike } = useUserVoting(recipe.id);
 
   return (
-    <Header padding={0}>
+    <>
       <TouchableOpacity onPress={onBack}>
         <View style={styles.backContainer}>
           <Ionicons name="arrow-back" size={24} color="white" />
@@ -42,23 +41,11 @@ const RecipeHeaderBar: React.FC<RecipeHeaderBarProps> = ({
           />
         </TouchableOpacity>
       </View>
-    </Header>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    width: '100%',
-
-    height: 100,
-    backgroundColor: '#C0630D',
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    overflow: 'hidden',
-    zIndex: 1,
-  },
   inner: {
     width: '100%',
     display: 'flex',

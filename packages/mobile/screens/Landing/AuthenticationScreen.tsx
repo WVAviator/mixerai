@@ -1,8 +1,6 @@
 import { CompositeScreenProps } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { BlurView } from 'expo-blur';
-import * as Linking from 'expo-linking';
-import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
 import { Animated, StyleSheet, Text, View } from 'react-native';
 import { LandingStackParamList } from '.';
