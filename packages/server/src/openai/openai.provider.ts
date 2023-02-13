@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { AxiosRequestConfig, AxiosResponse } from 'axios';
 import {
   Configuration,
@@ -34,9 +35,9 @@ export class OpenAIProvider {
     options?: AxiosRequestConfig<any>,
   ) => Promise<AxiosResponse<ImagesResponse, any>>;
 
-  constructor() {
+  constructor(private configService: ConfigService) {
     this.configuration = new Configuration({
-      apiKey: process.env.OPENAI_SECRET_KEY,
+      apiKey: configService.get('OPENAI_SECRET_KEY'),
     });
     this.openai = new OpenAIApi(this.configuration);
     this.createCompletion = this.openai.createCompletion.bind(this);

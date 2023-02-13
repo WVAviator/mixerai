@@ -3,11 +3,11 @@ import { Test } from '@nestjs/testing';
 import { UserService } from '../../../user/user.service';
 import { UnauthorizedException } from '@nestjs/common';
 import { UserDocument } from '../../../user/schemas/user.schema';
+import { ConfigService } from '@nestjs/config';
 
 describe('JwtStrategy', () => {
   let jwtStrategy: JwtStrategy;
   let userService: UserService;
-  process.env.JWT_SECRET = 'test';
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
@@ -16,6 +16,10 @@ describe('JwtStrategy', () => {
         {
           provide: UserService,
           useValue: { findOneById: jest.fn() },
+        },
+        {
+          provide: ConfigService,
+          useValue: { get: () => 'test' },
         },
       ],
     }).compile();

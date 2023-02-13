@@ -5393,7 +5393,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sideway/formula@npm:^3.0.0":
+"@sideway/formula@npm:^3.0.0, @sideway/formula@npm:^3.0.1":
   version: 3.0.1
   resolution: "@sideway/formula@npm:3.0.1"
   checksum: e4beeebc9dbe2ff4ef0def15cec0165e00d1612e3d7cea0bc9ce5175c3263fc2c818b679bd558957f49400ee7be9d4e5ac90487e1625b4932e15c4aa7919c57a
@@ -12923,6 +12923,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"joi@npm:^17.7.1":
+  version: 17.7.1
+  resolution: "joi@npm:17.7.1"
+  dependencies:
+    "@hapi/hoek": ^9.0.0
+    "@hapi/topo": ^5.0.0
+    "@sideway/address": ^4.1.3
+    "@sideway/formula": ^3.0.1
+    "@sideway/pinpoint": ^2.0.0
+  checksum: e34a97461ee1976e11ff79286e66a25271aacdb78a65bc6ce22bc1f59e458d0a1c7a762dfce61036432bf7324694bc0508613259cdd9a6e88013d7166c94e8f2
+  languageName: node
+  linkType: hard
+
 "join-component@npm:^1.1.0":
   version: 1.1.0
   resolution: "join-component@npm:1.1.0"
@@ -17281,6 +17294,7 @@ __metadata:
     eslint-config-prettier: ^8.3.0
     eslint-plugin-prettier: ^4.0.0
     jest: 29.3.1
+    joi: ^17.7.1
     mongoose: ^6.8.4
     openai: ^3.1.0
     passport: ^0.6.0

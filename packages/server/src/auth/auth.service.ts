@@ -1,4 +1,5 @@
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { AuthenticationSessionException } from '../auth-session/auth-session.exception';
@@ -16,6 +17,7 @@ export class AuthService {
     private jwtService: JwtService,
     private userService: UserService,
     private authSessionService: AuthSessionService,
+    private configService: ConfigService,
   ) {}
 
   /**
@@ -46,7 +48,7 @@ export class AuthService {
 
   private generateJwt(payload: JwtPayload) {
     return this.jwtService.sign(payload, {
-      secret: process.env.JWT_SECRET,
+      secret: this.configService.get('JWT_SECRET'),
     });
   }
 

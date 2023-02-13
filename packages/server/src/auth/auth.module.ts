@@ -6,13 +6,21 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { GoogleStrategy } from './strategies/google/google.strategy';
 import { JwtStrategy } from './strategies/jwt/jwt.strategy';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
     UserModule,
     AuthSessionModule,
-    JwtModule.register({
-      secret: process.env.JWT_SECRET,
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => {
+        await ConfigModule.envVariablesLoaded;
+        return {
+          secret: configService.get('JWT_SECRET'),
+        };
+      },
+      inject: [ConfigService],
     }),
   ],
   controllers: [AuthController],

@@ -1,3 +1,4 @@
+import { ConfigService } from '@nestjs/config';
 import { Test } from '@nestjs/testing';
 import { Profile as GoogleProfile } from 'passport-google-oauth20';
 import { AuthSessionService } from '../../../auth-session/auth-session.service';
@@ -8,9 +9,6 @@ describe('GoogleStrategy', () => {
   let googleStrategy: GoogleStrategy;
   let authSessionService: AuthSessionService;
 
-  process.env.GOOGLE_CLIENT_ID = 'google-client-id';
-  process.env.GOOGLE_CLIENT_SECRET = 'google-client-secret';
-
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       providers: [
@@ -19,6 +17,17 @@ describe('GoogleStrategy', () => {
           provide: AuthSessionService,
           useValue: {
             create: jest.fn(),
+          },
+        },
+        {
+          provide: ConfigService,
+          useValue: {
+            get: (key: string) => {
+              return {
+                GOOGLE_CLIENT_ID: 'google-client-id',
+                GOOGLE_CLIENT_SECRET: 'google-client-secret',
+              }[key];
+            },
           },
         },
       ],
