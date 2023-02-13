@@ -1,0 +1,25 @@
+version: '3'
+services:
+  db:
+    image: mongo
+    restart: always
+#   environment:
+#     MONGO_INITDB_ROOT_USERNAME: ${MONGODB_USER}
+#     MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASSWORD}
+#     MONGO_INITDB_DATABASE: ${MONGODB_DB}
+    volumes:
+      - mongo-data:/data/db
+  app:
+    build: .
+    restart: always
+    depends_on:
+      - db
+    environment:
+#     - MONGODB_URI=mongodb://${MONGODB_USER}:${MONGODB_PASSWORD}@db:27017/${MONGODB_DB}
+      - MONGODB_URI=mongodb://db:27017/test
+    env_file:
+      - .env
+    ports:
+      - 4000:4000
+volumes:
+  mongo-data:
