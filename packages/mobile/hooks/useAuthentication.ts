@@ -11,7 +11,7 @@ const useAuthentication = (authRoute: string) => {
   const authenticate = async (
     url: string,
     onAuthenticated: (user: User) => void,
-    onError?: (error: string) => void
+    onError?: (error: string) => void,
   ) => {
     const auid = Math.random().toString(36).slice(2, 11);
     const authUrl = new URL(url);

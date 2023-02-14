@@ -8,7 +8,7 @@ export interface UserContextProps {
 
 export const UserContext = React.createContext<UserContextProps>({
   user: null,
-  setUser: () => {},
+  setUser: () => 0,
 });
 
 interface UserProviderProps {
@@ -19,8 +19,6 @@ const UserProvider: React.FC<React.PropsWithChildren<UserProviderProps>> = ({
   children,
   value,
 }) => {
-  const [user, setUser] = React.useState<User | null>(null);
-
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 };
 

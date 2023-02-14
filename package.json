@@ -12,7 +12,9 @@
   "scripts": {
     "start:server": "cd packages/server && docker compose up",
     "start:mobile": "cd packages/mobile && yarn start",
-    "test": "lerna run test"
+    "test": "lerna run test",
+    "lint": "lerna run lint",
+    "typescript": "lerna run typescript"
   },
   "devDependencies": {
     "lerna": "^6.4.1"

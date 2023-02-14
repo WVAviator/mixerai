@@ -11,7 +11,6 @@ import {
 } from 'react-native';
 import { MainStackParamList } from '.';
 import { RootStackParamList } from '../../App';
-import Header from '../../components/Header/Header';
 import RecipeHeaderBar from '../../components/RecipeHeaderBar/RecipeHeaderBar';
 import useHeader from '../../hooks/useHeader';
 import useRecipe from '../../hooks/useRecipe';
@@ -26,7 +25,7 @@ const RecipeScreen: React.FC<RecipeScreenProps> = ({ navigation, route }) => {
   useHeader({
     navigation,
     contents: (
-      <RecipeHeaderBar recipe={recipe!} onBack={() => navigation.goBack()} />
+      <RecipeHeaderBar recipe={recipe} onBack={() => navigation.goBack()} />
     ),
     props: {
       padding: 0,
@@ -37,7 +36,6 @@ const RecipeScreen: React.FC<RecipeScreenProps> = ({ navigation, route }) => {
   if (!recipe) {
     return (
       <>
-        <Header />
         <Skeleton height={300} />
         <View style={styles.inner}>
           <Skeleton height={50} style={{ marginBottom: 20 }} />
@@ -45,6 +43,15 @@ const RecipeScreen: React.FC<RecipeScreenProps> = ({ navigation, route }) => {
           <Skeleton height={300} />
         </View>
       </>
+    );
+  }
+
+  if (error) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <Text>There was an error loading the recipe</Text>
+        <Text>{error}</Text>
+      </SafeAreaView>
     );
   }
 

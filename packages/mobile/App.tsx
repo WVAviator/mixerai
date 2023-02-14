@@ -1,4 +1,4 @@
-import { AntDesign, FontAwesome5, Ionicons } from '@expo/vector-icons';
+import { FontAwesome5 } from '@expo/vector-icons';
 import {
   DefaultTheme,
   NavigationContainer,

@@ -13,10 +13,8 @@ import { AuthService } from './auth.service';
 
 describe('AuthService', () => {
   let authService: AuthService;
-  let jwtService: JwtService;
   let userService: UserService;
   let authSessionService: AuthSessionService;
-  let configService: ConfigService;
 
   const testUser: User = {
     email: 'test@email.com',
@@ -67,7 +65,6 @@ describe('AuthService', () => {
       ],
     }).compile();
 
-    jwtService = module.get<JwtService>(JwtService);
     userService = module.get<UserService>(UserService);
     authService = module.get<AuthService>(AuthService);
     authSessionService = module.get<AuthSessionService>(AuthSessionService);

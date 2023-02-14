@@ -1,7 +1,6 @@
 import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Model } from 'mongoose';
-import { DatabaseException } from '../exceptions/database.exceptions';
 import { MockModel } from '../utils/testing/mock.model';
 import { AuthenticationSessionException } from './auth-session.exception';
 import { AuthSessionService } from './auth-session.service';
@@ -34,7 +33,7 @@ describe('AuthSessionService', () => {
 
   describe('create', () => {
     it('should create a new auth session', async () => {
-      const createFunction = jest.spyOn(authSessionModel, 'create');
+      jest.spyOn(authSessionModel, 'create');
       const authSession = await authSessionService.create(
         'abc123',
         'callbackUrl',

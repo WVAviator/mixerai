@@ -7,7 +7,6 @@ import { GoogleStrategy } from './google.strategy';
 
 describe('GoogleStrategy', () => {
   let googleStrategy: GoogleStrategy;
-  let authSessionService: AuthSessionService;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
@@ -34,7 +33,6 @@ describe('GoogleStrategy', () => {
     }).compile();
 
     googleStrategy = module.get<GoogleStrategy>(GoogleStrategy);
-    authSessionService = module.get<AuthSessionService>(AuthSessionService);
   });
 
   describe('validate', () => {

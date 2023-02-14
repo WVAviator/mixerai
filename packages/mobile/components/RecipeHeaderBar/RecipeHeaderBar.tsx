@@ -5,7 +5,7 @@ import useUserVoting from '../../hooks/useUserVoting';
 import { Recipe } from '../../types';
 
 interface RecipeHeaderBarProps {
-  recipe: Recipe;
+  recipe: Recipe | null;
   onBack: () => void;
 }
 
@@ -13,7 +13,13 @@ const RecipeHeaderBar: React.FC<RecipeHeaderBarProps> = ({
   recipe,
   onBack,
 }) => {
-  const { isLiked, isDisliked, like, dislike } = useUserVoting(recipe.id);
+  const { isLiked, isDisliked, like, dislike } = useUserVoting(
+    recipe?.id || '',
+  );
+
+  if (!recipe) {
+    return null;
+  }
 
   return (
     <>

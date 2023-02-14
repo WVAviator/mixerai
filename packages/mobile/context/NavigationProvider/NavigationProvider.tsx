@@ -14,9 +14,9 @@ interface NavigationContext {
 
 export const NavigationContext = React.createContext<NavigationContext>({
   header: {},
-  setHeader: () => {},
+  setHeader: () => 0,
   footer: { options: [] },
-  setFooter: () => {},
+  setFooter: () => 0,
 });
 
 interface NavigationProviderProps {

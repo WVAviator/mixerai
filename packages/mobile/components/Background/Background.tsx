@@ -1,7 +1,6 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import BottomNavigation from '../BottomNavigation/BottomNavigation';
 import Drink from '../Drink/Drink';
 
 interface BackgroundProps {

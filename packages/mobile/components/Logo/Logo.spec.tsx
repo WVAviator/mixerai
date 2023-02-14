@@ -16,7 +16,7 @@ describe('Logo', () => {
         <Logo size="small" />
         <Logo size="medium" />
         <Logo size="large" />
-      </>
+      </>,
     );
     const logo = screen.queryAllByTestId('logo');
     expect(logo).toHaveLength(3);
@@ -27,7 +27,7 @@ describe('Logo', () => {
       <>
         <Logo textColor="white" />
         <Logo textColor="black" />
-      </>
+      </>,
     );
     const logo = screen.queryAllByTestId('logo');
     expect(logo).toHaveLength(2);
