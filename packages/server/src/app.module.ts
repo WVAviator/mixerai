@@ -42,7 +42,6 @@ import * as Joi from 'joi';
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => {
         await ConfigModule.envVariablesLoaded;
-        console.log('URI:', configService.get('MONGODB_URI'));
         return {
           uri: configService.get('MONGODB_URI'),
           dbName: configService.get('MONGODB_DB'),
