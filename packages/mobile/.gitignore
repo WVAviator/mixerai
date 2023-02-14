@@ -16,3 +16,7 @@ web-build/
 # misc
 .env
 .env.*
+
+#testing
+cache/
+coverage/

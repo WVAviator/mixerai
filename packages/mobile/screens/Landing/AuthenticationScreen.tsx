@@ -1,8 +1,6 @@
 import { CompositeScreenProps } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { BlurView } from 'expo-blur';
-import * as Linking from 'expo-linking';
-import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
 import { Animated, StyleSheet, Text, View } from 'react-native';
 import { LandingStackParamList } from '.';
@@ -11,7 +9,9 @@ import AppleIcon from '../../components/icons/AppleIcon';
 import FacebookIcon from '../../components/icons/FacebookIcon';
 import GoogleIcon from '../../components/icons/GoogleIcon';
 import OutlineButton from '../../components/OutlineButton/OutlineButton';
+import useAuthentication from '../../hooks/useAuthentication';
 import useUser from '../../hooks/useUser';
+import { User } from '../../types';
 interface AuthProvider {
   text: string;
   fontSize?: number;
@@ -50,6 +50,7 @@ const AuthenticationScreen: React.FC<AuthenticationScreenProps> = ({
 }) => {
   const fadeAnim = React.useRef(new Animated.Value(0)).current;
   const { setUser } = useUser();
+  const { authenticate } = useAuthentication('landing/auth');
 
   React.useEffect(() => {
     Animated.timing(fadeAnim, {
@@ -61,36 +62,12 @@ const AuthenticationScreen: React.FC<AuthenticationScreenProps> = ({
   }, [fadeAnim]);
 
   const handleProviderPress = async (url: string) => {
-    const auid = Math.random().toString(36).slice(2, 11);
-    const authUrl = new URL(url);
-    authUrl.searchParams.append('auid', auid);
-    authUrl.searchParams.append('cb', Linking.createURL('landing/auth'));
-
-    console.log('Opening auth session: ', authUrl.toString());
-
-    const result = await WebBrowser.openAuthSessionAsync(authUrl.toString());
-
-    if (result.type !== 'success') {
-      console.log('Error authenticating through Google: ', result.type);
-      return;
-    }
-
-    try {
-      const authResponse = await fetch('https://api.mixerai.app/auth/login', {
-        method: 'POST',
-        body: JSON.stringify({ auid }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      const data = await authResponse.json();
-      const user = data.user;
+    const onSuccessfulAuth = async (user: User) => {
       setUser(user);
       navigation.navigate('main', { screen: 'discover' });
-    } catch (error) {
-      console.log('Error logging in: ', error);
-    }
+    };
+
+    authenticate(url, onSuccessfulAuth);
   };
 
   return (

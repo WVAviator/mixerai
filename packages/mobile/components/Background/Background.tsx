@@ -1,15 +1,17 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
+import BottomNavigation from '../BottomNavigation/BottomNavigation';
 import Drink from '../Drink/Drink';
 
 interface BackgroundProps {
   showDrink?: boolean;
+  includeNavigation?: boolean;
 }
 
 const Background: React.FC<React.PropsWithChildren<BackgroundProps>> = ({
   children,
-  showDrink,
+  showDrink = false,
 }) => {
   return (
     <LinearGradient
@@ -34,6 +36,7 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     height: '100%',
+    justifyContent: 'space-between',
   },
   drink: {
     position: 'absolute',

@@ -37,7 +37,11 @@ interface LogoProps {
 
 const Logo: React.FC<LogoProps> = ({ textColor = 'white', size = 'large' }) => {
   return (
-    <View style={styles.container}>
+    <View
+      accessibilityLabel="MixerAI logo"
+      style={styles.container}
+      testID="logo"
+    >
       <View
         style={{
           ...styles.logoWrapper,

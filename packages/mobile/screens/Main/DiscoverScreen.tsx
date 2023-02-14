@@ -4,33 +4,36 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { MainStackParamList } from '.';
 import { RootStackParamList } from '../../App';
+import RecipeList from '../../components/RecipeList/RecipeList';
+import useHeader from '../../hooks/useHeader';
 import useUser from '../../hooks/useUser';
+import { Recipe } from '../../types';
 
 type DiscoverScreenProps = CompositeScreenProps<
   NativeStackScreenProps<MainStackParamList, 'discover'>,
   NativeStackScreenProps<RootStackParamList, 'main'>
 >;
 
-const DiscoverScreen: React.FC<DiscoverScreenProps> = ({
-  navigation,
-  route,
-}) => {
+const DiscoverScreen: React.FC<DiscoverScreenProps> = ({ navigation }) => {
   const { user } = useUser();
 
-  React.useEffect(() => {
-    if (!user) {
-      console.log('no user, redirecting to auth screen');
-      navigation.navigate('landing', { screen: 'auth' });
-    }
-  }, [user]);
-
-  if (!user) {
-    return null;
-  }
+  useHeader({
+    navigation,
+    contents: <Text style={styles.text}>Welcome, {user?.displayName}!</Text>,
+    props: { padding: 20 },
+    dependencies: [user],
+  });
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Welcome, {user.displayName}!</Text>
+      <RecipeList
+        onSelectRecipe={(recipe: Recipe) => {
+          navigation.navigate('main', {
+            screen: 'recipe',
+            params: { id: recipe.id },
+          });
+        }}
+      />
     </View>
   );
 };
@@ -38,10 +41,8 @@ const DiscoverScreen: React.FC<DiscoverScreenProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'flex-start',
-    justifyContent: 'flex-start',
-    padding: 32,
-    paddingVertical: 128,
+    paddingHorizontal: 20,
+    width: '100%',
   },
   text: {
     fontSize: 24,
