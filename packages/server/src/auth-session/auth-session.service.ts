@@ -30,7 +30,7 @@ export class AuthSessionService {
         callbackUrl,
       });
       return authSession;
-    } catch (error) {
+    } catch (error: any) {
       throw new DatabaseException('Error creating authentication session.', {
         cause: error,
       });
@@ -50,7 +50,7 @@ export class AuthSessionService {
     let authSession: AuthSessionDocument;
     try {
       authSession = await this.authSessionModel.findOne({ auid });
-    } catch (error) {
+    } catch (error: any) {
       throw new DatabaseException('Error retrieving authentication session.', {
         cause: error,
       });
@@ -81,7 +81,7 @@ export class AuthSessionService {
 
       this.logger.log('Authentication session complete.');
       return authSession;
-    } catch (error) {
+    } catch (error: any) {
       throw new DatabaseException(
         'Error updating retrieved authentication session.',
         {
@@ -104,7 +104,7 @@ export class AuthSessionService {
     let authSession: AuthSessionDocument;
     try {
       authSession = await this.authSessionModel.findOne({ auid });
-    } catch (error) {
+    } catch (error: any) {
       throw new DatabaseException('Error updating authentication session.', {
         cause: error,
       });
@@ -119,7 +119,7 @@ export class AuthSessionService {
     authSession.userId = userId;
     try {
       await authSession.save();
-    } catch (error) {
+    } catch (error: any) {
       throw new DatabaseException(
         'Error updating retrieved authentication session.',
         {

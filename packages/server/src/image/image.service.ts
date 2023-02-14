@@ -48,7 +48,7 @@ export class ImageService {
     let imageBuffer: Buffer;
     try {
       imageBuffer = await this.imageDataProvider.getImage(tempImageUrl);
-    } catch (error) {
+    } catch (error: any) {
       this.logger.log(`Unable to download image from ${tempImageUrl}`);
       throw new ImageUploadException(`Error downloading image from OpenAI`, {
         cause: error,
@@ -59,7 +59,7 @@ export class ImageService {
     let imageUrl: string;
     try {
       imageUrl = await this.s3Provider.uploadImage(imageBuffer);
-    } catch (error) {
+    } catch (error: any) {
       throw new ImageUploadException(`Error uploading image to S3`, {
         cause: error,
       });
@@ -76,7 +76,7 @@ export class ImageService {
     const key = imageUrl.split('/').pop();
     try {
       await this.s3Provider.deleteImage(key);
-    } catch (error) {
+    } catch (error: any) {
       throw new ImageUploadException(`Error deleting image from S3`, {
         cause: error,
       });

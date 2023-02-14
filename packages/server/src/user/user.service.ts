@@ -24,10 +24,13 @@ export class UserService {
     try {
       const createdUser = await this.userModel.create(user);
       return createdUser.save();
-    } catch (error) {
+    } catch (error: any) {
       this.logger.error(`Database error creating user ${user.email}. ${error}`);
       throw new InternalServerErrorException(
-        `Error creating user ${user.email}. ${error}`,
+        `Error creating user ${user.email}.`,
+        {
+          cause: error,
+        },
       );
     }
   }
@@ -42,7 +45,7 @@ export class UserService {
     let user: UserDocument;
     try {
       user = await this.userModel.findOne({ _id: id });
-    } catch (error) {
+    } catch (error: any) {
       throw new DatabaseException('Databse error finding user', {
         cause: error,
       });
@@ -65,9 +68,12 @@ export class UserService {
       user = await this.userModel.findOne({
         email,
       });
-    } catch (error) {
+    } catch (error: any) {
       throw new InternalServerErrorException(
-        `Error finding user in database. ${error}`,
+        `Error finding user in database.`,
+        {
+          cause: error,
+        },
       );
     }
 
@@ -88,7 +94,7 @@ export class UserService {
     try {
       await user.remove();
       return user;
-    } catch (error) {
+    } catch (error: any) {
       throw new DatabaseException(`Error removing user from database.`, {
         cause: error,
       });

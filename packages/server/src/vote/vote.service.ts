@@ -48,7 +48,7 @@ export class VoteService {
       recipe.votes.push({ userId: user.id, vote });
       await recipe.save();
       return recipe;
-    } catch (error) {
+    } catch (error: any) {
       throw new DatabaseException('Database error creating vote', {
         cause: error,
       });
@@ -79,7 +79,7 @@ export class VoteService {
         return vote;
       });
       return recipe.save();
-    } catch (error) {
+    } catch (error: any) {
       throw new DatabaseException('Database error updating vote', {
         cause: error,
       });
@@ -104,7 +104,7 @@ export class VoteService {
         return vote.userId !== user.id;
       });
       return recipe.save();
-    } catch (error) {
+    } catch (error: any) {
       throw new DatabaseException('Database error deleting vote', {
         cause: error,
       });

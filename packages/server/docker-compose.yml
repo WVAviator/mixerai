@@ -15,7 +15,6 @@ services:
       - db
     environment:
       MONGODB_URI: mongodb://${MONGODB_USER}:${MONGODB_PASSWORD}@db:27017
-      # - MONGODB_URI=mongodb://db:27017/test
     env_file:
       - .env
     ports:

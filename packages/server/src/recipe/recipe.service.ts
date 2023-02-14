@@ -44,7 +44,7 @@ export class RecipeService {
       });
       recipeData.save();
       return recipeData;
-    } catch (error) {
+    } catch (error: any) {
       throw new DatabaseException('Error saving recipe', {
         cause: error,
       });
@@ -60,7 +60,7 @@ export class RecipeService {
     try {
       const recipes = await this.recipeModel.find({ user: user.id });
       return recipes;
-    } catch (error) {
+    } catch (error: any) {
       throw new DatabaseException('Error finding recipes', {
         cause: error,
       });
@@ -78,7 +78,7 @@ export class RecipeService {
     let recipe: RecipeDocument;
     try {
       recipe = await this.recipeModel.findOne({ _id: id });
-    } catch (error) {
+    } catch (error: any) {
       throw new DatabaseException('Error finding recipe', {
         cause: error,
       });
@@ -107,7 +107,7 @@ export class RecipeService {
     this.logger.log(`Deleting recipe with id ${id}.`);
     try {
       await recipe.remove();
-    } catch (error) {
+    } catch (error: any) {
       throw new DatabaseException('Error deleting recipe', {
         cause: error,
       });
