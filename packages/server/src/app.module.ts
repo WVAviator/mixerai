@@ -31,6 +31,7 @@ import * as Joi from 'joi';
         AWS_ACCESS_KEY_ID: Joi.string().required(),
         AWS_SECRET_ACCESS_KEY: Joi.string().required(),
         AWS_REGION: Joi.string().required(),
+        MONGODB_DB: Joi.string().required(),
       }),
       validationOptions: {
         allowUnknown: true,
@@ -44,6 +45,7 @@ import * as Joi from 'joi';
         console.log('URI:', configService.get('MONGODB_URI'));
         return {
           uri: configService.get('MONGODB_URI'),
+          dbName: configService.get('MONGODB_DB'),
         };
       },
       inject: [ConfigService],
