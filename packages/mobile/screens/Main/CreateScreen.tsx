@@ -5,6 +5,7 @@ import { StyleSheet, Text, TextInput, View } from 'react-native';
 import { MainStackParamList } from '.';
 import { RootStackParamList } from '../../App';
 import OutlineButton from '../../components/OutlineButton/OutlineButton';
+import useHeader from '../../hooks/useHeader';
 import serverInstance from '../../utilities/serverInstance';
 
 type CreateScreenProps = CompositeScreenProps<
@@ -15,6 +16,14 @@ type CreateScreenProps = CompositeScreenProps<
 const CreateScreen: React.FC<CreateScreenProps> = ({ navigation }) => {
   const [text, setText] = React.useState('');
   const [loading, setLoading] = React.useState(false);
+
+  useHeader({
+    contents: <Text style={styles.headerText}>Generate a Recipe</Text>,
+    navigation,
+    props: {
+      padding: 20,
+    },
+  });
 
   const onSubmit = async () => {
     setLoading(true);
@@ -82,6 +91,11 @@ const styles = StyleSheet.create({
     fontSize: 22,
     color: '#fff',
     marginBottom: 32,
+  },
+  headerText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#ffffff',
   },
   inputContainer: {
     borderWidth: 1,
