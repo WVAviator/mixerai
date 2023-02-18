@@ -1,13 +1,13 @@
 import React from 'react';
-import { Recipe } from '../types';
+import { Recipe } from '../../types';
+import serverInstance from '../../utilities/serverInstance';
 
 const useRecipeList = () => {
   const [recipes, setRecipes] = React.useState<Recipe[]>([]);
   const [refreshing, setRefreshing] = React.useState(false);
 
   const getRecipes = async () => {
-    const response = await fetch('https://api.mixerai.app/recipe');
-    const data = await response.json();
+    const { data } = await serverInstance.get('/recipe');
     setRecipes(data);
   };
 

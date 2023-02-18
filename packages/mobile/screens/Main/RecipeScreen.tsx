@@ -13,7 +13,7 @@ import { MainStackParamList } from '.';
 import { RootStackParamList } from '../../App';
 import RecipeHeaderBar from '../../components/RecipeHeaderBar/RecipeHeaderBar';
 import useHeader from '../../hooks/useHeader';
-import useRecipe from '../../hooks/useRecipe';
+import useRecipe from '../../hooks/useRecipe/useRecipe';
 
 type RecipeScreenProps = CompositeScreenProps<
   NativeStackScreenProps<MainStackParamList, 'recipe'>,

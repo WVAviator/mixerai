@@ -7,7 +7,7 @@ import {
   TouchableHighlight,
   View,
 } from 'react-native';
-import useRecipeList from '../../hooks/useRecipeList';
+import useRecipeList from '../../hooks/useRecipeList/useRecipeList';
 import { Recipe } from '../../types';
 
 const cutoffText = (text: string, length: number) => {

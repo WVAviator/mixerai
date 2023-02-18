@@ -9,7 +9,7 @@ import AppleIcon from '../../components/icons/AppleIcon';
 import FacebookIcon from '../../components/icons/FacebookIcon';
 import GoogleIcon from '../../components/icons/GoogleIcon';
 import OutlineButton from '../../components/OutlineButton/OutlineButton';
-import useAuthentication from '../../hooks/useAuthentication';
+import useAuthentication from '../../hooks/useAuthenticate/useAuthentication';
 import useUser from '../../hooks/useUser';
 import { User } from '../../types';
 interface AuthProvider {

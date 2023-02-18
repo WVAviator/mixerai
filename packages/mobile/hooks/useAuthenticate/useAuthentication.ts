@@ -1,6 +1,7 @@
 import * as Linking from 'expo-linking';
 import * as WebBrowser from 'expo-web-browser';
-import { User } from '../types';
+import { User } from '../../types';
+import serverInstance from '../../utilities/serverInstance';
 
 /**
  * A hook that handles communication with the server to complete the OAuth flow.
@@ -27,15 +28,8 @@ const useAuthentication = (authRoute: string) => {
     }
 
     try {
-      const authResponse = await fetch('https://api.mixerai.app/auth/login', {
-        method: 'POST',
-        body: JSON.stringify({ auid }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      const { user } = await authResponse.json();
+      const response = await serverInstance.post('/auth/login', { auid });
+      const { user } = response.data;
 
       onAuthenticated(user);
     } catch (error) {
