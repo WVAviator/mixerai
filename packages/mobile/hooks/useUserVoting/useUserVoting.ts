@@ -1,5 +1,5 @@
 import React from 'react';
-import serverInstance from '../utilities/serverInstance';
+import serverInstance from '../../utilities/serverInstance';
 
 const useUserVoting = (recipeId: string) => {
   const [userVote, setUserVote] = React.useState<string | null>(null);

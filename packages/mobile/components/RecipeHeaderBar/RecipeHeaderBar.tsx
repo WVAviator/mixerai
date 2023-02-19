@@ -1,7 +1,7 @@
 import { AntDesign, Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import useUserVoting from '../../hooks/useUserVoting';
+import useUserVoting from '../../hooks/useUserVoting/useUserVoting';
 import { Recipe } from '../../types';
 
 interface RecipeHeaderBarProps {
