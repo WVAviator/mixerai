@@ -1,6 +1,6 @@
 import React from 'react';
-import { Recipe } from '../types';
-import serverInstance from '../utilities/serverInstance';
+import { Recipe } from '../../types';
+import serverInstance from '../../utilities/serverInstance';
 
 const useRecipe = (id: string) => {
   const [recipe, setRecipe] = React.useState<Recipe | null>(null);

@@ -1,0 +1,23 @@
+version: '3'
+services:
+  db:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGODB_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASSWORD}
+    volumes:
+      - mixerai-data:/data/db
+  app:
+    build: .
+    restart: always
+    depends_on:
+      - db
+    environment:
+      MONGODB_URI: mongodb://${MONGODB_USER}:${MONGODB_PASSWORD}@db:27017
+    env_file:
+      - .env
+    ports:
+      - 4000:4000
+volumes:
+  mixerai-data:

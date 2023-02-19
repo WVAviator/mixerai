@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { S3 } from 'aws-sdk';
 import { randomBytes } from 'crypto';
 
@@ -9,11 +10,11 @@ import { randomBytes } from 'crypto';
 export class S3Provider {
   private readonly s3: S3;
 
-  constructor() {
+  constructor(private configService: ConfigService) {
     this.s3 = new S3({
-      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-      region: process.env.AWS_REGION,
+      accessKeyId: configService.get('AWS_ACCESS_KEY_ID'),
+      secretAccessKey: configService.get('AWS_SECRET_ACCESS_KEY'),
+      region: configService.get('AWS_REGION'),
     });
   }
 
@@ -26,7 +27,7 @@ export class S3Provider {
   public async uploadImage(image: Buffer, type = 'image/png'): Promise<string> {
     const key = randomBytes(16).toString('hex');
     const params = {
-      Bucket: process.env.AWS_BUCKET_NAME,
+      Bucket: this.configService.get('AWS_BUCKET_NAME'),
       Key: key,
       Body: image,
       ContentType: type,
@@ -42,7 +43,7 @@ export class S3Provider {
    */
   public async deleteImage(key: string): Promise<void> {
     const params = {
-      Bucket: process.env.AWS_BUCKET_NAME,
+      Bucket: this.configService.get('AWS_BUCKET_NAME'),
       Key: key,
     };
 

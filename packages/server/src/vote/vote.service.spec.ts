@@ -1,7 +1,7 @@
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { RecipeService } from '../recipe/recipe.service';
-import { RecipeDocument, Vote } from '../recipe/schemas/recipe.schema';
+import { RecipeDocument } from '../recipe/schemas/recipe.schema';
 import { UserDocument } from '../user/schemas/user.schema';
 import { VoteException } from './vote.exception';
 import { VoteService } from './vote.service';

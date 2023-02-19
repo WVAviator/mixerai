@@ -50,7 +50,7 @@ export class GenerateService {
       moderationResponse = await this.openai.createModeration({
         input: options.prompt,
       });
-    } catch (error) {
+    } catch (error: any) {
       throw new BadGatewayException('Error communicating with OpenAI', {
         cause: error,
       });
@@ -76,7 +76,7 @@ export class GenerateService {
         temperature: 0.8,
         max_tokens: 250,
       });
-    } catch (error) {
+    } catch (error: any) {
       throw new BadGatewayException('Error communicating with OpenAI', {
         cause: error,
       });
@@ -93,7 +93,7 @@ export class GenerateService {
     let generatedRecipe: GeneratedRecipe;
     try {
       generatedRecipe = await JSON.parse(responseJson);
-    } catch (error) {
+    } catch (error: any) {
       throw new AIResponseException('AI produced invalid JSON.', {
         cause: error,
       });

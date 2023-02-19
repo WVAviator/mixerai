@@ -1,4 +1,5 @@
 import { BadRequestException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Test } from '@nestjs/testing';
 import { Request } from 'express';
@@ -12,7 +13,6 @@ import { AuthService } from './auth.service';
 
 describe('AuthService', () => {
   let authService: AuthService;
-  let jwtService: JwtService;
   let userService: UserService;
   let authSessionService: AuthSessionService;
 
@@ -25,8 +25,6 @@ describe('AuthService', () => {
   };
 
   beforeEach(async () => {
-    process.env.JWT_SECRET = 'jwtSecret';
-
     const module = await Test.createTestingModule({
       providers: [
         AuthService,
@@ -58,10 +56,15 @@ describe('AuthService', () => {
             updateWithUserId: jest.fn(),
           },
         },
+        {
+          provide: ConfigService,
+          useValue: {
+            get: () => 'jwtSecret',
+          },
+        },
       ],
     }).compile();
 
-    jwtService = module.get<JwtService>(JwtService);
     userService = module.get<UserService>(UserService);
     authService = module.get<AuthService>(AuthService);
     authSessionService = module.get<AuthSessionService>(AuthSessionService);

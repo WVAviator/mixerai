@@ -1,11 +1,11 @@
 import { AntDesign, Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import useUserVoting from '../../hooks/useUserVoting';
+import useUserVoting from '../../hooks/useUserVoting/useUserVoting';
 import { Recipe } from '../../types';
 
 interface RecipeHeaderBarProps {
-  recipe: Recipe;
+  recipe: Recipe | null;
   onBack: () => void;
 }
 
@@ -13,7 +13,13 @@ const RecipeHeaderBar: React.FC<RecipeHeaderBarProps> = ({
   recipe,
   onBack,
 }) => {
-  const { isLiked, isDisliked, like, dislike } = useUserVoting(recipe.id);
+  const { isLiked, isDisliked, like, dislike } = useUserVoting(
+    recipe?.id || '',
+  );
+
+  if (!recipe) {
+    return null;
+  }
 
   return (
     <>
