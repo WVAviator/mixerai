@@ -20,9 +20,23 @@ export class FeedService {
       { $sort: { createdAt: -1 } },
       {
         $addFields: {
-          likes: { $sum: { $cond: [{ $eq: ['$votes.vote', 'like'] }, 1, 0] } },
+          likes: {
+            $size: {
+              $filter: {
+                input: '$votes',
+                as: 'vote',
+                cond: { $eq: ['$$vote.vote', 'like'] },
+              },
+            },
+          },
           dislikes: {
-            $sum: { $cond: [{ $eq: ['$votes.vote', 'dislike'] }, 1, 0] },
+            $size: {
+              $filter: {
+                input: '$votes',
+                as: 'vote',
+                cond: { $eq: ['$$vote.vote', 'dislike'] },
+              },
+            },
           },
           popularity: {
             $divide: [
@@ -47,7 +61,9 @@ export class FeedService {
       { $limit: limit },
     ]);
 
-    this.logger.log(`The top recipes are ${recipes.slice(0, 3)}.`);
+    this.logger.log(
+      `The top recipes are ${JSON.stringify(recipes.slice(0, 3))}.`,
+    );
 
     const recipeDocuments: RecipeDocument[] = recipes.map((recipe) =>
       this.recipeModel.hydrate(recipe),
