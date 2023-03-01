@@ -9,17 +9,17 @@ import useHeader from '../../hooks/useHeader';
 import useUser from '../../hooks/useUser';
 import { Recipe } from '../../types';
 
-type DiscoverScreenProps = CompositeScreenProps<
-  NativeStackScreenProps<MainStackParamList, 'discover'>,
+type MyRecipesScreenProps = CompositeScreenProps<
+  NativeStackScreenProps<MainStackParamList, 'myrecipes'>,
   NativeStackScreenProps<RootStackParamList, 'main'>
 >;
 
-const DiscoverScreen: React.FC<DiscoverScreenProps> = ({ navigation }) => {
+const MyRecipesScreen: React.FC<MyRecipesScreenProps> = ({ navigation }) => {
   const { user } = useUser();
 
   useHeader({
     navigation,
-    contents: <Text style={styles.text}>Trending Cocktails</Text>,
+    contents: <Text style={styles.text}>Your Recipes</Text>,
     props: { padding: 20 },
     dependencies: [user],
   });
@@ -33,6 +33,7 @@ const DiscoverScreen: React.FC<DiscoverScreenProps> = ({ navigation }) => {
             params: { id: recipe.id },
           });
         }}
+        options={{ getByUser: true }}
       />
     </View>
   );
@@ -55,4 +56,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DiscoverScreen;
+export default MyRecipesScreen;
