@@ -150,7 +150,7 @@ describe('GenerateService', () => {
 
       expect(openAIFunction).toHaveBeenCalledWith({
         prompt: `Test training prompt prefix: Test prompt`,
-        model: 'text-davinci-003',
+        model: 'gpt-3.5-turbo',
         temperature: 0.8,
         max_tokens: 250,
       });
