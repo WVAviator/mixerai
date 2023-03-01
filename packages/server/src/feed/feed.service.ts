@@ -19,6 +19,20 @@ export class FeedService {
     >([
       { $sort: { createdAt: -1 } },
       {
+        $group: {
+          _id: '$_id',
+          title: { $first: '$title' },
+          description: { $first: '$description' },
+          imageUrl: { $first: '$imageUrl' },
+          imagePrompt: { $first: '$imagePrompt' },
+          prompt: { $first: '$prompt' },
+          likes: { $sum: { $cond: [{ $eq: ['$votes.vote', 'like'] }, 1, 0] } },
+          dislikes: {
+            $sum: { $cond: [{ $eq: ['$votes.vote', 'dislike'] }, 1, 0] },
+          },
+        },
+      },
+      {
         $addFields: {
           popularity: {
             $divide: [
