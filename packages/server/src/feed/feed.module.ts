@@ -5,7 +5,7 @@ import { FeedService } from './feed.service';
 
 @Module({
   providers: [FeedService],
-
+  exports: [FeedService],
   imports: [
     MongooseModule.forFeature([{ name: 'Recipe', schema: RecipeSchema }]),
   ],
