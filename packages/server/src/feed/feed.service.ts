@@ -14,7 +14,9 @@ export class FeedService {
   async getTrending(page: number, pageSize: number) {
     const skip = (page - 1) * pageSize;
     const limit = pageSize;
-    const recipes = await this.recipeModel.aggregate<Recipe>([
+    const recipes = await this.recipeModel.aggregate<
+      Recipe & { popularity: number }
+    >([
       { $sort: { createdAt: -1 } },
       {
         $addFields: {
@@ -31,11 +33,18 @@ export class FeedService {
       { $limit: limit },
     ]);
 
-    this.logger.log(`Found ${recipes.length} trending recipes.`);
-    this.logger.log(
-      `The top recipes are ${JSON.stringify(recipes.slice(0, 3))}.`,
+    const recipeDocuments: RecipeDocument[] = recipes.map((recipe) =>
+      this.recipeModel.hydrate(recipe),
     );
 
-    return recipes;
+    this.logger.log(
+      `The top recipes are ${recipes
+        .slice(0, 3)
+        .map(
+          (recipe) => `${recipe.title}: popularity: ${recipe.popularity}`,
+        )}.`,
+    );
+
+    return recipeDocuments;
   }
 }
