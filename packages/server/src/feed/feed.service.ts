@@ -27,12 +27,21 @@ export class FeedService {
           popularity: {
             $divide: [
               { $subtract: ['$likes', '$dislikes'] },
-              { $divide: [{ $subtract: [new Date(), '$createdAt'] }, 3600000] },
+              {
+                $add: [
+                  {
+                    $divide: [
+                      { $subtract: [new Date(), '$createdAt'] },
+                      3600000,
+                    ],
+                  },
+                  1,
+                ],
+              },
             ],
           },
         },
       },
-      { $project: { popularity: 1 } },
       { $sort: { popularity: -1 } },
       { $skip: skip },
       { $limit: limit },
