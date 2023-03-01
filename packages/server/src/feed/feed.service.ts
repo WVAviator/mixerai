@@ -40,7 +40,29 @@ export class FeedService {
           },
           popularity: {
             $divide: [
-              { $subtract: ['$likes', '$dislikes'] },
+              {
+                $subtract: [
+                  {
+                    $size: {
+                      $filter: {
+                        input: '$votes',
+                        as: 'vote',
+                        cond: { $eq: ['$$vote.vote', 'like'] },
+                      },
+                    },
+                  },
+                  ,
+                  {
+                    $size: {
+                      $filter: {
+                        input: '$votes',
+                        as: 'vote',
+                        cond: { $eq: ['$$vote.vote', 'dislike'] },
+                      },
+                    },
+                  },
+                ],
+              },
               {
                 $add: [
                   {
