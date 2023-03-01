@@ -10,7 +10,7 @@
     "packages/*"
   ],
   "scripts": {
-    "start:server": "cd packages/server && docker compose up",
+    "start:server": "cd packages/server && docker compose build && docker compose up",
     "start:mobile": "cd packages/mobile && yarn start",
     "test": "lerna run test",
     "lint": "lerna run lint",
