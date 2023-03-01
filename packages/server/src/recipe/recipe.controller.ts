@@ -1,3 +1,4 @@
+import { FeedService } from './../feed/feed.service';
 import {
   Body,
   Controller,
@@ -15,7 +16,10 @@ import { RecipeService } from './recipe.service';
 
 @Controller('recipe')
 export class RecipeController {
-  constructor(private readonly recipeService: RecipeService) {}
+  constructor(
+    private readonly recipeService: RecipeService,
+    private readonly feedService: FeedService,
+  ) {}
 
   @Post()
   @UseGuards(JwtAuthGuard)
@@ -26,7 +30,20 @@ export class RecipeController {
     return this.recipeService.generate(generateRecipeDto, user);
   }
 
-  @Get()
+  @Get('trending')
+  @UseGuards(JwtAuthGuard)
+  getTrending() {
+    return this.feedService.getTrending(1, 25);
+  }
+
+  @Get('trending/:page')
+  @UseGuards(JwtAuthGuard)
+  getTrendingByPage(@Param('page') page: string) {
+    const pageNum = parseInt(page, 10);
+    return this.feedService.getTrending(pageNum, 25);
+  }
+
+  @Get('/user/:id')
   @UseGuards(JwtAuthGuard)
   findAll(@User() user: UserDocument) {
     return this.recipeService.findAll(user);
