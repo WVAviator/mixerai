@@ -9,6 +9,7 @@ import { ImageModule } from './image/image.module';
 import { OpenAIModule } from './openai/openai.module';
 import { VoteModule } from './vote/vote.module';
 import { AuthSessionModule } from './auth-session/auth-session.module';
+import { FeedModule } from './feed/feed.module';
 import * as Joi from 'joi';
 
 @Module({
@@ -57,6 +58,7 @@ import * as Joi from 'joi';
     OpenAIModule,
     VoteModule,
     AuthSessionModule,
+    FeedModule,
   ],
 })
 export class AppModule {}
