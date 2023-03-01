@@ -19,21 +19,11 @@ export class FeedService {
     >([
       { $sort: { createdAt: -1 } },
       {
-        $group: {
-          _id: '$_id',
-          title: { $first: '$title' },
-          description: { $first: '$description' },
-          imageUrl: { $first: '$imageUrl' },
-          imagePrompt: { $first: '$imagePrompt' },
-          prompt: { $first: '$prompt' },
+        $addFields: {
           likes: { $sum: { $cond: [{ $eq: ['$votes.vote', 'like'] }, 1, 0] } },
           dislikes: {
             $sum: { $cond: [{ $eq: ['$votes.vote', 'dislike'] }, 1, 0] },
           },
-        },
-      },
-      {
-        $addFields: {
           popularity: {
             $divide: [
               { $subtract: ['$likes', '$dislikes'] },
@@ -42,10 +32,13 @@ export class FeedService {
           },
         },
       },
+      { $project: { popularity: 1 } },
       { $sort: { popularity: -1 } },
       { $skip: skip },
       { $limit: limit },
     ]);
+
+    this.logger.log(`The top recipes are ${recipes.slice(0, 3)}.`);
 
     const recipeDocuments: RecipeDocument[] = recipes.map((recipe) =>
       this.recipeModel.hydrate(recipe),
