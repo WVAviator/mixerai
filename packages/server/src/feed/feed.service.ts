@@ -51,7 +51,6 @@ export class FeedService {
                       },
                     },
                   },
-                  ,
                   {
                     $size: {
                       $filter: {
