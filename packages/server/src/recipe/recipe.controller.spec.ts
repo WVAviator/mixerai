@@ -1,5 +1,4 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { FeedService } from '../feed/feed.service';
 import { UserDocument } from '../user/schemas/user.schema';
 import { RecipeController } from './recipe.controller';
 import { RecipeService } from './recipe.service';
@@ -8,7 +7,6 @@ import { RecipeDocument } from './schemas/recipe.schema';
 describe('RecipeController', () => {
   let recipeController: RecipeController;
   let recipeService: RecipeService;
-  let feedService: FeedService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -23,18 +21,11 @@ describe('RecipeController', () => {
             remove: jest.fn(),
           },
         },
-        {
-          provide: FeedService,
-          useValue: {
-            getTrending: jest.fn(),
-          },
-        },
       ],
     }).compile();
 
     recipeController = module.get<RecipeController>(RecipeController);
     recipeService = module.get<RecipeService>(RecipeService);
-    feedService = module.get<FeedService>(FeedService);
   });
 
   it('should be defined', () => {

@@ -7,7 +7,7 @@ const useRecipeList = () => {
   const [refreshing, setRefreshing] = React.useState(false);
 
   const getRecipes = async () => {
-    const { data } = await serverInstance.get('/recipe');
+    const { data } = await serverInstance.get('/feed');
     setRecipes(data);
   };
 
