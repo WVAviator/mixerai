@@ -11,6 +11,12 @@ export class FeedService {
     @InjectModel('Recipe') private recipeModel: Model<RecipeDocument>,
   ) {}
 
+  /**
+   * Returns a pagination of trending recipes calculated by dividing net likes over hours since creation
+   * @param page The page to start from
+   * @param pageSize The number of recipes to return per page
+   * @returns An array of RecipeDocuments
+   */
   async getTrending(page: number, pageSize: number) {
     const skip = (page - 1) * pageSize;
     const limit = pageSize;
@@ -20,24 +26,7 @@ export class FeedService {
       { $sort: { createdAt: -1 } },
       {
         $addFields: {
-          likes: {
-            $size: {
-              $filter: {
-                input: '$votes',
-                as: 'vote',
-                cond: { $eq: ['$$vote.vote', 'like'] },
-              },
-            },
-          },
-          dislikes: {
-            $size: {
-              $filter: {
-                input: '$votes',
-                as: 'vote',
-                cond: { $eq: ['$$vote.vote', 'dislike'] },
-              },
-            },
-          },
+          // popularity = (likes - dislikes) / (hours since creation + 1)
           popularity: {
             $divide: [
               {
@@ -83,19 +72,15 @@ export class FeedService {
     ]);
 
     this.logger.log(
-      `The top recipes are ${JSON.stringify(recipes.slice(0, 3))}.`,
-    );
-
-    const recipeDocuments: RecipeDocument[] = recipes.map((recipe) =>
-      this.recipeModel.hydrate(recipe),
-    );
-
-    this.logger.log(
       `The top recipes are ${recipes
         .slice(0, 3)
         .map(
           (recipe) => `${recipe.title}: popularity: ${recipe.popularity}`,
         )}.`,
+    );
+
+    const recipeDocuments: RecipeDocument[] = recipes.map((recipe) =>
+      this.recipeModel.hydrate(recipe),
     );
 
     return recipeDocuments;
