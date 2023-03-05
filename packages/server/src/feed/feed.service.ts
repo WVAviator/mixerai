@@ -20,6 +20,11 @@ export class FeedService {
   async getTrending(page: number, pageSize: number) {
     const skip = (page - 1) * pageSize;
     const limit = pageSize;
+
+    this.logger.log(
+      `Getting trending recipes, skipping ${skip} and limiting to ${limit}`,
+    );
+
     const recipes = await this.recipeModel.aggregate<
       Recipe & { popularity: number }
     >([

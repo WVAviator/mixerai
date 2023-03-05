@@ -57,7 +57,7 @@ const MainScreen: React.FC<MainScreenProps> = ({ navigation }) => {
         label: 'My Recipes',
         icon: <FontAwesome5 name="user" size={24} color="white" />,
         onPress: () => {
-          navigation.navigate('main', { screen: 'myrecipes' });
+          navigation.replace('main', { screen: 'myrecipes' });
         },
       },
     ],

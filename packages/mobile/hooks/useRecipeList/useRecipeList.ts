@@ -23,7 +23,7 @@ const useRecipeList = (options: RecipeListOptions = {}) => {
 
   React.useEffect(() => {
     getRecipes();
-  }, [options]);
+  }, []);
 
   const onRefresh = async () => {
     setRefreshing(true);

@@ -33,6 +33,7 @@ const DiscoverScreen: React.FC<DiscoverScreenProps> = ({ navigation }) => {
             params: { id: recipe.id },
           });
         }}
+        options={{ getByUser: false }}
       />
     </View>
   );
