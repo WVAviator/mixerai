@@ -70,12 +70,17 @@ export class GenerateService {
     let recipeResponse: AxiosResponse<CreateCompletionResponse, any>;
 
     try {
-      recipeResponse = await this.openai.createCompletion({
-        model: 'gpt-3.5-turbo',
-        prompt: this.promptProvider.createPrompt(options),
-        temperature: 0.8,
-        max_tokens: 250,
-      });
+      recipeResponse = await this.openai.createCompletion(
+        {
+          model: 'gpt-3.5-turbo',
+          prompt: this.promptProvider.createPrompt(options),
+          temperature: 0.8,
+          max_tokens: 250,
+        },
+        {
+          timeout: 10000,
+        },
+      );
     } catch (error: any) {
       throw new BadGatewayException('Error communicating with OpenAI', {
         cause: error,

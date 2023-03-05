@@ -148,12 +148,17 @@ describe('GenerateService', () => {
         prompt: 'Test prompt',
       });
 
-      expect(openAIFunction).toHaveBeenCalledWith({
-        prompt: `Test training prompt prefix: Test prompt`,
-        model: 'gpt-3.5-turbo',
-        temperature: 0.8,
-        max_tokens: 250,
-      });
+      expect(openAIFunction).toHaveBeenCalledWith(
+        {
+          prompt: `Test training prompt prefix: Test prompt`,
+          model: 'gpt-3.5-turbo',
+          temperature: 0.8,
+          max_tokens: 250,
+        },
+        {
+          timeout: 10000,
+        },
+      );
     });
 
     it('throws an error if an empty prompt is provided', async () => {
