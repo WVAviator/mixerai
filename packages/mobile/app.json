@@ -14,16 +14,25 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.wvaviator.mixerai"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/branding/icon.png",
         "backgroundColor": "#1F2122"
-      }
+      },
+      "package": "com.wvaviator.mixerai"
     },
-    "scheme": "mixerai"
+    "scheme": "mixerai",
+    "extra": {
+      "eas": {
+        "projectId": "6213686b-1532-453c-9028-ca1c617f2df5"
+      }
+    }
   }
 }
