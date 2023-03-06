@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { CacheModule, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { RecipeModule } from './recipe/recipe.module';
 import { UserModule } from './user/user.module';
@@ -49,6 +49,10 @@ import * as Joi from 'joi';
         };
       },
       inject: [ConfigService],
+    }),
+    CacheModule.register({
+      isGlobal: true,
+      ttl: 30000,
     }),
     RecipeModule,
     UserModule,

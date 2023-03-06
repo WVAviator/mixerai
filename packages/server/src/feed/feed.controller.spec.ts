@@ -1,3 +1,4 @@
+import { CacheModule } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { FeedController } from './feed.controller';
 import { FeedService } from './feed.service';
@@ -8,6 +9,12 @@ describe('FeedController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [FeedController],
+      imports: [
+        CacheModule.register({
+          isGlobal: true,
+          ttl: 30000,
+        }),
+      ],
       providers: [
         {
           provide: FeedService,
