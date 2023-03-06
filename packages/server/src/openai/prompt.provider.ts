@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import { RecipeGenerationOptions } from '../generate/dtos/recipe-generation-options.dto';
+import { ChatMessage } from './openai.provider';
 
 /**
  * Provides the methods for prefixing prompts to OpenAI with the appropriate context for few-shot learning.
@@ -28,12 +29,12 @@ export class PromptProvider {
   }
 
   createChatPrompt(options: RecipeGenerationOptions) {
-    const chatPrompt = JSON.parse(this.chatPrompt);
+    const chatPrompt = JSON.parse(this.chatPrompt) as ChatMessage[];
     chatPrompt.push({
       role: 'user',
       content: options.prompt,
     });
 
-    return JSON.stringify(chatPrompt);
+    return chatPrompt;
   }
 }

@@ -102,26 +102,21 @@ export class GenerateService {
   }
 
   private async getChatResponse(options: RecipeGenerationOptions) {
-    let recipeResponse: AxiosResponse<CreateCompletionResponse, any>;
+    let recipeResponse: AxiosResponse<CreateChatResponse, any>;
 
     try {
-      recipeResponse = await this.openai.createCompletion(
-        {
-          model: options.model,
-          prompt: this.promptProvider.createChatPrompt(options),
-          temperature: 0.8,
-          max_tokens: 250,
-        },
-        {
-          timeout: 10000,
-        },
-      );
+      recipeResponse = await this.openai.createChatCompletion({
+        model: options.model as 'gpt-3.5-turbo' | 'gpt-3.5-turbo-0301',
+        messages: this.promptProvider.createChatPrompt(options),
+        temperature: 0.8,
+        max_tokens: 250,
+      });
     } catch (error: any) {
       throw new BadGatewayException('Error communicating with OpenAI', {
         cause: error,
       });
     }
-    const recipe = await this.parseCompletionResponse(recipeResponse.data);
+    const recipe = await this.parseChatResponse(recipeResponse.data);
     this.logger.log(`Generated recipe ${recipe.title} successfully.`);
 
     return recipe;

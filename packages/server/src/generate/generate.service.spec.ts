@@ -87,7 +87,7 @@ describe('GenerateService', () => {
 
       const generatedRecipe = await generateService.generateRecipe({
         prompt: 'Test prompt',
-        model: 'gpt-3.5-turbo',
+        model: 'text-davinci-003',
       });
 
       expect(openAICall).toHaveBeenCalled();
@@ -102,7 +102,7 @@ describe('GenerateService', () => {
       await expect(
         generateService.generateRecipe({
           prompt: 'Test prompt',
-          model: 'gpt-3.5-turbo',
+          model: 'text-davinci-003',
         }),
       ).rejects.toThrow(AIResponseException);
     });
@@ -116,7 +116,7 @@ describe('GenerateService', () => {
       await expect(
         generateService.generateRecipe({
           prompt: 'Test prompt',
-          model: 'gpt-3.5-turbo',
+          model: 'text-davinci-003',
         }),
       ).rejects.toThrow(AIResponseException);
     });
@@ -135,7 +135,7 @@ describe('GenerateService', () => {
       await expect(
         generateService.generateRecipe({
           prompt: 'Test prompt',
-          model: 'gpt-3.5-turbo',
+          model: 'text-davinci-003',
         }),
       ).rejects.toThrow(AIResponseException);
     });

@@ -14,9 +14,14 @@ import {
 
 interface CreateChatRequest {
   model: 'gpt-3.5-turbo' | 'gpt-3.5-turbo-0301';
-  messages: { role: 'user' | 'system' | 'assistant'; content: string }[];
-  maxTokens: number;
+  messages: ChatMessage[];
+  max_tokens: number;
   temperature: number;
+}
+
+export interface ChatMessage {
+  role: 'user' | 'system' | 'assistant';
+  content: string;
 }
 
 export interface CreateChatResponse {
@@ -78,11 +83,11 @@ export class OpenAIProvider {
   }
 
   public async createChatCompletion(chatCompletionOptions: CreateChatRequest) {
-    const request = await axios.post<CreateCompletionResponse>(
+    const request = await axios.post<CreateChatResponse>(
       'https://api.openai.com/v1/chat/completions',
       {
         model: chatCompletionOptions.model,
-        max_tokens: chatCompletionOptions.maxTokens,
+        max_tokens: chatCompletionOptions.max_tokens,
         temperature: chatCompletionOptions.temperature,
         messages: chatCompletionOptions.messages,
       },
