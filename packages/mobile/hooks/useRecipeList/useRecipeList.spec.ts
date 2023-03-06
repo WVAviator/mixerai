@@ -22,7 +22,7 @@ describe('useRecipeList', () => {
 
     await waitFor(() => expect(result.current.recipes).toEqual(mockRecipes));
 
-    expect(serverInstance.get).toHaveBeenCalledWith('/recipe');
+    expect(serverInstance.get).toHaveBeenCalledWith('/feed');
   });
 
   it('should refresh recipes', async () => {
@@ -49,6 +49,6 @@ describe('useRecipeList', () => {
 
     await waitFor(() => expect(result.current.recipes).toEqual(updatedRecipes));
 
-    expect(serverInstance.get).toHaveBeenCalledWith('/recipe');
+    expect(serverInstance.get).toHaveBeenCalledWith('/feed');
   });
 });

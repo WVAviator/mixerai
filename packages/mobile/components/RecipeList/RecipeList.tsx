@@ -7,7 +7,9 @@ import {
   TouchableHighlight,
   View,
 } from 'react-native';
-import useRecipeList from '../../hooks/useRecipeList/useRecipeList';
+import useRecipeList, {
+  RecipeListOptions,
+} from '../../hooks/useRecipeList/useRecipeList';
 import { Recipe } from '../../types';
 
 const cutoffText = (text: string, length: number) => {
@@ -21,10 +23,14 @@ const cutoffText = (text: string, length: number) => {
 
 interface RecipeListProps {
   onSelectRecipe: (recipe: Recipe) => void;
+  options?: RecipeListOptions;
 }
 
-const RecipeList: React.FC<RecipeListProps> = ({ onSelectRecipe }) => {
-  const { recipes, refreshing, onRefresh } = useRecipeList();
+const RecipeList: React.FC<RecipeListProps> = ({
+  onSelectRecipe,
+  options = {},
+}) => {
+  const { recipes, refreshing, onRefresh } = useRecipeList(options);
 
   return (
     <FlatList

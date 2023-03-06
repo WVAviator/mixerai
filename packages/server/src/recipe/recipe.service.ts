@@ -30,7 +30,10 @@ export class RecipeService {
    */
   async generate({ prompt }: GenerateRecipeDto, user: User) {
     this.logger.log(`Generating recipe with prompt ${prompt}.`);
-    const recipe = await this.generateService.generateRecipe({ prompt });
+    const recipe = await this.generateService.generateRecipe({
+      prompt,
+      model: 'gpt-3.5-turbo',
+    });
     const imageUrl = await this.imageService.generateImage({
       prompt: recipe.imagePrompt,
     });

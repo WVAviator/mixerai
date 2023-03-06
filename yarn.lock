@@ -7648,6 +7648,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"cache-manager@npm:^5.1.7":
+  version: 5.1.7
+  resolution: "cache-manager@npm:5.1.7"
+  dependencies:
+    lodash.clonedeep: ^4.5.0
+    lru-cache: ^7.17.0
+  checksum: 550b04185b385de842953feee1fb5bad117f291264f3eaae55c7d00dcb15e2be658a883c031627f62d4ec88533c997b8ab3b845713809d1a9a512822dc4e35f5
+  languageName: node
+  linkType: hard
+
 "call-bind@npm:^1.0.0, call-bind@npm:^1.0.2":
   version: 1.0.2
   resolution: "call-bind@npm:1.0.2"
@@ -13613,6 +13623,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lodash.clonedeep@npm:^4.5.0":
+  version: 4.5.0
+  resolution: "lodash.clonedeep@npm:4.5.0"
+  checksum: 92c46f094b064e876a23c97f57f81fbffd5d760bf2d8a1c61d85db6d1e488c66b0384c943abee4f6af7debf5ad4e4282e74ff83177c9e63d8ff081a4837c3489
+  languageName: node
+  linkType: hard
+
 "lodash.debounce@npm:^4.0.8":
   version: 4.0.8
   resolution: "lodash.debounce@npm:4.0.8"
@@ -13725,6 +13742,13 @@ __metadata:
   dependencies:
     yallist: ^4.0.0
   checksum: f97f499f898f23e4585742138a22f22526254fdba6d75d41a1c2526b3b6cc5747ef59c5612ba7375f42aca4f8461950e925ba08c991ead0651b4918b7c978297
+  languageName: node
+  linkType: hard
+
+"lru-cache@npm:^7.17.0":
+  version: 7.18.3
+  resolution: "lru-cache@npm:7.18.3"
+  checksum: e550d772384709deea3f141af34b6d4fa392e2e418c1498c078de0ee63670f1f46f5eee746e8ef7e69e1c895af0d4224e62ee33e66a543a14763b0f2e74c1356
   languageName: node
   linkType: hard
 
@@ -15438,13 +15462,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"openai@npm:^3.1.0":
-  version: 3.1.0
-  resolution: "openai@npm:3.1.0"
+"openai@npm:^3.2.1":
+  version: 3.2.1
+  resolution: "openai@npm:3.2.1"
   dependencies:
     axios: ^0.26.0
     form-data: ^4.0.0
-  checksum: 2277d9e2b419b0ba17fb5ee7187bcff285a2a90120990c8da9658b8a8c8d4a927c95cec6cdc5503aa33108b4933288ef1f3756cc09033c33700d4bb2025138c0
+  checksum: ef3942e9b527cf27273c4355bb8fb9ebd94ae3a88c12eec0ac51c4ef0ad8c18864683759471597390816bcd822bdc9f2f1cea7a3eb1e432c9101f568f7c6d19a
   languageName: node
   linkType: hard
 
@@ -17513,6 +17537,7 @@ __metadata:
     "@typescript-eslint/parser": ^5.0.0
     aws-sdk: ^2.1304.0
     axios: ^1.2.6
+    cache-manager: ^5.1.7
     class-transformer: ^0.5.1
     class-validator: ^0.14.0
     cookie-parser: ^1.4.6
@@ -17522,7 +17547,7 @@ __metadata:
     jest: 29.3.1
     joi: ^17.7.1
     mongoose: ^6.8.4
-    openai: ^3.1.0
+    openai: ^3.2.1
     passport: ^0.6.0
     passport-google-oauth20: ^2.0.0
     passport-jwt: ^4.0.1

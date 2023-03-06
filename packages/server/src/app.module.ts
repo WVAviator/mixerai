@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { CacheModule, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { RecipeModule } from './recipe/recipe.module';
 import { UserModule } from './user/user.module';
@@ -9,6 +9,7 @@ import { ImageModule } from './image/image.module';
 import { OpenAIModule } from './openai/openai.module';
 import { VoteModule } from './vote/vote.module';
 import { AuthSessionModule } from './auth-session/auth-session.module';
+import { FeedModule } from './feed/feed.module';
 import * as Joi from 'joi';
 
 @Module({
@@ -49,6 +50,10 @@ import * as Joi from 'joi';
       },
       inject: [ConfigService],
     }),
+    CacheModule.register({
+      isGlobal: true,
+      ttl: 30000,
+    }),
     RecipeModule,
     UserModule,
     AuthModule,
@@ -57,6 +62,7 @@ import * as Joi from 'joi';
     OpenAIModule,
     VoteModule,
     AuthSessionModule,
+    FeedModule,
   ],
 })
 export class AppModule {}

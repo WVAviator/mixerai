@@ -32,12 +32,12 @@ export class RecipeController {
     return this.recipeService.findAll(user);
   }
 
-  @Get(':id')
+  @Get('/:id')
   findOne(@Param('id') id: string) {
     return this.recipeService.findOne(id);
   }
 
-  @Delete(':id')
+  @Delete('/:id')
   @UseGuards(JwtAuthGuard)
   remove(@Param('id') id: string, @User() user: UserDocument) {
     return this.recipeService.remove(id, user);
