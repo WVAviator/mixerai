@@ -1,4 +1,4 @@
-import { OpenAIProvider } from '../openai/openai.provider';
+import { CreateChatResponse, OpenAIProvider } from '../openai/openai.provider';
 import {
   BadGatewayException,
   Inject,
@@ -67,13 +67,22 @@ export class GenerateService {
       );
     }
 
+    const recipe =
+      options.model === 'text-davinci-003'
+        ? await this.getCompletionResponse(options)
+        : await this.getChatResponse(options);
+
+    return recipe;
+  }
+
+  private async getCompletionResponse(options: RecipeGenerationOptions) {
     let recipeResponse: AxiosResponse<CreateCompletionResponse, any>;
 
     try {
       recipeResponse = await this.openai.createCompletion(
         {
-          model: 'gpt-3.5-turbo',
-          prompt: this.promptProvider.createPrompt(options),
+          model: options.model,
+          prompt: this.promptProvider.createCompletionPrompt(options),
           temperature: 0.8,
           max_tokens: 250,
         },
@@ -86,16 +95,66 @@ export class GenerateService {
         cause: error,
       });
     }
-    const recipe = await this.parseRecipe(recipeResponse.data);
+    const recipe = await this.parseCompletionResponse(recipeResponse.data);
     this.logger.log(`Generated recipe ${recipe.title} successfully.`);
 
     return recipe;
   }
 
-  private async parseRecipe(data: CreateCompletionResponse) {
+  private async getChatResponse(options: RecipeGenerationOptions) {
+    let recipeResponse: AxiosResponse<CreateCompletionResponse, any>;
+
+    try {
+      recipeResponse = await this.openai.createCompletion(
+        {
+          model: options.model,
+          prompt: this.promptProvider.createChatPrompt(options),
+          temperature: 0.8,
+          max_tokens: 250,
+        },
+        {
+          timeout: 10000,
+        },
+      );
+    } catch (error: any) {
+      throw new BadGatewayException('Error communicating with OpenAI', {
+        cause: error,
+      });
+    }
+    const recipe = await this.parseCompletionResponse(recipeResponse.data);
+    this.logger.log(`Generated recipe ${recipe.title} successfully.`);
+
+    return recipe;
+  }
+
+  private async parseCompletionResponse(data: CreateCompletionResponse) {
     const responseJson = data.choices[0].text;
 
     let generatedRecipe: GeneratedRecipe;
+    try {
+      generatedRecipe = await JSON.parse(responseJson);
+    } catch (error: any) {
+      throw new AIResponseException('AI produced invalid JSON.', {
+        cause: error,
+      });
+    }
+
+    const validatedRecipe = new GeneratedRecipe(generatedRecipe);
+    const errors = await validate(validatedRecipe);
+    if (errors.length > 0) {
+      throw new AIResponseException('AI response failed validation', {
+        cause: new Error(errors[0].toString()),
+      });
+    }
+
+    return generatedRecipe;
+  }
+
+  private async parseChatResponse(data: CreateChatResponse) {
+    const responseJson = data.choices[0].message.content;
+
+    let generatedRecipe: GeneratedRecipe;
+
     try {
       generatedRecipe = await JSON.parse(responseJson);
     } catch (error: any) {

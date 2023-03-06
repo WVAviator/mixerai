@@ -8,16 +8,32 @@ import { RecipeGenerationOptions } from '../generate/dtos/recipe-generation-opti
  */
 @Injectable()
 export class PromptProvider {
-  private promptPrefix: string;
+  private completionPrefix: string;
+  private chatPrompt: string;
 
   constructor() {
-    this.promptPrefix = readFileSync(
-      join(process.cwd(), 'ai/prompt.txt'),
+    this.completionPrefix = readFileSync(
+      join(process.cwd(), 'ai/completion-prompt.txt'),
+      'utf8',
+    );
+
+    this.chatPrompt = readFileSync(
+      join(process.cwd(), 'ai/chat-prompt.json'),
       'utf8',
     );
   }
 
-  createPrompt(options: RecipeGenerationOptions) {
-    return `${this.promptPrefix} ${options.prompt}`;
+  createCompletionPrompt(options: RecipeGenerationOptions) {
+    return `${this.completionPrefix} ${options.prompt}`;
+  }
+
+  createChatPrompt(options: RecipeGenerationOptions) {
+    const chatPrompt = JSON.parse(this.chatPrompt);
+    chatPrompt.push({
+      role: 'user',
+      content: options.prompt,
+    });
+
+    return JSON.stringify(chatPrompt);
   }
 }
