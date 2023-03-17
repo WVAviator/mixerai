@@ -91,7 +91,7 @@ const MainScreen: React.FC<MainScreenProps> = ({ navigation }) => {
         <Stack.Navigator
           screenOptions={{
             headerShown: false,
-            statusBarColor: 'white',
+            statusBarColor: 'black',
             animation: 'none',
           }}
           initialRouteName="discover"

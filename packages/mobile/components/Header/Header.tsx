@@ -8,7 +8,7 @@ export interface HeaderProps {
 
 const Header: React.FC<React.PropsWithChildren<HeaderProps>> = ({
   children,
-  padding = 20,
+  padding = 15,
 }) => {
   return (
     <View style={[styles.container, { paddingHorizontal: padding }]}>
@@ -23,10 +23,6 @@ const styles = StyleSheet.create({
 
     height: 100,
     backgroundColor: '#C0630D',
-    // position: 'absolute',
-    // top: 0,
-    // left: 0,
-    // right: 0,
     overflow: 'hidden',
     zIndex: 1,
     paddingHorizontal: 20,
