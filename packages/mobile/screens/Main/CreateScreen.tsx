@@ -4,6 +4,7 @@ import React from 'react';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
 import { MainStackParamList } from '.';
 import { RootStackParamList } from '../../App';
+import DrinkLoader from '../../components/DrinkLoader/DrinkLoader';
 import OutlineButton from '../../components/OutlineButton/OutlineButton';
 import useHeader from '../../hooks/useHeader';
 import serverInstance from '../../utilities/serverInstance';
@@ -67,8 +68,22 @@ const CreateScreen: React.FC<CreateScreenProps> = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.inner}>
-        {loading ? <Text style={styles.text}>Loading...</Text> : promptForm}
+      <View
+        style={[
+          styles.inner,
+          { alignItems: loading ? 'center' : 'flex-start' },
+        ]}
+      >
+        {loading ? (
+          <>
+            <View>
+              <DrinkLoader />
+            </View>
+            <Text style={styles.text}>Generating...</Text>
+          </>
+        ) : (
+          promptForm
+        )}
       </View>
     </View>
   );
