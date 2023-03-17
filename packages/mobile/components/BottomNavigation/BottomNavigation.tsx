@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export interface NavigationOption {
   icon: React.ReactElement;
@@ -23,8 +23,9 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ options }) => {
           >
             <View style={styles.iconContainer}>
               {React.cloneElement(option.icon, {
-                size: 28,
+                size: 26,
               })}
+              <Text style={styles.iconText}>{option.label}</Text>
             </View>
             {index < options.length - 1 && <View style={styles.divider} />}
           </TouchableOpacity>
@@ -37,11 +38,7 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ options }) => {
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    height: 90,
-    // position: 'absolute',
-    // bottom: 0,
-    // left: 0,
-    // right: 0,
+    height: 85,
     overflow: 'hidden',
     backgroundColor: '#C0630D',
     flexDirection: 'row',
@@ -61,6 +58,11 @@ const styles = StyleSheet.create({
     width: 1,
     height: '100%',
     backgroundColor: '#fff',
+  },
+  iconText: {
+    fontSize: 14,
+    color: '#fff',
+    marginTop: 5,
   },
 });
 

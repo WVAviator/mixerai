@@ -11,6 +11,7 @@ import NavigationProvider from '../../context/NavigationProvider/NavigationProvi
 import useUser from '../../hooks/useUser';
 import CreateScreen from './CreateScreen';
 import DiscoverScreen from './DiscoverScreen';
+import MyRecipesScreen from './MyRecipesScreen';
 import RecipeScreen from './RecipeScreen';
 
 export type MainStackParamList = {
@@ -19,6 +20,7 @@ export type MainStackParamList = {
     id: string;
   };
   create: undefined;
+  myrecipes: undefined;
 };
 
 const Stack = createNativeStackNavigator<MainStackParamList>();
@@ -52,10 +54,10 @@ const MainScreen: React.FC<MainScreenProps> = ({ navigation }) => {
         },
       },
       {
-        label: 'Profile',
+        label: 'My Recipes',
         icon: <FontAwesome5 name="user" size={24} color="white" />,
         onPress: () => {
-          navigation.navigate('main', { screen: 'discover' });
+          navigation.replace('main', { screen: 'myrecipes' });
         },
       },
     ],
@@ -89,7 +91,7 @@ const MainScreen: React.FC<MainScreenProps> = ({ navigation }) => {
         <Stack.Navigator
           screenOptions={{
             headerShown: false,
-            statusBarColor: 'white',
+            statusBarColor: 'black',
             animation: 'none',
           }}
           initialRouteName="discover"
@@ -97,6 +99,7 @@ const MainScreen: React.FC<MainScreenProps> = ({ navigation }) => {
           <Stack.Screen name="discover" component={DiscoverScreen} />
           <Stack.Screen name="recipe" component={RecipeScreen} />
           <Stack.Screen name="create" component={CreateScreen} />
+          <Stack.Screen name="myrecipes" component={MyRecipesScreen} />
         </Stack.Navigator>
       </NavigationProvider>
     </Background>

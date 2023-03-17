@@ -17,7 +17,7 @@ const LandingScreen = () => {
       <Stack.Navigator
         screenOptions={{
           headerShown: false,
-          statusBarColor: 'white',
+          statusBarColor: 'black',
           animation: 'none',
         }}
       >

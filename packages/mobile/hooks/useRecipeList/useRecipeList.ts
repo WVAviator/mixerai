@@ -2,12 +2,22 @@ import React from 'react';
 import { Recipe } from '../../types';
 import serverInstance from '../../utilities/serverInstance';
 
-const useRecipeList = () => {
+export interface RecipeListOptions {
+  getByUser?: boolean;
+}
+
+const defaultOptions: RecipeListOptions = {
+  getByUser: false,
+};
+
+const useRecipeList = (options: RecipeListOptions = {}) => {
   const [recipes, setRecipes] = React.useState<Recipe[]>([]);
   const [refreshing, setRefreshing] = React.useState(false);
 
+  const { getByUser } = { ...defaultOptions, ...options };
+
   const getRecipes = async () => {
-    const { data } = await serverInstance.get('/recipe');
+    const { data } = await serverInstance.get(getByUser ? '/recipe' : '/feed');
     setRecipes(data);
   };
 

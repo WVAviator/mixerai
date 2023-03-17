@@ -19,7 +19,7 @@ const DiscoverScreen: React.FC<DiscoverScreenProps> = ({ navigation }) => {
 
   useHeader({
     navigation,
-    contents: <Text style={styles.text}>Welcome, {user?.displayName}!</Text>,
+    contents: <Text style={styles.text}>Trending Cocktails</Text>,
     props: { padding: 20 },
     dependencies: [user],
   });
@@ -33,6 +33,7 @@ const DiscoverScreen: React.FC<DiscoverScreenProps> = ({ navigation }) => {
             params: { id: recipe.id },
           });
         }}
+        options={{ getByUser: false }}
       />
     </View>
   );

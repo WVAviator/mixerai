@@ -23,6 +23,7 @@ describe('GenerateService', () => {
           provide: OpenAIProvider,
           useValue: {
             createCompletion: jest.fn(),
+            createChatCompletion: jest.fn(),
             createModeration: jest.fn(() => ({
               data: {
                 results: [
@@ -37,7 +38,8 @@ describe('GenerateService', () => {
         {
           provide: PromptProvider,
           useValue: {
-            createPrompt: jest.fn(),
+            createCompletionPrompt: jest.fn(),
+            createChatPrompt: jest.fn(),
           },
         },
       ],
@@ -85,6 +87,7 @@ describe('GenerateService', () => {
 
       const generatedRecipe = await generateService.generateRecipe({
         prompt: 'Test prompt',
+        model: 'text-davinci-003',
       });
 
       expect(openAICall).toHaveBeenCalled();
@@ -97,7 +100,10 @@ describe('GenerateService', () => {
         .mockResolvedValue(getTestResponse('error'));
 
       await expect(
-        generateService.generateRecipe({ prompt: 'Test prompt' }),
+        generateService.generateRecipe({
+          prompt: 'Test prompt',
+          model: 'text-davinci-003',
+        }),
       ).rejects.toThrow(AIResponseException);
     });
 
@@ -108,7 +114,10 @@ describe('GenerateService', () => {
         .mockResolvedValue(getTestResponse(JSON.stringify(missingTitle)));
 
       await expect(
-        generateService.generateRecipe({ prompt: 'Test prompt' }),
+        generateService.generateRecipe({
+          prompt: 'Test prompt',
+          model: 'text-davinci-003',
+        }),
       ).rejects.toThrow(AIResponseException);
     });
 
@@ -124,7 +133,10 @@ describe('GenerateService', () => {
         );
 
       await expect(
-        generateService.generateRecipe({ prompt: 'Test prompt' }),
+        generateService.generateRecipe({
+          prompt: 'Test prompt',
+          model: 'text-davinci-003',
+        }),
       ).rejects.toThrow(AIResponseException);
     });
 
@@ -134,7 +146,7 @@ describe('GenerateService', () => {
         .mockResolvedValue(getTestResponse(JSON.stringify(testRecipe)));
 
       const createPromptFunction = jest
-        .spyOn(promptProvider, 'createPrompt')
+        .spyOn(promptProvider, 'createCompletionPrompt')
         .mockImplementation(
           (options: RecipeGenerationOptions) =>
             `Test training prompt prefix: ${options.prompt}`,
@@ -142,23 +154,30 @@ describe('GenerateService', () => {
 
       await generateService.generateRecipe({
         prompt: 'Test prompt',
+        model: 'text-davinci-003',
       });
 
       expect(createPromptFunction).toHaveBeenCalledWith({
         prompt: 'Test prompt',
+        model: 'text-davinci-003',
       });
 
-      expect(openAIFunction).toHaveBeenCalledWith({
-        prompt: `Test training prompt prefix: Test prompt`,
-        model: 'text-davinci-003',
-        temperature: 0.8,
-        max_tokens: 250,
-      });
+      expect(openAIFunction).toHaveBeenCalledWith(
+        {
+          prompt: `Test training prompt prefix: Test prompt`,
+          model: 'text-davinci-003',
+          temperature: 0.8,
+          max_tokens: 250,
+        },
+        {
+          timeout: 10000,
+        },
+      );
     });
 
     it('throws an error if an empty prompt is provided', async () => {
       await expect(
-        generateService.generateRecipe({ prompt: '' }),
+        generateService.generateRecipe({ prompt: '', model: 'gpt-3.5-turbo' }),
       ).rejects.toThrow(InternalServerErrorException);
     });
 
@@ -166,6 +185,7 @@ describe('GenerateService', () => {
       await expect(
         generateService.generateRecipe({
           prompt: 'a'.repeat(101),
+          model: 'gpt-3.5-turbo',
         }),
       ).rejects.toThrow(InternalServerErrorException);
     });
@@ -195,7 +215,10 @@ describe('GenerateService', () => {
         .mockResolvedValue(mockResponse);
 
       await expect(
-        generateService.generateRecipe({ prompt: 'Test prompt' }),
+        generateService.generateRecipe({
+          prompt: 'Test prompt',
+          model: 'gpt-3.5-turbo',
+        }),
       ).rejects.toThrow(
         new ContentModerationException(
           `Prompt failed moderation. Reasons: ${JSON.stringify([
