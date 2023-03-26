@@ -7,7 +7,7 @@ import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Model } from 'mongoose';
 import { MockModel } from '../utils/testing/mock.model';
-import { UserCreatedEvent } from './events/UserCreatedEvent';
+import { UserCreatedEvent } from './events/user-created.event';
 import { User, UserDocument } from './schemas/user.schema';
 import { UserService } from './user.service';
 
