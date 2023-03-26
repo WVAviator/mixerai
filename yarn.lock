@@ -9837,6 +9837,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"expo-in-app-purchases@npm:~14.0.0":
+  version: 14.0.0
+  resolution: "expo-in-app-purchases@npm:14.0.0"
+  peerDependencies:
+    expo: "*"
+  checksum: 5e0be59b0e631ef1c7cbbb001cb4265957dcc56a152ba4feb4a6fb37d583b26b8370609036aa042ae99b5f4d4c034de9f0656142e14c341a1712f8dc77f3b0f3
+  languageName: node
+  linkType: hard
+
 "expo-keep-awake@npm:~11.0.1":
   version: 11.0.1
   resolution: "expo-keep-awake@npm:11.0.1"
@@ -14733,6 +14742,7 @@ __metadata:
     expo-auth-session: ~3.8.0
     expo-blur: ~12.0.1
     expo-font: ~11.0.1
+    expo-in-app-purchases: ~14.0.0
     expo-linear-gradient: ~12.0.1
     expo-linking: ~3.3.0
     expo-secure-store: ~12.0.0
