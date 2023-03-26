@@ -10,7 +10,7 @@ import { OpenAIModule } from './openai/openai.module';
 import { VoteModule } from './vote/vote.module';
 import { AuthSessionModule } from './auth-session/auth-session.module';
 import { FeedModule } from './feed/feed.module';
-import { TokenModule } from './token/token.module';
+import { TokenModule } from './token/tokens.module';
 import * as Joi from 'joi';
 
 @Module({
