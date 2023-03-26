@@ -33,4 +33,16 @@ export class TokensService {
       });
     }
   }
+
+  async getTokenCount(userId: string) {
+    try {
+      const tokenCountDocument = await this.tokenCountModel.findOne({ userId });
+      return tokenCountDocument.tokens;
+    } catch (error: any) {
+      throw new InternalServerErrorException({
+        message: `Error getting token count for user ${userId}.`,
+        cause: error,
+      });
+    }
+  }
 }
