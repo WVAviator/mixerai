@@ -1,3 +1,4 @@
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import {
   Injectable,
   InternalServerErrorException,
@@ -8,11 +9,15 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { DatabaseException } from '../exceptions/database.exceptions';
 import { User, UserDocument } from './schemas/user.schema';
+import { UserCreatedEvent } from './events/UserCreatedEvent';
 
 @Injectable()
 export class UserService {
   private logger = new Logger(UserService.name);
-  constructor(@InjectModel('User') private userModel: Model<UserDocument>) {}
+  constructor(
+    @InjectModel('User') private userModel: Model<UserDocument>,
+    private eventEmitter: EventEmitter2,
+  ) {}
 
   /**
    * Creates a new user in the database.
@@ -23,7 +28,11 @@ export class UserService {
     this.logger.log(`Creating user ${user.email} in database.`);
     try {
       const createdUser = await this.userModel.create(user);
-      return createdUser.save();
+      await createdUser.save();
+
+      this.eventEmitter.emit('user.created', new UserCreatedEvent(createdUser));
+
+      return createdUser;
     } catch (error: any) {
       this.logger.error(`Database error creating user ${user.email}. ${error}`);
       throw new InternalServerErrorException(

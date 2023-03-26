@@ -2,16 +2,19 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Model } from 'mongoose';
 import { MockModel } from '../utils/testing/mock.model';
+import { UserCreatedEvent } from './events/UserCreatedEvent';
 import { User, UserDocument } from './schemas/user.schema';
 import { UserService } from './user.service';
 
 describe('UserService', () => {
   let userService: UserService;
   let mockUserModel: Model<UserDocument>;
+  let mockEventEmitter: EventEmitter2;
 
   const testUser: User = {
     email: 'test@email.com',
@@ -28,12 +31,23 @@ describe('UserService', () => {
           provide: getModelToken(User.name),
           useValue: MockModel,
         },
+        {
+          provide: EventEmitter2,
+          useValue: {
+            emit: jest.fn(),
+          },
+        },
         UserService,
       ],
     }).compile();
 
     mockUserModel = module.get<Model<UserDocument>>(getModelToken(User.name));
     userService = module.get<UserService>(UserService);
+    mockEventEmitter = module.get<EventEmitter2>(EventEmitter2);
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
   it('should be defined', () => {
@@ -44,8 +58,21 @@ describe('UserService', () => {
     it('should create and save a user in the database', async () => {
       const createFunction = jest.spyOn(mockUserModel, 'create');
 
-      const user = await userService.create(testUser);
-      expect(createFunction).toBeCalledWith(user);
+      await userService.create(testUser);
+
+      expect(createFunction).toBeCalledWith(
+        expect.objectContaining({ ...testUser }),
+      );
+    });
+
+    it('should emit a user created event', async () => {
+      const emitFunction = jest.spyOn(mockEventEmitter, 'emit');
+      const userDocument = await userService.create(testUser);
+
+      expect(emitFunction).toBeCalledWith(
+        'user.created',
+        expect.objectContaining({ userDocument }),
+      );
     });
 
     it('throws an internal server error if the database fails to create', async () => {

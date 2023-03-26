@@ -59,6 +59,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     EventEmitterModule.forRoot({
       wildcard: true,
       delimiter: '.',
+      global: true,
     }),
     RecipeModule,
     UserModule,
