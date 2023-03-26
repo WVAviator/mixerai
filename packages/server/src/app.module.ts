@@ -12,6 +12,7 @@ import { AuthSessionModule } from './auth-session/auth-session.module';
 import { FeedModule } from './feed/feed.module';
 import { TokenModule } from './token/tokens.module';
 import * as Joi from 'joi';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
   imports: [
@@ -54,6 +55,10 @@ import * as Joi from 'joi';
     CacheModule.register({
       isGlobal: true,
       ttl: 30000,
+    }),
+    EventEmitterModule.forRoot({
+      wildcard: true,
+      delimiter: '.',
     }),
     RecipeModule,
     UserModule,

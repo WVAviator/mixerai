@@ -24,6 +24,7 @@
     "@nestjs/common": "^9.0.0",
     "@nestjs/config": "^2.2.0",
     "@nestjs/core": "^9.0.0",
+    "@nestjs/event-emitter": "^1.4.1",
     "@nestjs/jwt": "^10.0.1",
     "@nestjs/mapped-types": "*",
     "@nestjs/mongoose": "^9.2.1",
