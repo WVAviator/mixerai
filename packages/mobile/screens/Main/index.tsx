@@ -12,6 +12,7 @@ import useUser from '../../hooks/useUser';
 import CreateScreen from './CreateScreen';
 import DiscoverScreen from './DiscoverScreen';
 import MyRecipesScreen from './MyRecipesScreen';
+import PurchaseScreen from './PurchaseScreen';
 import RecipeScreen from './RecipeScreen';
 
 export type MainStackParamList = {
@@ -21,6 +22,7 @@ export type MainStackParamList = {
   };
   create: undefined;
   myrecipes: undefined;
+  purchase: undefined;
 };
 
 const Stack = createNativeStackNavigator<MainStackParamList>();
@@ -51,6 +53,13 @@ const MainScreen: React.FC<MainScreenProps> = ({ navigation }) => {
         icon: <AntDesign name="plussquareo" size={24} color="white" />,
         onPress: () => {
           navigation.navigate('main', { screen: 'create' });
+        },
+      },
+      {
+        label: 'Tokens',
+        icon: <FontAwesome5 name="coins" size={24} color="white" />,
+        onPress: () => {
+          navigation.navigate('main', { screen: 'purchase' });
         },
       },
       {
@@ -99,6 +108,7 @@ const MainScreen: React.FC<MainScreenProps> = ({ navigation }) => {
           <Stack.Screen name="discover" component={DiscoverScreen} />
           <Stack.Screen name="recipe" component={RecipeScreen} />
           <Stack.Screen name="create" component={CreateScreen} />
+          <Stack.Screen name="purchase" component={PurchaseScreen} />
           <Stack.Screen name="myrecipes" component={MyRecipesScreen} />
         </Stack.Navigator>
       </NavigationProvider>

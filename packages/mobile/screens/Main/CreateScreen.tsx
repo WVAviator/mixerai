@@ -7,6 +7,7 @@ import { RootStackParamList } from '../../App';
 import DrinkLoader from '../../components/DrinkLoader/DrinkLoader';
 import OutlineButton from '../../components/OutlineButton/OutlineButton';
 import useHeader from '../../hooks/useHeader';
+import useTokens from '../../hooks/useTokens/useTokens';
 import serverInstance from '../../utilities/serverInstance';
 
 type CreateScreenProps = CompositeScreenProps<
@@ -17,6 +18,10 @@ type CreateScreenProps = CompositeScreenProps<
 const CreateScreen: React.FC<CreateScreenProps> = ({ navigation }) => {
   const [text, setText] = React.useState('');
   const [loading, setLoading] = React.useState(false);
+
+  // const { tokens, isLoading: tokensLoading } = useTokens();
+  const tokens = 3;
+  const tokensLoading = false;
 
   useHeader({
     contents: <Text style={styles.headerText}>Generate a Recipe</Text>,
@@ -62,7 +67,17 @@ const CreateScreen: React.FC<CreateScreenProps> = ({ navigation }) => {
           }}
         />
       </View>
-      <OutlineButton onPress={() => onSubmit()}>Generate</OutlineButton>
+      <OutlineButton
+        onPress={() => onSubmit()}
+        disabled={!tokensLoading && tokens <= 0}
+      >
+        Generate
+      </OutlineButton>
+      {!tokensLoading && (
+        <Text style={styles.tokenInfo}>
+          Costs 1 token. You currently have {tokens} tokens available.
+        </Text>
+      )}
     </>
   );
 
@@ -106,6 +121,11 @@ const styles = StyleSheet.create({
     fontSize: 22,
     color: '#fff',
     marginBottom: 32,
+  },
+  tokenInfo: {
+    fontSize: 16,
+    color: '#fff',
+    marginTop: 16,
   },
   headerText: {
     fontSize: 24,
