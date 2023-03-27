@@ -4,13 +4,15 @@ import {
   Logger,
   NotFoundException,
 } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { DatabaseException } from '../exceptions/database.exceptions';
 import { GenerateService } from '../generate/generate.service';
 import { ImageService } from '../image/image.service';
-import { User } from '../user/schemas/user.schema';
+import { User, UserDocument } from '../user/schemas/user.schema';
 import { GenerateRecipeDto } from './dto/generate-recipe.dto';
+import { RecipeCreatedEvent } from './events/recipe-created.event';
 import { RecipeDocument } from './schemas/recipe.schema';
 
 @Injectable()
@@ -20,15 +22,16 @@ export class RecipeService {
     @InjectModel('Recipe') private recipeModel: Model<RecipeDocument>,
     private generateService: GenerateService,
     private imageService: ImageService,
+    private eventEmitter: EventEmitter2,
   ) {}
 
   /**
    * Generates a recipe given the provided prompt and any other options. Generates an image based on the recipe's image prompt description. Saves the recipe to the database.
    * @param param0 The provided prompt and other options
-   * @param user The user requesting the created recipe
+   * @param userDocument The user requesting the created recipe
    * @returns A promise that resolves to a new recipe document after it is saved to the database
    */
-  async generate({ prompt }: GenerateRecipeDto, user: User) {
+  async generate({ prompt }: GenerateRecipeDto, userDocument: UserDocument) {
     this.logger.log(`Generating recipe with prompt ${prompt}.`);
     const recipe = await this.generateService.generateRecipe({
       prompt,
@@ -43,9 +46,15 @@ export class RecipeService {
         ...recipe,
         imageUrl,
         prompt,
-        user,
+        user: userDocument,
       });
       recipeData.save();
+
+      this.eventEmitter.emit(
+        'recipe.created',
+        new RecipeCreatedEvent(recipeData, userDocument),
+      );
+
       return recipeData;
     } catch (error: any) {
       throw new DatabaseException('Error saving recipe', {

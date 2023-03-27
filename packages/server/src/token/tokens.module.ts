@@ -12,5 +12,6 @@ import { TokensService } from './tokens.service';
       { name: 'TokenCount', schema: TokenCountSchema },
     ]),
   ],
+  exports: [TokensService],
 })
 export class TokenModule {}

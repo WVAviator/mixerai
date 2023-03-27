@@ -1,4 +1,5 @@
 import { ForbiddenException } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Model } from 'mongoose';
@@ -6,7 +7,7 @@ import { DatabaseException } from '../exceptions/database.exceptions';
 import { GeneratedRecipe } from '../generate/dtos/generated-recipe.dto';
 import { GenerateService } from '../generate/generate.service';
 import { ImageService } from '../image/image.service';
-import { User } from '../user/schemas/user.schema';
+import { User, UserDocument } from '../user/schemas/user.schema';
 import { MockModel } from '../utils/testing/mock.model';
 import { RecipeService } from './recipe.service';
 import { Recipe, RecipeDocument } from './schemas/recipe.schema';
@@ -16,6 +17,7 @@ describe('RecipeService', () => {
   let generateService: GenerateService;
   let imageService: ImageService;
   let mockRecipeModel: Model<RecipeDocument>;
+  let mockEventEmitter: EventEmitter2;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -38,6 +40,12 @@ describe('RecipeService', () => {
             deleteImage: jest.fn(),
           },
         },
+        {
+          provide: EventEmitter2,
+          useValue: {
+            emit: jest.fn(),
+          },
+        },
       ],
     }).compile();
 
@@ -47,6 +55,7 @@ describe('RecipeService', () => {
     mockRecipeModel = module.get<Model<RecipeDocument>>(
       getModelToken(Recipe.name),
     );
+    mockEventEmitter = module.get<EventEmitter2>(EventEmitter2);
   });
 
   it('should be defined', () => {
@@ -65,7 +74,10 @@ describe('RecipeService', () => {
         .mockResolvedValue('test-image-url');
       const createFunction = jest.spyOn(mockRecipeModel, 'create');
 
-      await recipeService.generate({ prompt: 'test-prompt' }, {} as User);
+      await recipeService.generate(
+        { prompt: 'test-prompt' },
+        {} as UserDocument,
+      );
 
       expect(generateRecipeFunction).toBeCalled();
       expect(generateImageFunction).toBeCalled();
@@ -84,7 +96,7 @@ describe('RecipeService', () => {
       });
 
       await expect(
-        recipeService.generate({ prompt: 'test-prompt' }, {} as User),
+        recipeService.generate({ prompt: 'test-prompt' }, {} as UserDocument),
       ).rejects.toThrow(DatabaseException);
     });
   });

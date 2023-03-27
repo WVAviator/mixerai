@@ -6,6 +6,7 @@ import {
 import { OnEvent } from '@nestjs/event-emitter';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { RecipeCreatedEvent } from '../recipe/events/recipe-created.event';
 import { UserCreatedEvent } from '../user/events/user-created.event';
 import { TokenCount } from './schemas/token-count.schema';
 
@@ -41,6 +42,25 @@ export class TokensService {
     } catch (error: any) {
       throw new InternalServerErrorException({
         message: `Error getting token count for user ${userId}.`,
+        cause: error,
+      });
+    }
+  }
+
+  @OnEvent('recipe.created')
+  async handleRecipeCreatedEvent(event: RecipeCreatedEvent) {
+    this.logger.log(
+      `Recipe created event received for recipe ${event.recipeDocument.name}.`,
+    );
+    try {
+      const tokenCountDocument = await this.tokenCountModel.findOne({
+        userId: event.recipeDocument.userId,
+      });
+      tokenCountDocument.tokens = tokenCountDocument.tokens - 1;
+      await tokenCountDocument.save();
+    } catch (error: any) {
+      throw new InternalServerErrorException({
+        message: `Error updating token count for user ${event.recipeDocument.userId}.`,
         cause: error,
       });
     }
