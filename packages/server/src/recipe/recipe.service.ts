@@ -10,6 +10,7 @@ import { Model } from 'mongoose';
 import { DatabaseException } from '../exceptions/database.exceptions';
 import { GenerateService } from '../generate/generate.service';
 import { ImageService } from '../image/image.service';
+import { TokensService } from '../token/tokens.service';
 import { User, UserDocument } from '../user/schemas/user.schema';
 import { GenerateRecipeDto } from './dto/generate-recipe.dto';
 import { RecipeCreatedEvent } from './events/recipe-created.event';
@@ -23,6 +24,7 @@ export class RecipeService {
     private generateService: GenerateService,
     private imageService: ImageService,
     private eventEmitter: EventEmitter2,
+    private tokensService: TokensService,
   ) {}
 
   /**
@@ -33,6 +35,15 @@ export class RecipeService {
    */
   async generate({ prompt }: GenerateRecipeDto, userDocument: UserDocument) {
     this.logger.log(`Generating recipe with prompt ${prompt}.`);
+
+    this.logger.log(`Verifying user has enough tokens.`);
+    const tokens = await this.tokensService.getTokenCount(userDocument.id);
+    if (tokens < 1) {
+      throw new ForbiddenException(
+        'You do not have enough tokens to generate a recipe.',
+      );
+    }
+
     const recipe = await this.generateService.generateRecipe({
       prompt,
       model: 'gpt-3.5-turbo',

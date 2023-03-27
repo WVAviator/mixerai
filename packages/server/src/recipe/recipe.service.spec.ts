@@ -7,6 +7,7 @@ import { DatabaseException } from '../exceptions/database.exceptions';
 import { GeneratedRecipe } from '../generate/dtos/generated-recipe.dto';
 import { GenerateService } from '../generate/generate.service';
 import { ImageService } from '../image/image.service';
+import { TokensService } from '../token/tokens.service';
 import { User, UserDocument } from '../user/schemas/user.schema';
 import { MockModel } from '../utils/testing/mock.model';
 import { RecipeService } from './recipe.service';
@@ -17,7 +18,8 @@ describe('RecipeService', () => {
   let generateService: GenerateService;
   let imageService: ImageService;
   let mockRecipeModel: Model<RecipeDocument>;
-  let mockEventEmitter: EventEmitter2;
+  let eventEmitter: EventEmitter2;
+  let tokensService: TokensService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -46,6 +48,12 @@ describe('RecipeService', () => {
             emit: jest.fn(),
           },
         },
+        {
+          provide: TokensService,
+          useValue: {
+            getTokenCount: jest.fn(() => 1),
+          },
+        },
       ],
     }).compile();
 
@@ -55,7 +63,8 @@ describe('RecipeService', () => {
     mockRecipeModel = module.get<Model<RecipeDocument>>(
       getModelToken(Recipe.name),
     );
-    mockEventEmitter = module.get<EventEmitter2>(EventEmitter2);
+    eventEmitter = module.get<EventEmitter2>(EventEmitter2);
+    tokensService = module.get<TokensService>(TokensService);
   });
 
   it('should be defined', () => {
@@ -98,6 +107,14 @@ describe('RecipeService', () => {
       await expect(
         recipeService.generate({ prompt: 'test-prompt' }, {} as UserDocument),
       ).rejects.toThrow(DatabaseException);
+    });
+
+    it('should throw an error if the user has no tokens', async () => {
+      jest.spyOn(tokensService, 'getTokenCount').mockResolvedValue(0);
+
+      await expect(
+        recipeService.generate({ prompt: 'test-prompt' }, {} as UserDocument),
+      ).rejects.toThrow(ForbiddenException);
     });
   });
 
