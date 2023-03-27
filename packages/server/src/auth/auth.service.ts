@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { AuthenticationSessionException } from '../auth-session/auth-session.exception';
@@ -7,6 +8,7 @@ import { AuthSessionService } from '../auth-session/auth-session.service';
 import { User } from '../user/schemas/user.schema';
 import { UserService } from '../user/user.service';
 import { LoginDto } from './dtos/login.dto';
+import { UserLoginEvent } from './events/user-login.event';
 import { JwtPayload } from './strategies/jwt/types';
 
 @Injectable()
@@ -18,6 +20,7 @@ export class AuthService {
     private userService: UserService,
     private authSessionService: AuthSessionService,
     private configService: ConfigService,
+    private eventEmitter: EventEmitter2,
   ) {}
 
   /**
@@ -42,6 +45,8 @@ export class AuthService {
       email: user.email,
       sub: user.id,
     });
+
+    this.eventEmitter.emit('user.login', new UserLoginEvent(user));
 
     return { userData: user, token };
   }

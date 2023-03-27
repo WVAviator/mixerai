@@ -35,6 +35,33 @@ export class TokensService {
     }
   }
 
+  @OnEvent('user.login')
+  async handleUserLoginEvent(event: UserCreatedEvent) {
+    this.logger.log(
+      `User login event received for user ${event.userDocument.email}.`,
+    );
+    try {
+      const tokenCountDocument = await this.tokenCountModel.findOne({
+        userId: event.userDocument._id,
+      });
+
+      if (!tokenCountDocument) {
+        this.logger.log(
+          `No token count document found for user ${event.userDocument.email}. Creating one.`,
+        );
+        await this.tokenCountModel.create({
+          userId: event.userDocument._id,
+          count: 3,
+        });
+      }
+    } catch (error: any) {
+      throw new InternalServerErrorException({
+        message: `Error creating token count for user ${event.userDocument.email}.`,
+        cause: error,
+      });
+    }
+  }
+
   async getTokenCount(userId: string) {
     try {
       const tokenCountDocument = await this.tokenCountModel.findOne({ userId });

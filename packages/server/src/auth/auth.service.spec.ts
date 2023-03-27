@@ -1,5 +1,6 @@
 import { BadRequestException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { JwtService } from '@nestjs/jwt';
 import { Test } from '@nestjs/testing';
 import { Request } from 'express';
@@ -15,6 +16,7 @@ describe('AuthService', () => {
   let authService: AuthService;
   let userService: UserService;
   let authSessionService: AuthSessionService;
+  let eventEmitter: EventEmitter2;
 
   const testUser: User = {
     email: 'test@email.com',
@@ -62,12 +64,19 @@ describe('AuthService', () => {
             get: () => 'jwtSecret',
           },
         },
+        {
+          provide: EventEmitter2,
+          useValue: {
+            emit: jest.fn(),
+          },
+        },
       ],
     }).compile();
 
     userService = module.get<UserService>(UserService);
     authService = module.get<AuthService>(AuthService);
     authSessionService = module.get<AuthSessionService>(AuthSessionService);
+    eventEmitter = module.get<EventEmitter2>(EventEmitter2);
   });
 
   afterEach(() => {
@@ -116,6 +125,26 @@ describe('AuthService', () => {
 
       await expect(authService.login({ auid: 'auid' })).rejects.toThrowError(
         AuthenticationSessionException,
+      );
+    });
+
+    it('should emit a user signed in event', async () => {
+      jest
+        .spyOn(userService, 'findOneById')
+        .mockResolvedValue({ ...testUser, id: 'userId' } as UserDocument);
+      jest.spyOn(authSessionService, 'retrieveAndValidate').mockResolvedValue({
+        userId: 'userId',
+      } as AuthSessionDocument);
+
+      const emitFunction = jest.spyOn(eventEmitter, 'emit');
+
+      const { userData: userDocument } = await authService.login({
+        auid: 'auid',
+      });
+
+      expect(emitFunction).toHaveBeenCalledWith(
+        'user.login',
+        expect.objectContaining({ userDocument }),
       );
     });
   });
