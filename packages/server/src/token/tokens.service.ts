@@ -92,4 +92,20 @@ export class TokensService {
       });
     }
   }
+
+  async increaseTokenCount(userId: string, amount: number) {
+    try {
+      const tokenCountDocument = await this.tokenCountModel.findOneAndUpdate(
+        { userId },
+        { $inc: { tokens: amount } },
+        { new: true },
+      );
+      return tokenCountDocument.tokens;
+    } catch (error: any) {
+      throw new InternalServerErrorException({
+        message: `Error increasing token count for user ${userId}.`,
+        cause: error,
+      });
+    }
+  }
 }

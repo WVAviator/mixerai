@@ -22,4 +22,11 @@ export class MockModel<T> {
       return null;
     }
   });
+  static findOneAndUpdate = jest.fn().mockImplementation((doc: Document) => {
+    if (doc) {
+      return new MockModel(doc);
+    } else {
+      return null;
+    }
+  });
 }
