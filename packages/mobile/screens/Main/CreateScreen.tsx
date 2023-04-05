@@ -1,5 +1,6 @@
 import { CompositeScreenProps } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { AxiosError } from 'axios';
 import React from 'react';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
 import { MainStackParamList } from '.';
@@ -33,20 +34,22 @@ const CreateScreen: React.FC<CreateScreenProps> = ({ navigation }) => {
 
   const onSubmit = async () => {
     setLoading(true);
-    const response = await serverInstance.post('/recipe', {
-      prompt: text,
-    });
+    try {
+      const response = await serverInstance.post('/recipe', {
+        prompt: text,
+      });
 
-    if (response.status !== 201) {
-      // TODO: Handle error and advise user to try again
+      const recipe = response.data;
       setLoading(false);
-      return;
+
+      navigation.replace('recipe', { id: recipe.id });
+    } catch (e: unknown) {
+      if (e instanceof AxiosError) {
+        console.log(e.message, e.response?.data);
+      }
+      console.log('Unable to generate recipe: ', e);
+      setLoading(false);
     }
-
-    const recipe = response.data;
-    setLoading(false);
-
-    navigation.replace('recipe', { id: recipe.id });
   };
 
   const promptForm = (

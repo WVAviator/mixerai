@@ -17,8 +17,14 @@ const useRecipeList = (options: RecipeListOptions = {}) => {
   const { getByUser } = { ...defaultOptions, ...options };
 
   const getRecipes = async () => {
-    const { data } = await serverInstance.get(getByUser ? '/recipe' : '/feed');
-    setRecipes(data);
+    try {
+      const { data } = await serverInstance.get(
+        getByUser ? '/recipe' : '/feed',
+      );
+      setRecipes(data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   React.useEffect(() => {

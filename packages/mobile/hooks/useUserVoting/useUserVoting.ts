@@ -6,8 +6,12 @@ const useUserVoting = (recipeId: string) => {
 
   React.useEffect(() => {
     const getUserVote = async () => {
-      const { data } = await serverInstance.get(`/vote/${recipeId}`);
-      setUserVote(data?.vote ?? null);
+      try {
+        const { data } = await serverInstance.get(`/vote/${recipeId}`);
+        setUserVote(data?.vote ?? null);
+      } catch (error) {
+        console.log(error);
+      }
     };
 
     getUserVote();
