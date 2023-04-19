@@ -5,12 +5,14 @@ import { RecipeService } from './recipe.service';
 import { RecipeController } from './recipe.controller';
 import { RecipeSchema } from './schemas/recipe.schema';
 import { ImageModule } from '../image/image.module';
+import { TokenModule } from '../token/tokens.module';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: 'Recipe', schema: RecipeSchema }]),
     GenerateModule,
     ImageModule,
+    TokenModule,
   ],
   controllers: [RecipeController],
   providers: [RecipeService],
