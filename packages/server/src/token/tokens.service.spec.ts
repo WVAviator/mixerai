@@ -1,4 +1,4 @@
-import { RecipeDocument } from './../../dist/recipe/schemas/recipe.schema.d';
+import { RecipeDocument } from './../../dist/recipe/schemas/recipe.schema';
 import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Model } from 'mongoose';
@@ -9,15 +9,23 @@ import { MockModel } from '../utils/testing/mock.model';
 import { TokenCount, TokenCountDocument } from './schemas/token-count.schema';
 import { TokensService } from './tokens.service';
 import { RecipeCreatedEvent } from '../recipe/events/recipe-created.event';
+import { AndroidPublisherProvider } from './providers/android-publisher.provider';
 
 describe('TokensService', () => {
   let tokensService: TokensService;
   let mockTokenCountModel: Model<TokenCountDocument>;
+  let androidPublisherProvider: AndroidPublisherProvider;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         { provide: getModelToken(TokenCount.name), useValue: MockModel },
+        {
+          provide: AndroidPublisherProvider,
+          useValue: {
+            getPurchase: jest.fn(),
+          },
+        },
         TokensService,
       ],
     }).compile();
@@ -25,6 +33,9 @@ describe('TokensService', () => {
     tokensService = module.get<TokensService>(TokensService);
     mockTokenCountModel = module.get<Model<TokenCountDocument>>(
       getModelToken(TokenCount.name),
+    );
+    androidPublisherProvider = module.get<AndroidPublisherProvider>(
+      AndroidPublisherProvider,
     );
   });
 

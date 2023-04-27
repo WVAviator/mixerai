@@ -65,8 +65,8 @@ export const useInAppPurchases = () => {
     const getProducts = async () => {
       try {
         const items = Platform.select({
-          ios: ['com.mixerai.10_tokens', 'com.mixerai.25_tokens'],
-          android: ['10_tokens', '25_tokens'],
+          ios: ['com.mixerai.tokens_10', 'com.mixerai.tokens_25'],
+          android: ['com.mixerai.tokens_10', 'com.mixerai.tokens_25'],
         });
 
         if (!items) {

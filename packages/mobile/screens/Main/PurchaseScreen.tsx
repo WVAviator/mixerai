@@ -2,15 +2,13 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { CompositeScreenProps } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React from 'react';
-import { Platform, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { MainStackParamList } from '.';
 import { RootStackParamList } from '../../App';
 import OutlineButton from '../../components/OutlineButton/OutlineButton';
 import useHeader from '../../hooks/useHeader';
-import useTokens from '../../hooks/useTokens/useTokens';
-import serverInstance from '../../utilities/serverInstance';
-import * as InAppPurchases from 'expo-in-app-purchases';
 import { useInAppPurchases } from '../../hooks/useInAppPurchases/useInAppPurchases';
+import useTokens from '../../hooks/useTokens/useTokens';
 
 type PurchaseScreenProps = CompositeScreenProps<
   NativeStackScreenProps<MainStackParamList, 'purchase'>,
