@@ -15,6 +15,10 @@ import LandingScreen, { LandingStackParamList } from './screens/Landing';
 import MainScreen, { MainStackParamList } from './screens/Main';
 import { User } from './types';
 import serverInstance from './utilities/serverInstance';
+import * as InAppPurchases from 'expo-in-app-purchases';
+import { useSetupInAppPurchases } from './hooks/useInAppPurchases/useInAppPurchases';
+
+InAppPurchases.connectAsync();
 
 SplashScreen.preventAutoHideAsync();
 
@@ -28,6 +32,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 export default function App() {
   const [appReady, setAppReady] = React.useState(false);
   const [user, setUser] = React.useState<User | null>(null);
+  useSetupInAppPurchases();
 
   React.useEffect(() => {
     const establishSession = async () => {

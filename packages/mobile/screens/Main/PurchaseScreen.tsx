@@ -2,13 +2,15 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { CompositeScreenProps } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React from 'react';
-import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { Platform, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { MainStackParamList } from '.';
 import { RootStackParamList } from '../../App';
 import OutlineButton from '../../components/OutlineButton/OutlineButton';
 import useHeader from '../../hooks/useHeader';
 import useTokens from '../../hooks/useTokens/useTokens';
 import serverInstance from '../../utilities/serverInstance';
+import * as InAppPurchases from 'expo-in-app-purchases';
+import { useInAppPurchases } from '../../hooks/useInAppPurchases/useInAppPurchases';
 
 type PurchaseScreenProps = CompositeScreenProps<
   NativeStackScreenProps<MainStackParamList, 'purchase'>,
@@ -17,6 +19,7 @@ type PurchaseScreenProps = CompositeScreenProps<
 
 const PurchaseScreen: React.FC<PurchaseScreenProps> = ({ navigation }) => {
   const { tokens } = useTokens();
+  const { items, purchaseItem } = useInAppPurchases();
 
   useHeader({
     navigation,
@@ -35,16 +38,14 @@ const PurchaseScreen: React.FC<PurchaseScreenProps> = ({ navigation }) => {
       </View>
       <View style={styles.options}>
         <Text style={styles.text}>Buy More</Text>
-        <OutlineButton
-          icon={<FontAwesome5 name="coins" size={24} color="white" />}
-        >
-          10 Tokens ($0.99)
-        </OutlineButton>
-        <OutlineButton
-          icon={<FontAwesome5 name="coins" size={24} color="white" />}
-        >
-          25 Tokens ($1.99)
-        </OutlineButton>
+        {items.map((item) => (
+          <OutlineButton
+            icon={<FontAwesome5 name="coins" size={24} color="white" />}
+            onPress={() => purchaseItem(item)}
+          >
+            {item.description} ({item.price})
+          </OutlineButton>
+        ))}
       </View>
     </SafeAreaView>
   );
