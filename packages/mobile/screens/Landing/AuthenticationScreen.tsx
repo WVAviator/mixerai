@@ -20,12 +20,12 @@ interface AuthProvider {
 }
 
 const providers: AuthProvider[] = [
-  {
-    text: 'Continue with Apple',
-    fontSize: 18,
-    icon: <AppleIcon />,
-    url: 'https://api.mixerai.app/auth/apple',
-  },
+  // {
+  //   text: 'Continue with Apple',
+  //   fontSize: 18,
+  //   icon: <AppleIcon />,
+  //   url: 'https://api.mixerai.app/auth/apple',
+  // },
   {
     text: 'Continue with Google',
     fontSize: 18,
