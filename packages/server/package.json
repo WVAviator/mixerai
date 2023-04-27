@@ -40,6 +40,7 @@
     "mongoose": "^6.8.4",
     "openai": "^3.2.1",
     "passport": "^0.6.0",
+    "passport-facebook": "^3.0.0",
     "passport-google-oauth20": "^2.0.0",
     "passport-jwt": "^4.0.1",
     "reflect-metadata": "^0.1.13",

@@ -21,7 +21,7 @@ export class User {
   avatarUrl: string;
 
   @Prop()
-  authService: 'google' | 'local';
+  authService: 'google' | 'facebook' | 'local';
 
   @Prop()
   authServiceId: string;

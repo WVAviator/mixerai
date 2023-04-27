@@ -16,6 +16,7 @@ import {
 import { AuthService } from './auth.service';
 import { LoginDto } from './dtos/login.dto';
 import { GoogleOAuthGuard } from './guards/google-oauth.guard';
+import { FacebookOAuthGuard } from './guards/facebook-oauth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -32,6 +33,23 @@ export class AuthController {
   @Get('google/callback')
   @UseGuards(GoogleOAuthGuard)
   async googleAuthRedirect(
+    @Request() request: ExpressRequest,
+    @Response() response: ExpressResponse,
+  ) {
+    const { callbackUrl } = await this.authService.processAuthCallback(request);
+
+    return response.redirect(callbackUrl);
+  }
+
+  @Get('facebook')
+  @UseGuards(FacebookOAuthGuard)
+  async facebookAuth() {
+    this.logger.log('Redirecting to Facebook for authentication.');
+  }
+
+  @Get('facebook/callback')
+  @UseGuards(FacebookOAuthGuard)
+  async facebookAuthRedirect(
     @Request() request: ExpressRequest,
     @Response() response: ExpressResponse,
   ) {

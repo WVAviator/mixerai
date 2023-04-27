@@ -15945,6 +15945,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"passport-facebook@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "passport-facebook@npm:3.0.0"
+  dependencies:
+    passport-oauth2: 1.x.x
+  checksum: f70598738537b39b914845a202b8d7b86ece56e2e1de6e723f74337c69445664ef2503e449a90ad63329f59440ceeb7920f5825123e725db8935531f251df142
+  languageName: node
+  linkType: hard
+
 "passport-google-oauth20@npm:^2.0.0":
   version: 2.0.0
   resolution: "passport-google-oauth20@npm:2.0.0"
@@ -17707,6 +17716,7 @@ __metadata:
     mongoose: ^6.8.4
     openai: ^3.2.1
     passport: ^0.6.0
+    passport-facebook: ^3.0.0
     passport-google-oauth20: ^2.0.0
     passport-jwt: ^4.0.1
     prettier: ^2.3.2
