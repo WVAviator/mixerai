@@ -11,6 +11,7 @@ import useRecipeList, {
   RecipeListOptions,
 } from '../../hooks/useRecipeList/useRecipeList';
 import { Recipe } from '../../types';
+import LikesSummary from '../LikesSummary/LikesSummary';
 
 const cutoffText = (text: string, length: number) => {
   if (text.length > length) {
@@ -62,6 +63,10 @@ const RecipeList: React.FC<RecipeListProps> = ({
                   <ListItem.Subtitle style={[styles.text, styles.description]}>
                     {cutoffText(recipe.description, 100)}
                   </ListItem.Subtitle>
+                  <LikesSummary
+                    likes={recipe.likes}
+                    dislikes={recipe.dislikes}
+                  />
                 </View>
               </ListItem.Content>
             </ListItem>
