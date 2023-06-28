@@ -9,7 +9,18 @@
   "workspaces": [
     "packages/*"
   ],
+  "scripts": {
+    "start:server": "cd packages/server && docker compose build && docker compose up",
+    "start:mobile": "cd packages/mobile && yarn start",
+    "test": "lerna run test",
+    "lint": "lerna run lint",
+    "typescript": "lerna run typescript",
+    "postinstall": "husky install"
+  },
   "devDependencies": {
-    "lerna": "^6.4.1"
-  }
+    "husky": "^8.0.0",
+    "lerna": "^6.4.1",
+    "lint-staged": "^13.1.2"
+  },
+  "packageManager": "yarn@3.3.1"
 }

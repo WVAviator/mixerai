@@ -1,33 +1,36 @@
 {
   "expo": {
-    "name": "mobile",
-    "slug": "mobile",
-    "version": "1.0.0",
+    "name": "MixerAI",
+    "slug": "mixerai",
+    "version": "0.0.1",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/branding/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/branding/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#1F2122"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.wvaviator.mixerai"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
-      }
+        "foregroundImage": "./assets/branding/icon.png",
+        "backgroundColor": "#1F2122"
+      },
+      "package": "com.wvaviator.mixerai"
     },
-    "web": {
-      "favicon": "./assets/favicon.png"
+    "scheme": "mixerai",
+    "extra": {
+      "eas": {
+        "projectId": "6213686b-1532-453c-9028-ca1c617f2df5"
+      }
     }
   }
 }
