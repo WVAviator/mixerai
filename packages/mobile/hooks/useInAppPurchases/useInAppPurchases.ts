@@ -2,6 +2,7 @@ import React from 'react';
 import * as InAppPurchases from 'expo-in-app-purchases';
 import { Platform } from 'react-native';
 import serverInstance from '../../utilities/serverInstance';
+import Constants from 'expo-constants';
 
 const verifyPurchase = (purchase: InAppPurchases.InAppPurchase) => {
   try {
@@ -49,11 +50,14 @@ export const useSetupInAppPurchases = () => {
         },
       );
     };
-
-    setupInAppPurchases();
+    if (Constants.appOwnership === 'standalone') {
+      setupInAppPurchases();
+    }
 
     return () => {
-      InAppPurchases.disconnectAsync();
+      if (Constants.appOwnership === 'standalone') {
+        InAppPurchases.disconnectAsync();
+      }
     };
   }, []);
 };
@@ -83,7 +87,9 @@ export const useInAppPurchases = () => {
         console.log(err);
       }
     };
-    getProducts();
+    if (Constants.appOwnership === 'standalone') {
+      getProducts();
+    }
   }, []);
 
   const purchaseItem = async (item: InAppPurchases.IAPItemDetails) => {
